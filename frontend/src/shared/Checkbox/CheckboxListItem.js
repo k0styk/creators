@@ -1,18 +1,16 @@
 import React from 'react';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {
     Checkbox,
     Tooltip,
     ListItemText,
-    List,
     ListItem,
     ListItemIcon as ListItemIconUi,
-    SecondaryAction,
     IconButton,
-    ListItemSecondaryAction
+    ListItemSecondaryAction, TextField
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import s from './Promo.module.scss';
+import s from './Checkbox.module.scss';
 
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
@@ -28,13 +26,15 @@ const ListItemIcon = withStyles((theme) => ({
     }
 }))(ListItemIconUi);
 
-export default function CheckboxList({id, title, price, tooltip, checked, onClick}) {
+export default function CheckboxList({id, title, price, tooltip, checked, onClick, withPriceField}) {
+    const isChecked = checked.includes(id);
     return (
-        <ListItem key={id} dense button onClick={() => onClick(id)}>
+        <ListItem key={id} dense button>
             <ListItemIcon>
                 <Checkbox
+                    onClick={() => onClick(id)}
                     edge="start"
-                    checked={checked.includes(id)}
+                    checked={isChecked}
                     disableRipple
                     inputProps={{'aria-labelledby': 1}}
                 />
@@ -43,7 +43,18 @@ export default function CheckboxList({id, title, price, tooltip, checked, onClic
             <ListItemText>
                 <div className={s.titleCheckbox}>
                     <span> {title} </span>
-                    <span className={s.priceService}> {price} руб. </span>
+                    {
+                        !withPriceField && <span className={s.priceService}> {price} руб. </span> ||
+                        isChecked && withPriceField &&
+                        (<div className={s.textFieldBlock}>
+                            <span className={s.dopField}> Стоимость: </span>
+                            <TextField
+                                size={'small'}
+                                color={'secondary'}
+                                className={s.textField}/>
+                            <span className={s.dopField}> руб. </span>
+                        </div>)
+                    }
                 </div>
             </ ListItemText>
 

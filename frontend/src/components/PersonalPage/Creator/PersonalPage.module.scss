@@ -1,0 +1,96 @@
+@import '../../../shared/style';
+
+.content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  font-size: 14px;
+
+  & > * + * {
+    margin-top: 30px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+  }
+}
+
+.userName {
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: .15px;
+
+  & > * {
+    margin-right: 10px;
+  }
+}
+
+.avatar {
+  margin-top: 20px;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 4px;
+
+  img {
+    -o-object-fit: cover;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-auto-rows: minmax(20px, auto);
+  margin-top: 10px;
+}
+
+.works {
+  display: flex;
+  flex-direction: column !important;
+
+  .titleWorks {
+    margin: 10px 0;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: .15px;
+    display: flex;
+    align-items: center;
+
+    & > * {
+      margin-left: 10px;
+    }
+  }
+}
+
+.addIcon {
+  font-size: 20px;
+  color: $green-100;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column !important;
+
+  & > * {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-auto-rows: minmax(30px, auto);
+    margin-top: 10px;
+  }
+
+  .chip {
+    color: #1a1818;
+    background: #edf3ff;
+    margin: 2px;
+  }
+}
+
+.titleField {
+  font-weight: 400;
+  color: $gray-100;
+}

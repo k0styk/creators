@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {List} from '@material-ui/core';
 import CheckboxListItem from '../../shared/Checkbox/CheckboxListItem';
 import {inject} from "mobx-react";
@@ -27,7 +27,12 @@ const CheckList = withStyles((theme) => ({
 class CheckboxList extends React.Component {
     render() {
         const {checked, items, onCheckService} = this.props;
-        const listItem = items.map((item) => <CheckboxListItem {...item} checked={checked} onClick={onCheckService}/>)
+        const listItem = items.map((item) => <CheckboxListItem
+            {...item}
+            checked={checked}
+            onClick={onCheckService}
+            withPriceField={true}
+        />)
 
         return (
             <CheckList>

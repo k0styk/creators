@@ -22,6 +22,12 @@ const Page = loadable(
             case 'lk': {
                 return import('../components/PersonalPage');
             }
+            case 'chat': {
+                return import('../components/Chat');
+            }
+            case 'create': {
+                return import('../components/Create');
+            }
             default:
                 return;
         }

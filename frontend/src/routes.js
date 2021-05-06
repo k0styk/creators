@@ -35,6 +35,16 @@ export default () => {
                         path='/lk'
                         render={(props) => <Wrapper {...props} name={'lk'}/>}
                     />
+                    <Route
+                        exact={true}
+                        path='/chat/:id'
+                        render={(props) => <Wrapper {...props} name={'chat'}/>}
+                    />
+                    <Route
+                        exact={true}
+                        path='/create'
+                        render={(props) => <Wrapper {...props} name={'create'}/>}
+                    />
                     <Route render={() => <div>{'Miss'}</div>}/>
                 </Switch>
             </BrowserRouter>

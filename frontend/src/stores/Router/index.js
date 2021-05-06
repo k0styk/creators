@@ -13,7 +13,6 @@ class RouterStore {
             setRoute: action,
             getParam: action
         })
-
     }
 
     setRoute(location, match, history) {

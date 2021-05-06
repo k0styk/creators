@@ -6,10 +6,15 @@ $gray-100-40: rgba(146, 153, 167, .4);
 $main-blue: #1976d2;
 $main-blue-40: rgba(161, 165, 170, 0.4);
 
+$main-green: rgba(27, 194, 3, 0.96);
+$green-100: rgba(109, 170, 143, 0.96);
+
 :export {
   $main-blue: $main-blue;
   gray-100: $gray-100;
   gray-100-10: $gray-100-10;
   gray-100-40: $gray-100-40;
-  main-blue-40: $main-blue-40
+  main-blue-40: $main-blue-40;
+  main-green:$main-green;
+  green-100: $green-100;
 }
