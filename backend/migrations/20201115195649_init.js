@@ -52,23 +52,16 @@ exports.up = async (knex) => Promise.all([
             .notNullable();
         table
             .integer("userId")
-            .notNullable()
+            .notNullable();
         table
             .string("link")
             .notNullable();
         table
             .integer("typeId")
-            .notNullable()
+            .notNullable();
         table.timestamp("deleted_at");
         table.timestamps();
         table.index("id");
-    }),
-
-    knex.schema.createTable("videoTypes", table => {
-        table.increments("id")
-            .primary();
-        table.integer("name")
-            .notNullable();
     }),
 
     knex.schema.createTable("services", table => {
@@ -117,6 +110,8 @@ exports.up = async (knex) => Promise.all([
 
 exports.down = function (knex) {
     return Promise.all([
+        knex.schema.dropTable('sphereTypes'),
+        knex.schema.dropTable('promoTypes'),
         knex.schema.dropTable('promosServices'),
         knex.schema.dropTable('promos'),
         knex.schema.dropTable('services'),
