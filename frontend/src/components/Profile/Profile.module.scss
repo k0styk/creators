@@ -1,0 +1,72 @@
+@import '../../shared/style';
+
+.body {
+  display: flex;
+  flex-direction: row;
+  margin: 20px 0;
+
+  .leftSide {
+    display: flex;
+    flex-direction: column;
+
+    .avatar {
+      width: 280px;
+      height: 350px;
+      overflow: hidden;
+      border-radius: 4px;
+
+      img {
+        -o-object-fit: cover;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .connectButton {
+      margin-top: 20px;
+      background: $main-blue;
+    }
+  }
+
+  .user {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+
+    & > * {
+      display: grid;
+      grid-row-gap: 10px;
+      grid-template-columns: 1fr 3fr;
+      grid-auto-rows: minmax(30px, auto);
+      margin-top: 10px;
+    }
+
+    .titleField {
+      text-transform: none;
+      width: 180px;
+      color: $gray-100;
+    }
+
+    .chip {
+      color: #1a1818;
+      background: #edf3ff;
+      margin: 2px;
+    }
+
+    .userName {
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: .15px;
+      margin: 0;
+    }
+  }
+}
+
+.filterTitle {
+  margin: 20px 0;
+  font-weight: bold;
+  font-size: 18px;
+}

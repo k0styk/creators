@@ -1,0 +1,15 @@
+$gray-100: #9299a7;
+
+$gray-100-10: rgba(146, 153, 167, 0.1);
+$gray-100-40: rgba(146, 153, 167, .4);
+
+$main-blue: #1976d2;
+$main-blue-40: rgba(161, 165, 170, 0.4);
+
+:export {
+  $main-blue: $main-blue;
+  gray-100: $gray-100;
+  gray-100-10: $gray-100-10;
+  gray-100-40: $gray-100-40;
+  main-blue-40: $main-blue-40
+}
