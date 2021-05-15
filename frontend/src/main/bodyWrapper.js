@@ -5,12 +5,17 @@ import Header from './Header';
 import Footer from '../shared/Footer';
 
 class Body extends Component {
-  render() {
+    constructor(props) {
+        super(props);
+        this.state = { alerts: []};
+    }
+
+    render() {
     const {children} = this.props;
 
     return (
       <div className={s.wrapper}>
-        <Header/>
+          <Header/>
         <div className={s.content}>
           {children}
         </div>

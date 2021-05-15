@@ -1,17 +1,15 @@
 import React from 'react';
 import {inject} from "mobx-react";
 import s from './Create.module.scss';
-import {Tooltip,TextField, IconButton, Divider, Chip} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import YouTube from "react-youtube";
+import {Tooltip, TextField, IconButton, Divider, Chip, Button} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 import MediaBlock from './MediaBlock';
-import CreateStore from "../../stores/Create";
 
 @inject(({CreateStore}) => {
     return {
-        price: CreateStore.price
+        onChangeDesc: CreateStore.onChangeDesc,
+        desc: CreateStore.desc,
+        sumbit: CreateStore.sumbit
     };
 })
 class CreateView extends React.Component {
@@ -28,33 +26,33 @@ class CreateView extends React.Component {
     };
 
     render() {
+        const {onChangeDesc,  desc, sumbit} = this.props;
+
         return (
             <React.Fragment>
                 <div className={s.title}>
                     Создание кейса
                 </div>
                 <MediaBlock/>
-                <div className={s.services}>
-                    <div className={s.titleBox}>
-                        Укажите, что включено в эту стоимость
-                    </div>
-                    <div className={s.titleBox}>
-                        Вы также можете указать дополнительные услуги за дополнительную стоимость </div>
-                    <div>
-                        <CheckboxList/>
-                    </div>
-                    <div>
-                        <CheckboxList/>
-                    </div>
-                </div>
+                <CheckboxList/>
                 <Divider />
                 <TextField
+                    onChange={onChangeDesc}
+                    value={desc}
                     size={'small'}
                     label="Описание"
                     multiline
                     rows={4}
                     className={s.desc}
                     variant={"outlined"}/>
+
+                <Button
+                    variant='contained'
+                    size={'small'}
+                    color={'primary'}
+                    className={s.buttonSumbit}
+                    onClick={sumbit}
+                > Отправить кейс на проверку </Button>
             </React.Fragment>
         );
     }

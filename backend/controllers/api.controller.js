@@ -3,11 +3,11 @@ const {
     getUser,
     getCurrentUser,
     editUser,
-    getPromoTypes,
-    getPromoSpheres
+    getDataForCreate,
+    createPromo
 } = require('../service');
 
-const promiseFn = (fn, res, params) => new Promise((resolve) => fn(params).then((data) => {
+const promiseFn = (fn, res, params) => new Promise((resolve) => fn({params, knex}).then((data) => {
     if (data) {
         data.status && res.status(data.status);
         if (data.message) {
@@ -21,10 +21,10 @@ const promiseFn = (fn, res, params) => new Promise((resolve) => fn(params).then(
 }));
 
 module.exports = {
-    getUser: ({params}, res) => promiseFn(getUser, res, {params, knex}),
-    getCurrentUser: (params, res) => promiseFn(getCurrentUser, res, {params, knex}),
-    editUser: (params, res) => promiseFn(editUser, res, {params, knex}),
+    getUser: ({params}, res) => promiseFn(getUser, res, params),
+    getCurrentUser: (params, res) => promiseFn(getCurrentUser, res, params),
+    editUser: (params, res) => promiseFn(editUser, res, params),
 
-    getPromoTypes: (_, res) => promiseFn(getPromoTypes, res, {knex}),
-    getPromoSpheres: (_, res) => promiseFn(getPromoSpheres, res, {knex}),
+    getDataForCreate: (_, res) => promiseFn(getDataForCreate, res, knex),
+    createPromo: ({body}, res) => promiseFn(createPromo, res, body)
 };

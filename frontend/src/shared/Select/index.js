@@ -49,12 +49,8 @@ class Index extends React.Component {
     defaultPlaceholder = 'Выберете значение'
 
     render() {
-        const {placeholder, options, loadOptions} = this.props;
+        const {placeholder, options, loadOptions, defaultOptions} = this.props;
 
-        const colourOptions = [
-            {id: null, label: 'Не имеет значения'},
-            {id: 0, label: 'Введите город', isDisabled: true}
-            ]
         return (
             !loadOptions && <ReactSelect
                 className={s.select}
@@ -69,7 +65,7 @@ class Index extends React.Component {
                 styles={customStyles}
                 loadOptions={loadOptions}
                 cacheOptions
-                defaultOptions={colourOptions}
+                defaultOptions={defaultOptions}
             />
         )
     }

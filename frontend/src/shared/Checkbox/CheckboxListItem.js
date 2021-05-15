@@ -26,7 +26,7 @@ const ListItemIcon = withStyles((theme) => ({
     }
 }))(ListItemIconUi);
 
-export default function CheckboxList({id, title, price, tooltip, checked, onClick, withPriceField}) {
+export default function CheckboxList({id, name, price, tooltip, checked, onClick, withPriceField, onPriceChange, prices}) {
     const isChecked = checked.includes(id);
     return (
         <ListItem key={id} dense button>
@@ -42,16 +42,19 @@ export default function CheckboxList({id, title, price, tooltip, checked, onClic
 
             <ListItemText>
                 <div className={s.titleCheckbox}>
-                    <span> {title} </span>
+                    <span> {name} </span>
                     {
                         !withPriceField && <span className={s.priceService}> {price} руб. </span> ||
                         isChecked && withPriceField &&
                         (<div className={s.textFieldBlock}>
                             <span className={s.dopField}> Стоимость: </span>
                             <TextField
+                                value={prices[id]}
                                 size={'small'}
                                 color={'secondary'}
-                                className={s.textField}/>
+                                className={s.textField}
+                                onChange={({target})=>onPriceChange(target.value, id)}
+                            />
                             <span className={s.dopField}> руб. </span>
                         </div>)
                     }

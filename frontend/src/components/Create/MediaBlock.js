@@ -4,7 +4,7 @@ import s from './Create.module.scss';
 import {Tooltip, TextField, IconButton, Divider, Chip} from "@material-ui/core";
 import YouTube from "react-youtube";
 import Select from "../../shared/Select";
-import CreateStore from "../../stores/Create";
+import BlockField from "../../shared/BlockField";
 
 @inject(({CreateStore}) => {
     return {
@@ -15,7 +15,13 @@ import CreateStore from "../../stores/Create";
         types: CreateStore.types,
         spheres: CreateStore.spheres,
         changeAddress: CreateStore.changeAddress,
-        addresses: CreateStore.addresses
+        addresses: CreateStore.addresses,
+        city: CreateStore.city,
+        onChangeCity: CreateStore.onChangeCity,
+        onChangeTypes: CreateStore.onChangeTypes,
+        onChangeSpheres: CreateStore.onChangeSpheres,
+        selectedTypes:CreateStore.selectedTypes,
+        selectedSpheres: CreateStore.selectedSpheres
     };
 })
 class CreateView extends React.Component {
@@ -40,8 +46,18 @@ class CreateView extends React.Component {
             types,
             spheres,
             changeAddress,
-            addresses
+            addresses,
+            city,
+            onChangeCity,
+            onChangeSpheres,
+            onChangeTypes
         } = this.props;
+
+
+        const cityOptions = [
+            {id: 'helper', label: 'Введите город', isDisabled: true},
+            {id: 0, label: 'Не имеет значения'}
+        ]
 
         return (
             <div className={s.videoBlock}>
@@ -51,36 +67,46 @@ class CreateView extends React.Component {
                     opts={this.opts}
                 />
                 <div>
-                    <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на youtube
-                            </span>
-                        <TextField size={'small'} onChange={setYoutubeId}/>
-                    </div>
-                    <div className={s.field}>
-                            <span className={s.titleField}>
-                                Название
-                            </span>
-                        <TextField size={'small'} value={title} onChange={setTitle}/>
-                    </div>
-                    <div className={s.field}>
-                            <span className={s.titleField}>
-                                Сфера кейса
-                            </span>
-                        <Select size={'small'} options={spheres}/>
-                    </div>
-                    <div className={s.field}>
-                            <span className={s.titleField}>
-                                Тип видеоролиĸа
-                            </span>
-                        <Select size={'small'} options={types}/>
-                    </div>
-                    <div className={s.field}>
-                            <span className={s.titleField}>
-                                Город
-                            </span>
-                        <Select size={'small'} loadOptions={changeAddress} options={addresses}/>
-                    </div>
+                    <BlockField
+                        isRequiered={true}
+                        title={'Ссылка на youtube'}
+                        value={<TextField size={'small'}
+                                          onChange={setYoutubeId}/>}
+                    />
+                    <BlockField
+                        isRequiered={true}
+                        title={'Название'}
+                        value={<TextField size={'small'}
+                                          value={title}
+                                          onChange={setTitle}/>}
+                    />
+                    <BlockField
+                        isRequiered={true}
+                        title={'Сфера кейса'}
+                        value={<Select size={'small'}
+                                       options={spheres}
+                                       onChange={onChangeSpheres}
+                        />}
+                    />
+                    <BlockField
+                        isRequiered={true}
+                        title={'Тип видеоролиĸа'}
+                        value={<Select size={'small'}
+                                       options={types}
+                                       onChange={onChangeTypes}
+                        />}
+                    />
+                    <BlockField
+                        title={'Город'}
+                        value={<Select
+                            value={city}
+                            onChange={onChangeCity}
+                            size={'small'}
+                            loadOptions={changeAddress}
+                            options={addresses}
+                            defaultOptions={cityOptions}
+                        />}
+                    />
                 </div>
             </div>
         );

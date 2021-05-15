@@ -1,0 +1,18 @@
+@import '../style';
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-auto-rows: minmax(30px, auto);
+  margin-bottom: 20px;
+  column-gap: 50px;
+
+  .titleField {
+    color: $gray-100;
+    font-weight: 400;
+  }
+}
+
+.isRequiered{
+  color: $red
+}

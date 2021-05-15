@@ -1,4 +1,5 @@
 "use strict";
+const {videoTypes, spheres, services, testUser} = require('./migrationsData/initData');
 
 exports.up = async (knex) => Promise.all([
     knex.schema.createTable("users", table => {
@@ -31,34 +32,49 @@ exports.up = async (knex) => Promise.all([
     knex.schema.createTable("promoTypes", table => {
         table.increments("id")
             .primary();
-        table.integer("name")
+        table.string("name")
             .notNullable();
     }),
 
     knex.schema.createTable("sphereTypes", table => {
         table.increments("id")
             .primary();
-        table.integer("name")
+        table.string("name")
             .notNullable();
+    }),
+
+    knex.schema.createTable("cities", table => {
+        table.increments("id")
+            .primary();
+        table.string("name")
+            .notNullable()
+            .unique();
     }),
 
     knex.schema.createTable("promos", table => {
         table.increments("id")
             .primary();
-        table.string("name")
-            .notNullable();
+        table
+            .string("title")
+            .notNullable(),
+        table
+            .string("desc"),
         table.integer("productionTime")
-            .comment('Срок изготовления в днях')
-            .notNullable();
+            .comment('Срок изготовления в днях'),
         table
             .integer("userId")
             .notNullable();
         table
-            .string("link")
+            .integer("sphereId")
+            .notNullable();
+        table
+            .string("youtubeId")
             .notNullable();
         table
             .integer("typeId")
             .notNullable();
+        table
+            .integer("cityId")
         table.timestamp("deleted_at");
         table.timestamps();
         table.index("id");
@@ -67,14 +83,10 @@ exports.up = async (knex) => Promise.all([
     knex.schema.createTable("services", table => {
         table.increments("id")
             .primary();
-        table.integer("serviceId")
-            .notNullable();
         table.string("name")
             .notNullable();
-        table.string("tooltipLink")
-            .notNullable();
-        table.string("tooltipText")
-            .notNullable();
+        table.string("tooltipLink"),
+        table.string("tooltipText");
     }),
 
     knex.schema.createTable("promosServices", table => {
@@ -87,6 +99,9 @@ exports.up = async (knex) => Promise.all([
         table.integer("serviceId")
             .notNullable()
             .comment("Идентификатор услуги");
+        table.integer("type")
+            .notNullable()
+            .comment("Тип услуги");
         table
             .bigInteger("price")
             .notNullable()
@@ -104,7 +119,11 @@ exports.up = async (knex) => Promise.all([
         table.integer("status")
             .notNullable();
         table.index("clientId");
-    })
+    }),
+    knex.table('promoTypes').insert(videoTypes),
+    knex.table('sphereTypes').insert(spheres),
+    knex.table('services').insert(services),
+    knex.table('users').insert(testUser)
 ]);
 
 
@@ -117,5 +136,6 @@ exports.down = function (knex) {
         knex.schema.dropTable('services'),
         knex.schema.dropTable('deals'),
         knex.schema.dropTable('users'),
+        knex.schema.dropTable('cities'),
     ]);
 };

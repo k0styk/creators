@@ -3,12 +3,60 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Wrapper from './main/routWrapper';
 import {Provider} from "mobx-react";
 import RouterStore from './stores/Router';
+import 'react-notifications-component/dist/theme.css'
+import ReactNotification, { store } from 'react-notifications-component';
+
+export const Alert = ({type, title = ' ', message = ' '}) => {
+    const opt = {
+        container: "top-right",
+        dismiss: {
+            duration: 3000,
+            onScreen: true
+        },
+        showIcon: true
+    };
+
+    switch (type) {
+        case 'info':
+            store.addNotification({
+                title: title,
+                message: message,
+                type: "info",
+                ...opt
+            });
+
+        case 'success':
+            store.addNotification({
+                title: title,
+                message: message,
+                type: "success",
+                ...opt
+            });
+
+        case 'warning':
+            store.addNotification({
+                title: title,
+                message: message,
+                type: "warning",
+                ...opt
+            });
+
+        case 'error':
+            store.addNotification({
+                title: title,
+                message: message,
+                type: "danger",
+                ...opt
+            });
+    }
+}
 
 // eslint-disable-next-line react/display-name
 export default () => {
     return (
         <Provider RouterStore={RouterStore}>
             <BrowserRouter>
+                <ReactNotification/>
                 <Switch>
                     <Route
                         exact={true}
@@ -19,12 +67,12 @@ export default () => {
                         exact={true}
                         path='/search'
                         render={(props) => <Wrapper {...props} name={'search'}/>}
-                        />
+                    />
                     <Route
                         exact={true}
                         path='/promo/:id'
                         render={(props) => <Wrapper {...props} name={'promo'}/>}
-                        />
+                    />
                     <Route
                         exact={true}
                         path='/profile/:id'

@@ -3,6 +3,9 @@ import {withStyles} from '@material-ui/core/styles';
 import {List} from '@material-ui/core';
 import CheckboxListItem from '../../shared/Checkbox/CheckboxListItem';
 import {inject} from "mobx-react";
+import CreateStore from "../../stores/Create";
+import s from "./Create.module.scss";
+import {action} from "mobx";
 
 const CheckList = withStyles((theme) => ({
     root: {
@@ -17,27 +20,70 @@ const CheckList = withStyles((theme) => ({
     }
 }))(List);
 
-@inject(({PromoStore}) => {
+@inject(({CreateStore}) => {
     return {
-        checked: PromoStore.checked,
-        items: PromoStore.items,
-        onCheckService: PromoStore.onCheckService
+        checkedMainServices: CreateStore.checkedMainServices,
+        checkedAddServices: CreateStore.checkedAddServices,
+        services: CreateStore.services,
+        onCheckAddService:  CreateStore.onCheckAddService,
+        onCheckMainService:  CreateStore.onCheckMainService,
+        addServices: CreateStore.addServices,
+        onPriceChange:  CreateStore.onPriceChange,
+        prices: CreateStore.prices
     };
 })
 class CheckboxList extends React.Component {
     render() {
-        const {checked, items, onCheckService} = this.props;
-        const listItem = items.map((item) => <CheckboxListItem
+        const {
+            services,
+            checkedMainServices,
+            checkedAddServices,
+            onCheckAddService,
+            onCheckMainService,
+            addServices,
+            onPriceChange,
+            prices
+        } = this.props;
+
+        const listItemMainServices = services.map((item) => <CheckboxListItem
             {...item}
-            checked={checked}
-            onClick={onCheckService}
+            checked={checkedMainServices}
+            onClick={onCheckMainService}
             withPriceField={true}
+            onPriceChange={onPriceChange}
+            prices={prices}
+        />)
+
+        const listItemAddServices = addServices.map((item) => <CheckboxListItem
+            {...item}
+            checked={checkedAddServices}
+            onClick={onCheckAddService}
+            withPriceField={true}
+            onPriceChange={onPriceChange}
+            prices={prices}
         />)
 
         return (
-            <CheckList>
-                {listItem}
-            </CheckList>
+
+            <div className={s.services}>
+                <div className={s.titleBox}>
+                    Укажите, что включено в эту стоимость <span className={s.isRequiered}> * </span>
+                </div>
+                <div className={s.titleBox}>
+                    Вы также можете указать дополнительные услуги за дополнительную стоимость </div>
+                <div>
+                    <CheckList>
+                        {listItemMainServices}
+                    </CheckList>
+                </div>
+                <div>
+                    <CheckList>
+                        {listItemAddServices}
+                    </CheckList>
+                </div>
+            </div>
+
+
         );
     }
 }

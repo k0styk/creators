@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Filter.module.scss';
 import Select from '../Select';
-import TextField from '../TextField';
+import TextField from '../BlockField';
 import {Button} from '@material-ui/core';
 
 class Filter extends React.Component {

@@ -3,15 +3,14 @@
 const {getUser} = require('./users/getUser');
 const {getCurrentUser} = require('./users/getCurrentUser');
 const {editUser} = require('./users/editUser');
-const {getPromoTypes} = require('./promo/getTypes');
-const {getPromoSpheres} = require('./promo/getSpheres');
-
+const {getDataForCreate} = require('./promo/getDataForCreate');
+const {createPromo} = require('./promo/createPromo');
 
 module.exports = {
     getUser,
     getCurrentUser,
     editUser,
 
-    getPromoTypes,
-    getPromoSpheres
+    getDataForCreate,
+    createPromo
 };
