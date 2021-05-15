@@ -6,10 +6,12 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import YouTube from "react-youtube";
 import CheckboxList from "./CheckboxList";
+import MediaBlock from './MediaBlock';
+import CreateStore from "../../stores/Create";
 
-@inject(({PromoStore}) => {
+@inject(({CreateStore}) => {
     return {
-        price: PromoStore.price
+        price: CreateStore.price
     };
 })
 class CreateView extends React.Component {
@@ -31,45 +33,7 @@ class CreateView extends React.Component {
                 <div className={s.title}>
                     Создание кейса
                 </div>
-                <div className={s.videoBlock}>
-                    <YouTube
-                        className={s.video}
-                        videoId={'X_8O-RvbYwM'}
-                        opts={this.opts}
-                    />
-                    <div>
-                        <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на ютуб
-                            </span>
-                            <TextField size={'small'}/>
-                        </div>
-                        <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на ютуб
-                            </span>
-                            <TextField size={'small'}/>
-                        </div>
-                        <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на ютуб
-                            </span>
-                            <TextField size={'small'}/>
-                        </div>
-                        <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на ютуб
-                            </span>
-                            <TextField size={'small'}/>
-                        </div>
-                        <div className={s.field}>
-                            <span className={s.titleField}>
-                                Ссылка на ютуб
-                            </span>
-                            <TextField size={'small'}/>
-                        </div>
-                    </div>
-                </div>
+                <MediaBlock/>
                 <div className={s.services}>
                     <div className={s.titleBox}>
                         Укажите, что включено в эту стоимость

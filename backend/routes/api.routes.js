@@ -13,4 +13,6 @@ router.get('/users/getUser/:id', apiController.getUser);
 router.get('/users/getCurrentUser', apiController.getCurrentUser);
 router.put('/users/editUser', apiController.editUser);
 
+router.get('/promos/getTypes', apiController.getPromoTypes);
+router.get('/promos/getSpheres', apiController.getPromoSpheres);
 module.exports = router;

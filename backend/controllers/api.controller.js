@@ -2,7 +2,9 @@ const knex = require("../knex/index");
 const {
     getUser,
     getCurrentUser,
-    editUser
+    editUser,
+    getPromoTypes,
+    getPromoSpheres
 } = require('../service');
 
 const promiseFn = (fn, res, params) => new Promise((resolve) => fn(params).then((data) => {
@@ -21,5 +23,8 @@ const promiseFn = (fn, res, params) => new Promise((resolve) => fn(params).then(
 module.exports = {
     getUser: ({params}, res) => promiseFn(getUser, res, {params, knex}),
     getCurrentUser: (params, res) => promiseFn(getCurrentUser, res, {params, knex}),
-    editUser: (params, res) => promiseFn(editUser, res, {params, knex})
+    editUser: (params, res) => promiseFn(editUser, res, {params, knex}),
+
+    getPromoTypes: (_, res) => promiseFn(getPromoTypes, res, {knex}),
+    getPromoSpheres: (_, res) => promiseFn(getPromoSpheres, res, {knex}),
 };

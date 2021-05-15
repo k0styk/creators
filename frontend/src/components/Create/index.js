@@ -1,7 +1,8 @@
 import React from 'react';
 import {Provider} from "mobx-react";
-import PromoStore from '../../stores/Promo';
+import CreateStore from '../../stores/Create';
 import CreateView from './CreateView';
+import PromoStore from '../../stores/Promo';
 import {inject} from 'mobx-react';
 
 @inject(({RouterStore}) => {
@@ -12,12 +13,13 @@ class PersonalPage extends React.Component {
         super(props);
         const {RouterStore} = this.props;
 
-        this.PromoStore = new PromoStore({RouterStore});
+        this.CreateStore = new CreateStore({RouterStore});
+        this.PromoStore= new PromoStore({RouterStore});
     }
 
     render() {
         return (
-            <Provider PromoStore={this.PromoStore}>
+            <Provider PromoStore={this.PromoStore} CreateStore={this.CreateStore}>
                   <CreateView />
             </Provider>
         );
