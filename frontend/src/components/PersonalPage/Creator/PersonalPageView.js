@@ -1,112 +1,191 @@
 import React from 'react';
 import {inject} from "mobx-react";
 import s from './PersonalPage.module.scss';
-import {Tooltip, IconButton, Divider, Chip} from "@material-ui/core";
-import Card from "../../../shared/PromoCard";
-import AddIcon from '@material-ui/icons/Add';
-import Cards from "../../../shared/PromoCard/Cards";
+import {Tooltip, IconButton, Button, Chip} from "@material-ui/core";
+import TextField from "../../../shared/TextField";
 import EditIcon from '@material-ui/icons/Edit';
+import PersonIcon from '@material-ui/icons/Person';
+import formatPhone from '../../../tools/phoneTools';
+import PromosBlock from "./PromosBlock";
+import {toJS} from 'mobx';
+import Dropzone from 'react-dropzone'
+import PublishIcon from '@material-ui/icons/Publish';
+import DoneIcon from '@material-ui/icons/Done';
 
 @inject(({PersonalPageStore}) => {
     return {
-        price: PersonalPageStore.price
-    };
+        user: toJS(PersonalPageStore.user),
+        spheres: PersonalPageStore.spheres,
+        promosCount: PersonalPageStore.promosCount,
+        promos: PersonalPageStore.promos,
+        isEdit: PersonalPageStore.isEdit,
+        toggleEdit: PersonalPageStore.toggleEdit,
+        setUserField: PersonalPageStore.setUserField,
+        loadFiled: PersonalPageStore.loadFiled,
+        updateUser: PersonalPageStore.updateUser
+    }
 })
 class PersonalPage extends React.Component {
     render() {
-        const {price} = this.props;
-        const cards = [];
-        for (let i = 1; i < 3; i++) {
-            cards.push(<Card withActions={true} withIncludes={false}/>);
-        }
+        const {
+            user,
+            spheres,
+            promosCount,
+            isEdit,
+            toggleEdit,
+            setUserField,
+            loadFiled,
+            updateUser
+        } = this.props;
 
         return (
-            <div className={s.content}>
-                <div>
-                    <div className={s.userName}>
-                        <span> Алексей Стен</span>
-                        <Tooltip placement="right" title={'Редактировать'}>
-                            <IconButton size='small' color="primary">
-                                <EditIcon className={s.addIcon}/>
-                            </IconButton>
-                        </Tooltip>
-                    </div>
-                    <div className={s.avatar}>
-                        <img
-                            src={'https://sun9-37.userapi.com/impg/DtbybJ1pculLMHN29oXM-HzAazNyjJ8hzNS7sw/p5wakIgVpaY.jpg?size=1350x1800&quality=96&sign=db049c6407e81ce1fe9c4f68f81a2f53&type=album'}
-                        />
-                    </div>
-                    <div className={s.field}>
-                        <span className={s.titleField}> Город </span>
-                        <span> Москва</span>
-                    </div>
-                    <div className={s.field}>
-                        <span className={s.titleField}> Телефон </span>
-                        <span>  +7 999 999 99 99 </span>
-                    </div>
-                    <div className={s.field}>
-                        <span className={s.titleField}> Почта </span>
-                        <span>  zakazchik@mail.ru </span>
-                    </div>
-                    <div className={s.field}>
-                        <span className={s.titleField}> Баланс </span>
-                        <span>  28 000 руб </span>
-                    </div>
+            <React.Fragment>
+                <div className={s.userName}>
+                    <span>
+                        {`${user.secondName} ${user.firstName} ${user.lastName} `}
+                    </span>
+                    {
+                        !isEdit && (
+                            <Tooltip
+                                onClick={toggleEdit}
+                                placement="right" title={'Редактировать'}>
+                                <IconButton
+                                    size='small'
+                                    color="primary">
+                                    <EditIcon className={s.addIcon}/>
+                                </IconButton>
+                            </Tooltip>) || (
+                            <Button className={s.saveButton}
+                                    size='small'
+                                    color="primary"
+                                    onClick={updateUser}
+                            >
+                                <DoneIcon className={s.addIcon}/>
+                                Сохранить
+                            </Button>
+                        )
+                    }
                 </div>
-                <div>
-                    <div className={s.userInfo}>
-                        <div>
-                            <span className={s.titleField}>Деятельность </span>
-                            <span>
-                            <Chip className={s.chip} label='фото' size="small"/>
-                        </span>
+                <div className={s.content}>
+                    <div>
+                        <div className={s.avatar}>
+                            {
+                                isEdit && (
+                                    <Dropzone onDrop={loadFiled}>
+                                        {({getRootProps, getInputProps}) => (
+                                            <section>
+                                                <div className={s.loadBlock} {...getRootProps()}>
+                                                    <input {...getInputProps()} />
+                                                    <p>Загрузить фотографию </p>
+                                                    <PublishIcon/>
+                                                </div>
+                                            </section>
+                                        )}
+                                    </Dropzone>
+                                )
+                            }
+                            {
+                                user.photoPath && <img src={user.photoPath}/>
+                                || <PersonIcon className={s.noPhoto}/>
+                            }
                         </div>
-                        <div>
-                            <span className={s.titleField}>Сферы клиентов  </span>
-                            <span>
-                            <Chip className={s.chip} size="small" label='недвижимость'/>
-                        </span>
+
+                        <div className={s.field}>
+                            <span className={s.titleField}> Город </span>
+                            <span> {user.city} </span>
                         </div>
-                        <div>
-                            <span className={s.titleField}>Количество кейсов  </span>
-                            <span className={s.valueField}>
-                             <Chip className={s.chip} size="small" label='25'/>
-                        </span>
+                        <div className={s.field}>
+                            <span className={s.titleField}> Телефон </span>
+                            <span>  {user.phone && formatPhone.formatPhone(user.phone)} </span>
                         </div>
-                        <div><span className={s.titleField}>Средняя стоимость работ </span>
-                            <span>
+                        <div className={s.field}>
+                            <span className={s.titleField}> Почта </span>
+                            <span> {user.email} </span>
+                        </div>
+                        <div className={s.field}>
+                            <span className={s.titleField}> Баланс </span>
+                            <span>  28 000 руб </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div className={s.userInfo}>
+                            {
+                                isEdit && <React.Fragment>
+                                    <div>
+                                        <span className={s.titleField}> Фамилия </span>
+                                        <TextField
+                                            onChange={({target}) => setUserField('secondName', target.value)}
+                                            value={user.secondName}
+                                            multiline={true}
+                                        />
+                                    </div>
+                                    <div>
+                                        <span className={s.titleField}> Имя </span>
+                                        <TextField
+                                            onChange={({target}) => setUserField('firstName', target.value)}
+                                            value={user.firstName}
+                                            multiline={true}
+                                        />
+                                    </div>
+                                    <div>
+                                        <span className={s.titleField}> Отчество </span>
+                                        <TextField
+                                            onChange={({target}) => setUserField('lastName', target.value)}
+                                            value={user.lastName}
+                                            multiline={true}
+                                        />
+                                    </div>
+                                </React.Fragment>
+                            }
+
+                            <div>
+                                <span className={s.titleField}>Деятельность </span>
+                                <span>
+                                    <Chip className={s.chip} label='видео' size="small"/>
+                                </span>
+                            </div>
+                            <div>
+                                <span className={s.titleField}>Сферы клиентов  </span>
+                                <span>
+                            {
+                                spheres.map((item) =>
+                                    <Chip key={item} className={s.chip} label={item} size="small"/>
+                                )
+                            }
+                        </span>
+                            </div>
+                            <div>
+                                <span className={s.titleField}>
+                                    Количество кейсов
+                                </span>
+                                <span className={s.valueField}>
+                             <Chip className={s.chip} size="small" label={promosCount || 'Не указано'}/>
+                        </span>
+                            </div>
+                            <div>
+                                <span className={s.titleField}>Средняя стоимость работ </span>
+                                <span>
                             <Chip className={s.chip} size="small" label='28 000 руб.'/>
                         </span>
+                            </div>
+                            <div>
+                                <span className={s.titleField}> О себе </span>
+                                {
+                                    !isEdit && (<span>{user.about || 'Не указано'}</span>)
+                                    || (
+                                        <TextField
+                                            onChange={({target}) => setUserField('about', target.value)}
+                                            value={user.about}
+                                            multiline={true}
+                                        />
+                                    )
+                                }
+                            </div>
                         </div>
-                        <div><span className={s.titleField}> О себе </span>
-                            <span>
-                            В основном занимаюсь видео для строительных компаний уже более 3 лет.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce convallis
-                    pellentesque metus id lacinia. Nunc dapibus pulvinar auctor. Duis nec sem at orci
-                    commodo viverra id in ipsum.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce convallis
-                    pellentesque metus id lacinia. Nunc dapibus pulvinar auctor. Duis nec sem at orci
-                    commodo viverra id in ipsum.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </span>
-                        </div>
-                    </div>
-                    <div className={s.works}>
-                            <span className={s.titleWorks}> Ваши кейсы
-                                <Tooltip placement="right" title={'Создать кейс'}>
-                                    <IconButton size='small' color="primary">
-                                    <AddIcon className={s.addIcon}/>
-                                </IconButton>
-                                </Tooltip>
-                                 </span>
-                        <Divider/>
-                        <Cards promos={cards}/>
-                        <span className={s.titleWorks}>Исполненные заказы </span>
-                        <Divider/>
-                        <Cards promos={cards}/>
+                        <PromosBlock/>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }

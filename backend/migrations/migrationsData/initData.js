@@ -35,21 +35,8 @@ const services = [
     {name: 'Озвучĸа'},
 ];
 
-const testUser = {
-    firstName: 'firstName',
-    lastName: 'lastName',
-    password: 'password',
-    phone: 8922796092,
-    secondName: 'secondName',
-    type: 1,
-    cityId: 1,
-    email: 'email'
-};
-
-
 module.exports = {
     spheres,
     videoTypes,
-    services,
-    testUser
+    services
 };

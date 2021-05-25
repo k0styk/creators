@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import loadable from '@loadable/component';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Body from './bodyWrapper';
+import s from './main.module.scss';
 
 const Page = loadable(
     ({name}) => {
@@ -32,7 +33,7 @@ const Page = loadable(
                 return;
         }
     }, {
-        fallback: (<CircularProgress/>),
+        fallback: (<div className={s.loader}> <CircularProgress/> </div>),
         cacheKey: ({name}) => name,
     },
 );

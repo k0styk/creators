@@ -6,10 +6,9 @@ module.exports = {
         client: 'pg',
         connection: {
             host: 'localhost',
-            database: 'creators',
-            user: 'test-user',
-            password: '3133',
-            port: '5432'
+            database: 'develop',
+            user: 'postgres',
+            port: '5433'
         },
         pool: {
             min: 2,

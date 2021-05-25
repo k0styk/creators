@@ -1,49 +1,105 @@
 import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import API from "../../api";
 
 class PersonalPageStore {
     routerStore = {};
-    items = [
-        {title: 'Съемка', price: 2000, id: 1, tooltip: 1},
-        {title: 'Монтаж', price: 6000, id: 2, tooltip: 1},
-        {title: 'Сценарий', price: 6500, id: 3, tooltip: 1},
-        {title: 'Озвучка', price: 7000, id: 4, tooltip: 1},
-    ]
-    checked = [];
-    price = '';
+    user = {};
+    spheres = [];
+    promos = [];
+    promosCount = 0;
+    isEdit = false;
 
     constructor({RouterStore}) {
         makeObservable(this, {
-            promoId: computed,
-            checked: observable,
-            onCheckService: action,
-            price: observable,
-            changePrice: action,
+            user: observable,
+            promos: observable,
+            promosCount: observable,
+            spheres: observable,
+            setUser: action,
+            initData: action,
+            isEdit: observable,
+            toggleEdit: action,
+            setUserField: action
         })
         this.routerStore = RouterStore || {};
+        this.getData();
+        console.log('34');
     }
 
-    get promoId() {
-        console.log(toJS(this.routerStore));
+    getData = async () => {
+        try {
+            const {
+                data: {
+                    user,
+                    promos,
+                    promosCount,
+                    spheres
+                }
+            } = await API.get('users/getPersonalPage');
 
-        return Number(get(get(this.routerStore.match, 'params'), 'id')) || null;
+            this.setUser(user);
+            this.initData({spheres, promos, promosCount});
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    onCheckService = (id) => {
-        if (this.checked.includes(id)) {
-            this.checked = this.checked.filter((item) => item !== id)
-        } else this.checked = [...this.checked, id];
-
-        this.changePrice();
+    setUser = (user) => {
+        this.user = user;
     }
 
-    changePrice = () => {
-        let sumPrice = 0;
-        this.items.forEach(({id, price}) => {
-            if (this.checked.includes(id)) {
-                sumPrice += price;
-            }
-        })
-        this.price = sumPrice;
+    initData = ({spheres, promos, promosCount}) => {
+        this.spheres = spheres;
+        this.promos = promos;
+        this.promosCount = promosCount;
+    }
+
+    toggleEdit = () => {
+        this.isEdit = !this.isEdit;
+    }
+
+    setUserField = (field, value) => {
+        this.user[field] = value;
+    }
+
+    loadFiled = async(files) => {
+        const data = new FormData();
+        console.log(files);
+        data.append('file', files[0]);
+
+        try {
+            const {data: {file}} = await API.post('upload', data);
+
+            this.setUserField('photoPath', file)
+        } catch (e) {
+            console.log(e);
+        }
+
+    }
+
+    updateUser = async() => {
+        const {
+            about,
+            photoPath,
+            lastName,
+            secondName,
+            firstName
+        } = this.user;
+
+        try {
+            const {data} = await API.post('users/editUser', {
+                about,
+                photoPath,
+                lastName,
+                secondName,
+                firstName
+            });
+
+            this.toggleEdit();
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 
 }

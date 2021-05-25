@@ -44,11 +44,9 @@ export default function Header({userType = true}) {
         </div>
         <div>
           <IconButton
-            size={'large'}
           > <NotificationsNoneIcon className={s.favIcon}/>
           </IconButton>
           <IconButton
-            size={'large'}
           > <FavoriteBorderIcon className={s.favIcon}/>
           </IconButton>
           <Button onClick={handleClick} className={s.userButton}>

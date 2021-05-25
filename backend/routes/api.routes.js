@@ -1,19 +1,14 @@
 const router = require('express-promise-router')();
-const apiController = require('../controllers/api.controller');
+const {getMethod} = require('../controllers/api.controller');
 
-router.get('/api', (req, res) => {
-    res.status(200).send({
-        success: 'true',
-        message: 'Started!',
-        version: '1.0.0',
-    });
-});
+router.get('/users/getUser/:id', (query) => getMethod('getUser', query));
+router.get('/users/getCurrentUser',(query) => getMethod('getCurrentUser', query));
+router.post('/users/editUser', (query) => getMethod('editUser', query));
+router.get('/users/getPersonalPage',(query) => getMethod('getPersonalPage', query));
 
-router.get('/users/getUser/:id', apiController.getUser);
-router.get('/users/getCurrentUser', apiController.getCurrentUser);
-router.put('/users/editUser', apiController.editUser);
+router.get('/promos/getDataForCreate',(query) => getMethod('getDataForCreate', query));
+router.post('/promos/create', (query) => getMethod('createPromo', query));
 
-router.get('/promos/getDataForCreate', apiController.getDataForCreate);
-router.post('/promos/create', apiController.createPromo);
+router.post('/upload', (query) => getMethod('upload', query));
 
 module.exports = router;

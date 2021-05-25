@@ -114,7 +114,7 @@ exports.up = async (knex) => Promise.all([
             .primary();
         table.integer("clientId")
             .notNullable();
-        table.integer("implementerId")
+        table.integer("creatorId")
             .notNullable();
         table.integer("status")
             .notNullable();
@@ -122,8 +122,7 @@ exports.up = async (knex) => Promise.all([
     }),
     knex.table('promoTypes').insert(videoTypes),
     knex.table('sphereTypes').insert(spheres),
-    knex.table('services').insert(services),
-    knex.table('users').insert(testUser)
+    knex.table('services').insert(services)
 ]);
 
 

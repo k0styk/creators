@@ -6,7 +6,7 @@ const BlockField = ({title, value, isRequiered}) => {
         <div className={s.field}>
             <span className={s.titleField}>
             {title}
-                {isRequiered && <span className={s.isRequiered}> * </span>}
+                {isRequiered && <span className={s.isRequiered}>*</span>}
             </span>
             {value}
         </div>

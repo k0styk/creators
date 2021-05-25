@@ -33,7 +33,6 @@ class Header extends React.Component {
               <div className={s.user}>
                 <IconButton
                   color={'primary'}
-                  size={'large'}
                 > <FavoriteBorderIcon className={s.favIcon}/>
                 </IconButton>
                 <Avatar
