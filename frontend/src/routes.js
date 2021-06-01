@@ -24,7 +24,7 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
                 type: "info",
                 ...opt
             });
-
+            break;
         case 'success':
             store.addNotification({
                 title: title,
@@ -32,6 +32,7 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
                 type: "success",
                 ...opt
             });
+            break;
 
         case 'warning':
             store.addNotification({
@@ -40,7 +41,7 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
                 type: "warning",
                 ...opt
             });
-
+            break;
         case 'error':
             store.addNotification({
                 title: title,

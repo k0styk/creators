@@ -164,6 +164,8 @@ class CreateStore {
             prices
         } = this;
 
+        console.log(title);
+
         const res = {
             city,
             desc,

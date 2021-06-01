@@ -1,5 +1,4 @@
 import axios from "axios";
-import CreateStore from "../stores/Create";
 
 const token = "518f96d435704b748e40b3f6a0aa18efea327334";
 
@@ -13,7 +12,7 @@ const api = axios.create({
 });
 
 const getAddress = async (query) => {
-    let t = [];
+    let cities = [];
     try {
         const {data: {suggestions}} = await api.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
             JSON.stringify({
@@ -27,7 +26,7 @@ const getAddress = async (query) => {
                 "to_bound": {"value": "city"},
             }));
 
-        t = suggestions.map(({value, data}) =>
+        cities = suggestions.map(({value, data}) =>
         {
             return {
                 label: value,
@@ -35,12 +34,9 @@ const getAddress = async (query) => {
             }
         });
 
-    } catch (e) {
-        console.log(e);
+    } catch (_) {
     }
-
-    console.log(t);
-    return t;
+    return cities;
 }
 
 

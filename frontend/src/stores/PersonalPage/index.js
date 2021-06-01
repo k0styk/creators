@@ -10,6 +10,7 @@ class PersonalPageStore {
     isEdit = false;
 
     constructor({RouterStore}) {
+        console.log(PersonalPageStore);
         makeObservable(this, {
             user: observable,
             promos: observable,

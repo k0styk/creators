@@ -1,8 +1,7 @@
 const {serviceType} = require('../../enums');
 
 module.exports = {
-    createPromo: async ({params, knex}) => {
-        console.log(params);
+    createPromo: async ({body, knex}) => {
         const response = {};
         const {
             city,
@@ -13,7 +12,7 @@ module.exports = {
             title,
             mainServices = [],
             addServices = [],
-        } = params;
+        } = body;
 
         let cityId = null;
 

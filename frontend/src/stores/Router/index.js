@@ -15,7 +15,7 @@ class RouterStore {
         })
     }
 
-    setRoute(location, match, history) {
+    setRoute(location, match, history){
         this.location = location;
         this.match = match;
         this.history = history;

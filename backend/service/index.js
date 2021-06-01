@@ -7,8 +7,12 @@ const {getPersonalPage} = require('./users/getPersonalPage');
 
 const {getDataForCreate} = require('./promo/getDataForCreate');
 const {createPromo} = require('./promo/createPromo');
-const {upload} = require('./upload');
+const {getParameters} = require('./promo/getParameters');
+const {getRecommendations} = require('./promo/getRecommendations');
+const {searchPromos} = require('./promo/searchPromos');
 
+
+const {upload} = require('./upload');
 module.exports = {
     getUser,
     getCurrentUser,
@@ -17,6 +21,9 @@ module.exports = {
 
     getDataForCreate,
     createPromo,
+    getParameters,
+    getRecommendations,
+    searchPromos,
 
     upload
 };

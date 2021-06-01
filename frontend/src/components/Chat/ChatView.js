@@ -1,7 +1,6 @@
 import React from 'react';
-import {inject} from "mobx-react";
 import s from './Chat.module.scss';
-import {Tooltip, IconButton, Divider, Avatar, Button} from "@material-ui/core";
+import {Divider, Avatar, Button} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 
 // @inject(({ChatStore}) => {
