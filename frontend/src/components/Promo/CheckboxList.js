@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles} from '@material-ui/core/styles';
 import {List} from '@material-ui/core';
-import CheckboxListItem from '../../shared/Checkbox/CheckboxListItem';
+import CheckboxListItem from '../../shared/CheckboxPrice/CheckboxListItem';
 import {inject} from "mobx-react";
 
 const CheckList = withStyles((theme) => ({

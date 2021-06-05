@@ -2,7 +2,12 @@ import React from 'react';
 import {inject} from "mobx-react";
 import s from './Promo.module.scss';
 import YouTube from "react-youtube";
-import {Avatar, Button, Link, Paper} from "@material-ui/core";
+import {
+    Avatar,
+    Button,
+    Link,
+    Paper
+} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 
 @inject(({PromoStore}) => {
@@ -16,7 +21,6 @@ import CheckboxList from "./CheckboxList";
     };
 })
 class Search extends React.Component {
-    //opts вынести в шаред
     opts = {
         playerVars: {
             rel: 0,
@@ -34,9 +38,7 @@ class Search extends React.Component {
             price,
             productionTime,
             user,
-            youtubeId,
-            sphere,
-            type
+            youtubeId
         } = this.props;
 
         return (
@@ -49,10 +51,17 @@ class Search extends React.Component {
                 <div className={s.info}>
                     <div className={s.header}>
                         <div>
-                            <span className={s.titleS}> {type}  </span>
-                            <span className={s.descTitle}>  {sphere} </span>
+                            <span className={s.titleS}>
+                                Стоимость: {price} руб.
+                            </span>
+                            <span className={s.descTitle}>
+                                Срок изготовления: {productionTime}
+                            </span>
                         </div>
-                        <Link className={s.user} href={`/profile/${user.id}`}>
+                        <Link
+                            className={s.user}
+                            href={`/profile/${user.id}`}
+                        >
                             {user.firstName}
                             <Avatar
                                 alt={user.firstName}
@@ -61,8 +70,6 @@ class Search extends React.Component {
                         </Link>
                     </div>
                     <div>
-                        <span className={s.titleS}> Стоимость: {price} руб. </span>
-                        <span className={s.descTitle}> Срок изготовления: {productionTime} </span>
                     </div>
                     <span className={s.titleBox}>
                         Что включено
@@ -74,7 +81,6 @@ class Search extends React.Component {
                         color={'primary'}
                         className={s.buttonLink}
                     >
-
                         Перейти к странице заказа
                     </Button>
                 </div>

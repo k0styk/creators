@@ -25,7 +25,7 @@ class ProfileService {
         this.routerStore = RouterStore || {};
     }
 
-    get promoId() {
+    get userId() {
         console.log(toJS(this.routerStore));
 
         return Number(get(get(this.routerStore.match, 'params'), 'id')) || null;

@@ -20,7 +20,8 @@ module.exports = {
                          'id', "users"."id",
                         'firstName', "firstName",
                         'lastName',  "lastName",
-                        'secondName', "secondName"
+                        'secondName', "secondName",
+                        'photoPath', "photoPath"
                     ) as user`))
                 .select(knex.raw(`
                     json_build_object(
