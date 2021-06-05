@@ -5,11 +5,15 @@ import Card from './index';
 class Recommendations extends React.Component {
     render() {
         const {promos = [], ...restProps} = this.props;
-        const cardElements = promos.map((item) => <Card key = {item.youtubeId} {...item} {...restProps}/>);
-
-        return (
-                <div className={s.cards}>{cardElements}</div>
+        const cardElements = promos.map((item) =>
+            <Card
+                key={item.id}
+                {...item}
+                {...restProps}
+            />
         );
+
+        return <div className={s.cards}>{cardElements}</div>;
     }
 }
 

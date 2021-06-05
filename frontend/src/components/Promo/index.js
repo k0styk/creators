@@ -15,6 +15,10 @@ class Search extends React.Component {
         this.PromoStore = new PromoStore({RouterStore});
     }
 
+    componentWillUnmount() {
+        this.PromoStore.close();
+    }
+
     render() {
 
         return (

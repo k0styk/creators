@@ -2,12 +2,17 @@ import React from 'react';
 import {inject} from "mobx-react";
 import s from './Promo.module.scss';
 import YouTube from "react-youtube";
-import {Avatar, Button, Paper} from "@material-ui/core";
+import {Avatar, Button, Link, Paper} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 
 @inject(({PromoStore}) => {
     return {
-        price: PromoStore.price
+        price: PromoStore.price,
+        productionTime: PromoStore.promo.productionTime,
+        type: PromoStore.promo.type,
+        sphere: PromoStore.promo.sphere,
+        youtubeId: PromoStore.promo.youtubeId,
+        user: PromoStore.promo.user || {}
     };
 })
 class Search extends React.Component {
@@ -25,35 +30,53 @@ class Search extends React.Component {
     };
 
     render() {
-        const {price} = this.props;
+        const {
+            price,
+            productionTime,
+            user,
+            youtubeId,
+            sphere,
+            type
+        } = this.props;
+
         return (
             <Paper className={s.content} elevation={3}>
                 <YouTube
                     className={s.iframe}
-                    videoId={'X_8O-RvbYwM'}
+                    videoId={youtubeId}
                     opts={this.opts}
                 />
                 <div className={s.info}>
                     <div className={s.header}>
                         <div>
-                            <span className={s.price}> Стоимость: {price} руб. </span>
-                            <span className={s.dates}> Срок изготовления: 14 дней </span>
+                            <span className={s.titleS}> {type}  </span>
+                            <span className={s.descTitle}>  {sphere} </span>
                         </div>
-                        <div className={s.user}>
-                            Cindy Baker
+                        <Link className={s.user} href={`/profile/${user.id}`}>
+                            {user.firstName}
                             <Avatar
-                                alt="Cindy Baker"
-                                src="https://sun9-37.userapi.com/impg/DtbybJ1pculLMHN29oXM-HzAazNyjJ8hzNS7sw/p5wakIgVpaY.jpg?size=1350x1800&quality=96&sign=db049c6407e81ce1fe9c4f68f81a2f53&type=album"/>
-
-                        </div>
+                                alt={user.firstName}
+                                src={user.photoPath}
+                            />
+                        </Link>
                     </div>
-                    <span className={s.titleBox}>Что включено </span> <CheckboxList/>
+                    <div>
+                        <span className={s.titleS}> Стоимость: {price} руб. </span>
+                        <span className={s.descTitle}> Срок изготовления: {productionTime} </span>
+                    </div>
+                    <span className={s.titleBox}>
+                        Что включено
+                    </span>
+                    <CheckboxList/>
                     <Button
                         variant='contained'
                         size={'small'}
                         color={'primary'}
                         className={s.buttonLink}
-                    > Перейти к странице заказа </Button>
+                    >
+
+                        Перейти к странице заказа
+                    </Button>
                 </div>
             </Paper>
         );

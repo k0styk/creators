@@ -9,7 +9,7 @@ import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 
 const useStyles = makeStyles((theme) => ({
   appBarClient: {
-    background: '#1976d2',
+    background: '#288ad6',
     padding: '0 10%',
   },
   appBarCreator: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({userType = true}) {
+export default function Header({userType = false}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -34,7 +34,7 @@ export default function Header({userType = true}) {
   };
 
   return (
-    <AppBar className={userType && classes.appBarCreator || classes.appBarClient} position="static">
+    <AppBar className={userType && classes.appBarCreator || classes.appBarClient} position="fixed">
       <Toolbar className={s.toolbar}>
         <div>
           <IconButton edge="start" color="inherit" aria-label="menu">

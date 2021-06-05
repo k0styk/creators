@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import s from './Checkbox.module.scss';
+import formatPrice from '../../tools/formatPrice';
 
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
@@ -26,7 +27,7 @@ const ListItemIcon = withStyles((theme) => ({
     }
 }))(ListItemIconUi);
 
-export default function CheckboxList({id, name, price, tooltip, checked, onClick, withPriceField, onPriceChange, prices}) {
+export default function CheckboxList({id, name, price, tooltipText, checked, onClick, withPriceField, onPriceChange, prices}) {
     const isChecked = checked.includes(id);
     return (
         <ListItem key={id} dense button>
@@ -44,7 +45,10 @@ export default function CheckboxList({id, name, price, tooltip, checked, onClick
                 <div className={s.titleCheckbox}>
                     <span> {name} </span>
                     {
-                        !withPriceField && <span className={s.priceService}> {price} руб. </span> ||
+                        !withPriceField &&
+                        <span className={s.priceService}>
+                            {formatPrice(price)} руб.
+                        </span> ||
                         isChecked && withPriceField &&
                         (<div className={s.textFieldBlock}>
                             <span className={s.dopField}> Стоимость: </span>
@@ -53,7 +57,7 @@ export default function CheckboxList({id, name, price, tooltip, checked, onClick
                                 size={'small'}
                                 color={'secondary'}
                                 className={s.textField}
-                                onChange={({target})=>onPriceChange(target.value, id)}
+                                onChange={({target})=> onPriceChange(target.value, id)}
                             />
                             <span className={s.dopField}> руб. </span>
                         </div>)
@@ -62,7 +66,7 @@ export default function CheckboxList({id, name, price, tooltip, checked, onClick
             </ ListItemText>
 
             <ListItemSecondaryAction>
-                <LightTooltip placement="right" title={tooltip}>
+                <LightTooltip placement="right" title={tooltipText}>
                     <IconButton edge="end">
                         <HelpIcon className={s.helpIcon}/>
                     </IconButton>

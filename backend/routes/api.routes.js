@@ -12,6 +12,7 @@ router.get('/promos/getParameters',(query) => getMethod('getParameters', query))
 router.get('/promos/getRecommendations',(query) => getMethod('getRecommendations', query));
 router.post('/promos/searchPromos', (query) => getMethod('searchPromos', query));
 router.get('/promos/getDataForCreate',(query) => getMethod('getDataForCreate', query));
+router.get('/promos/getPromo/:id',(query) => getMethod('getPromo', query));
 
 router.post('/upload', (query) => getMethod('upload', query));
 

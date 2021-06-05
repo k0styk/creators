@@ -14,7 +14,7 @@ class Recommendations extends React.Component {
 
         return (
             <div className={s.recommendationsContainer}>
-                <div className={s.title}> Рекоммендуем</div>
+                <div className={s.title}> Рекомендуем</div>
                 <Cards promos={promos}/>
             </div>
         );

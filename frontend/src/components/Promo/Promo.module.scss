@@ -5,9 +5,17 @@
   flex-direction: column;
 
   .title {
+    display: flex;
+    flex-direction: column;
     margin: 20px 0;
     font-size: 20px;
     font-weight: 600;
+  }
+
+  .city{
+    font-size: 14px;
+    color: $gray-100;
+    font-weight: 500;
   }
 
   .content {
@@ -29,6 +37,7 @@
       .header {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 20px;
 
         .user {
           display: flex;
@@ -38,19 +47,6 @@
           & > * {
             margin-left: 10px;
           }
-        }
-
-        .price {
-          display: block;
-          font-size: 18px;
-          font-weight: 600;
-        }
-
-        .dates {
-          display: block;
-          font-size: 14px;
-          font-weight: 400;
-          color: $gray-100;
         }
       }
 
@@ -64,6 +60,19 @@
         text-transform: none;
       }
     }
+  }
+
+  .titleS {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .descTitle {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    color: $gray-100;
   }
 
   .more {

@@ -3,8 +3,9 @@ import API from "../../api";
 
 class FilterStore {
     RouterStore;
-    spheres = []
-    types = []
+
+    @observable spheres = []
+    @observable types = []
 
     @observable selectedSphere = null;
     @observable selectedCity = null;
@@ -30,7 +31,7 @@ class FilterStore {
         this.price = {};
     }
 
-    clearParams = ()=> {
+    clearParams = () => {
         this.RouterStore.history.push({
             pathname: '/search',
             search: ''
@@ -53,7 +54,8 @@ class FilterStore {
         this.selectedType = val;
     }
 
-    initParameters = (types, spheres) => {
+    @action initParameters = (types, spheres) => {
+        console.log('initParameters')
         this.spheres = spheres.map(({id, name}) => {
             return {
                 label: name,

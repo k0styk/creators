@@ -1,54 +1,86 @@
-import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import {observable, get, action, reaction, computed, makeObservable, autorun} from 'mobx';
+import API from "../../api";
+import {serviceType} from '../../enums';
+import formatTime from '../../tools/formatProductionTime';
+import formatPrice from '../../tools/formatPrice';
 
 class PromoStore {
     routerStore = {};
-    items = [
-        {title: 'Съемка', price: 2000, id: 1, tooltip: 1},
-        {title: 'Монтаж', price: 6000, id: 2, tooltip: 1},
-        {title: 'Сценарий', price: 6500, id: 3, tooltip: 1},
-        {title: 'Озвучка', price: 7000, id: 4, tooltip: 1},
 
-        ]
-    checked = [];
-    price = '';
+    @observable services = [];
+    @observable checkedServices = [];
+    @observable price = '';
+    @observable promo = {};
+    @observable userPromos = [];
 
     constructor({RouterStore}) {
-        makeObservable(this, {
-            promoId: computed,
-            checked: observable,
-            onCheckService: action,
-            price: observable,
-            changePrice: action,
-        })
-        this.checked = [1,3];
-        this.changePrice();
+        makeObservable(this,)
         this.routerStore = RouterStore || {};
+
+       this.disposerAutorunPromo = autorun(this.getData);
     }
 
-    get promoId() {
-        console.log(toJS(this.routerStore));
-
+    @computed get promoId() {
         return Number(get(get(this.routerStore.match, 'params'), 'id')) || null;
     }
 
-    onCheckService = (id) => {
-        if (this.checked.includes(id)) {
-            this.checked = this.checked.filter((item) => item !== id)
-        } else this.checked = [...this.checked, id];
+    getData = async () => {
+        try {
+            const {
+                services,
+                userPromos,
+                ...promo
+                } = await API.get(`promos/getPromo/${this.promoId}`).then(({data}) => data);
+
+            this.setPromo(promo);
+            this.setUserPromos(userPromos);
+            this.initServices(services || []);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+   @action setUserPromos = (userPromos) => {
+        this.userPromos = userPromos;
+   }
+
+   @action setPromo = (promo) => {
+        const productionTime = formatTime(promo.productionTime);
+        this.promo = {...promo, productionTime};
+   }
+
+   @action initServices = (services) => {
+        this.checkedServices = services.filter(({type}) => type === serviceType.MAIN).map(({id}) => id);
+        this.services = services;
+        this.changePrice();
+   }
+
+   @action setServices = (services) => {
+        this.services = services;
+   }
+
+   @action onCheckService = (id) => {
+        if (this.checkedServices.includes(id)) {
+            this.checkedServices = this.checkedServices.filter((item) => item !== id)
+        } else this.checkedServices = [...this.checkedServices, id];
 
         this.changePrice();
-    }
+   }
 
-    changePrice = () => {
+    @action changePrice = () => {
         let sumPrice = 0;
-        this.items.forEach(({id, price}) => {
-            if (this.checked.includes(id)) {
-                sumPrice += price;
+        this.services.forEach(({id, price}) => {
+            if (this.checkedServices.includes(id)) {
+                sumPrice += Number(price);
             }
         })
-        this.price = sumPrice;
+        this.price = formatPrice(sumPrice);
     }
 
+
+    @action close = () => {
+       this.disposerAutorunPromo();
+    }
 }
 
 export default PromoStore;

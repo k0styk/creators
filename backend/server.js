@@ -21,7 +21,7 @@ app.use('/api/', apiRoute);
 // app.use('/api/', auth.verifyToken, apiRoute);
 
 
-app.listen(3002, function () {
+app.listen(3003, function () {
     console.log('API app started');
 });
 

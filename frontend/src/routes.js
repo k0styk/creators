@@ -94,7 +94,7 @@ export default () => {
                         path='/create'
                         render={(props) => <Wrapper {...props} name={'create'}/>}
                     />
-                    <Route render={() => <div>{'Miss'}</div>}/>
+                    <Route render={() => <div>{'not found'}</div>}/>
                 </Switch>
             </BrowserRouter>
         </Provider>

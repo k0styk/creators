@@ -9,54 +9,45 @@ import Cards from "../../shared/PromoCard/Cards";
 
 @inject(({PromoStore}) => {
     return {
-        price: PromoStore.price
+        price: PromoStore.price,
+        promo: PromoStore.promo,
+        user: PromoStore.promo.user || {},
+        userPromos: PromoStore.userPromos
     };
 })
 class Search extends React.Component {
-    //opts вынести в шаред
-    opts = {
-        playerVars: {
-            rel: 0,
-            showinfo: 0,
-            iv_load_policy: 3,
-            modestbranding: 1,
-            fs: 0,
-            loop: 1,
-            controls: 0
-        },
-    };
-
     render() {
-
-        const cards = [];
-        for (let i =1; i<5; i++) {
-            cards.push( <Card withActions={false}/>);
-        }
+        const {user, promo, userPromos} = this.props;
 
         return (
             <div className={s.body}>
                 <div className={s.title}>
-                    Рекламный ролик "ПромСтройСервис"
+                    {promo.title}
+                    <span className={s.city}>
+                        {promo.city}
+                    </span>
                 </div>
-            <MediaBlock />
+                <MediaBlock/>
                 <div className={s.desc}>
                     <Divider/>
-                    <span className={s.descTitle}> Описание </span>
+                    <span className={s.descTitle}>
+                        Описание
+                    </span>
                     <span className={s.descText}>
-                        Делаю видео для строительных компаний уже более 3-х лет. Знаю все тонкости съемки на строительных объектах, а также все
-техники безопасности, чтобы вы не угадили на штраф. В заказ подобного видео входит 2 дня съемки: 1 день в офисе и 1 день на
-строительном объекте.через 5 дней после съемок вы увидите смонтированное видео, а еще через 7 уже полностью готовое с
-цветокоррекцией и саунддизайном.
+                     {promo.desc || 'Не указано'}
                     </span>
                     <Divider/>
                 </div>
-              <div className={s.more}>Еще работы от Алексей Стен
-                  <Link
-                  color={'primary'}
-                  className={s.buttonLink}
-              >все работы </Link>
-              </div>
-                <Cards promos={cards}/>
+                <div className={s.more}>
+                    Еще работы автора
+                    <Link
+                        color={'primary'}
+                        className={s.buttonLink}
+                    >
+                        все работы
+                    </Link>
+                </div>
+                <Cards promos={userPromos}/>
             </div>
         );
     }

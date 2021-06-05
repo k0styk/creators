@@ -3,29 +3,25 @@ import API from "../../api";
 import FilterStore from './FilterStore';
 
 class HomeStore extends FilterStore {
-    recommendations = [];
+    @observable recommendations = [];
 
     constructor({RouterStore}) {
         super({RouterStore});
 
-        makeObservable(this, {
-            recommendations: observable,
-            setRecommendations: action
-        })
+        makeObservable(this)
         this.getRecommendations();
     }
 
     getRecommendations = async () => {
         try {
             const promos = await API.get('promos/getRecommendations').then(({data}) => data)
-            console.log(promos);
             this.setRecommendations(promos)
         } catch (e) {
             console.log(e);
         }
     }
 
-    setRecommendations = (promos) => {
+    @action setRecommendations = (promos) => {
         this.recommendations = promos;
     }
 

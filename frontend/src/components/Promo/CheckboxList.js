@@ -19,15 +19,15 @@ const CheckList = withStyles((theme) => ({
 
 @inject(({PromoStore}) => {
     return {
-        checked: PromoStore.checked,
-        items: PromoStore.items,
+        checkedServices: PromoStore.checkedServices,
+        services: PromoStore.services,
         onCheckService: PromoStore.onCheckService
     };
 })
 class CheckboxList extends React.Component {
     render() {
-        const {checked, items, onCheckService} = this.props;
-        const listItem = items.map((item) => <CheckboxListItem {...item} checked={checked} onClick={onCheckService}/>)
+        const {checkedServices, services, onCheckService} = this.props;
+        const listItem = services.map((service) => <CheckboxListItem {...service} checked={checkedServices} onClick={onCheckService}/>)
 
         return (
             <CheckList>

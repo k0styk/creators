@@ -10,7 +10,7 @@ const {createPromo} = require('./promo/createPromo');
 const {getParameters} = require('./promo/getParameters');
 const {getRecommendations} = require('./promo/getRecommendations');
 const {searchPromos} = require('./promo/searchPromos');
-
+const {getPromo} = require('./promo/getPromo');
 
 const {upload} = require('./upload');
 module.exports = {
@@ -24,6 +24,7 @@ module.exports = {
     getParameters,
     getRecommendations,
     searchPromos,
+    getPromo,
 
     upload
 };
