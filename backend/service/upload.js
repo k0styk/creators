@@ -1,6 +1,5 @@
-
 module.exports = {
-    upload: async ({params, knex, files}) => {
+    upload: async ({files}) => {
         const imageFile = files.file;
 
         try {

@@ -16,6 +16,6 @@ router.post('/promos/searchPromos',getMethod(()=>'searchPromos'));
 router.get('/promos/getDataForCreate', getMethod(()=>'getDataForCreate'));
 router.get('/promos/getPromo/:id', getMethod(()=>'getPromo'));
 
-router.post('/upload', (query) => getMethod(()=>'upload'));
+router.post('/upload', getMethod(()=>'upload'));
 
 module.exports = router;
