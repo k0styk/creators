@@ -6,18 +6,13 @@ const {
 } = require('./tools/queries');
 
 module.exports = {
-    getPersonalPage: async ({params, knex}) => {
-
-        const userId = 1;
-
+    getProfile: async ({params: {id}, knex}) => {
         const [user, spheres, promos, promosCount] = await Promise.all([
             getUser(knex, userId, [
                 'users.id',
                 'firstName',
-                'phone',
                 'lastName',
                 'secondName',
-                'email',
                 'about',
                 'cityId',
                 'photoPath',

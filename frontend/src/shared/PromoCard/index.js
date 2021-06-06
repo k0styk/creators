@@ -55,7 +55,7 @@ import {inject} from "mobx-react";
                             {createdAt}
                         </span>
                              <span className={s.videoTitle}>
-                            {title.length > 60 ? `${title.slice(0, 60)}...` : title}
+                            {title && title.length > 60 ? `${title.slice(0, 60)}...` : title}
                         </span>
                              <span className={s.price}>
                             {price && `${formatPrice(price)} руб` || 'Стоимость не указана'}

@@ -15,7 +15,8 @@ app.use(cors());
 app.use(fileUpload());
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/auth/', authRoute);
-app.use('/api/', apiRoute);
+
+app.use('/api', apiRoute);
 
 //проверять авторизацию нужно только на определенных роутах
 // app.use('/api/', auth.verifyToken, apiRoute);
