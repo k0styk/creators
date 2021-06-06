@@ -1,6 +1,7 @@
 import React from 'react';
 import {inject, Provider} from "mobx-react";
-import HomeStore from '../../stores/PromoList/HomeStore';
+import HomeStore from '../../stores/CaseList/HomeStore';
+
 import HomeView from './HomeView';
 
 @inject(({RouterStore}) => {

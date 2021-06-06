@@ -1,8 +1,5 @@
 import React from 'react';
-import {Select as SelectUi, MenuItem, FormControl, InputLabel} from '@material-ui/core';
-import s from './Select.module.scss';
 import ReactSelect from 'react-select';
-import withStylesUi from '@material-ui/core/styles/withStyles';
 import AsyncSelect from 'react-select/async';
 
 const customStyles = {
@@ -77,7 +74,6 @@ class Select extends React.Component {
                 options={options}
                 value={selected}
             /> || <AsyncSelect
-                className={s.select}
                 placeholder={placeholder || this.defaultPlaceholder}
                 {...this.props}
                 styles={customStyles}

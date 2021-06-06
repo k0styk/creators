@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Profile.module.scss';
 import FilterComponent from '../../shared/Filter';
-import {Button} from '@material-ui/core';
+import {Divider} from "@material-ui/core";
 
 class Filter extends React.Component {
     mock = [
@@ -11,10 +11,11 @@ class Filter extends React.Component {
     render() {
         return (
             <React.Fragment>
+                <Divider />
                 <div className={s.filterTitle}>
-                    Услуги автора
+                    Кейсы исполнителя
                 </div>
-                <FilterComponent withButton={true}/>
+                    <FilterComponent withButton={true}/>
             </React.Fragment>
         );
     }

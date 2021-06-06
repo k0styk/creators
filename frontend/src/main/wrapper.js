@@ -14,8 +14,8 @@ const Page = loadable(
             case 'search': {
                 return import('../components/Search');
             }
-            case 'promo': {
-                return import('../components/Promo');
+            case 'case': {
+                return import('../components/Case');
             }
             case 'profile': {
                 return import('../components/Profile');

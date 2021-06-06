@@ -5,7 +5,11 @@ body {
   font-family: 'Segoe', 'Segoe UI', Arial, 'sans-serif';
   color: #34373d;
 }
-
+.wrapper{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .headerContainer {
   background: $gray-100-10;;
   min-height: 40vh;

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import s from './../main.module.scss';
 import {AppBar, Button, Menu, MenuItem, Toolbar, IconButton, Typography, Avatar} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';

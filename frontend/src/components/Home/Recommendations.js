@@ -1,21 +1,21 @@
 import React from 'react';
 import s from './Home.module.scss';
-import Cards from '../../shared/PromoCard/Cards';
+import Index from '../../shared/CaseCard';
 import {inject} from "mobx-react";
 
 @inject(({HomeStore}) => {
     return {
-        promos: HomeStore.recommendations
+        cases: HomeStore.recommendations
     };
 })
 class Recommendations extends React.Component {
     render() {
-        const {promos} = this.props;
+        const {cases} = this.props;
 
         return (
             <div className={s.recommendationsContainer}>
                 <div className={s.title}> Рекомендуем</div>
-                <Cards promos={promos}/>
+                <Index cases={cases}/>
             </div>
         );
     }

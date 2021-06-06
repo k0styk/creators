@@ -1,5 +1,13 @@
 @import '../style';
 
+.filterContainer{
+  background-color: rgba(239, 243, 241, 0.32);
+  padding: 20px 0
+;border: 1px solid  rgba(146, 153, 167, .1)
+}
+.fastFilter{
+  width: 600px;
+}
 .select {
   width: 250px;
 }
@@ -8,6 +16,7 @@
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: center;
 
   & > * {
     margin-bottom: 15px;
@@ -41,4 +50,7 @@
 .button {
   margin-top: auto;
   padding: 4px 0;
+}
+.delBut{
+  margin-left: 10px;
 }

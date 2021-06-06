@@ -2,7 +2,7 @@ import React from 'react';
 import s from './Footer.module.scss';
 import logo from '../logo.png';
 
-class Index extends React.Component {
+class Footer extends React.Component {
   render() {
     return (
       <div className={s.footer}>
@@ -23,4 +23,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default Footer;

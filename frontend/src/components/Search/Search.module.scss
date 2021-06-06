@@ -1,19 +1,46 @@
 @import '../../shared/style';
 
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 20px;
+  min-height: 40px;
+}
+
+.user {
+  display: flex;
+  font-size: 18px;
+  align-items: center;
+  margin: 0px 0 -10px 10px;
+  color: $gray-main;
+
+  .avatar {
+    padding: 5px;
+    background: #ffffff;
+    border: 1.5px solid $red;
+    border-radius: 100%;
+  }
+
+  & > * {
+    margin-right: 10px;
+  }
+}
+
 .clearButton {
   font-size: 16px;
 }
 
 .title {
-  font-size: 35px;
+  font-size: 22px;
   font-weight: 500;
-  margin: 10px 0;
-  text-align: center;
+  margin-bottom: 5px;
 }
 
 .helperText {
   font-size: 25px;
   font-weight: 300;
-  margin: 10px 0;
+  margin: 20px 0;
   text-align: center;
 }

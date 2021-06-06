@@ -28,7 +28,7 @@ const cities = [
     {name: 'Москва'}
 ];
 
-const promos = [
+const cases = [
     {
         cityId: 1,
         productionTimeHours: '2',
@@ -36,12 +36,12 @@ const promos = [
         title: 'Рекламный ролик "ПромСтройСервис"',
         typeId: 1,
         userId: 2,
-        desc: 'В заказ подобного видео входит 2 дня съемки: 1 день в офисе и 1 день на строительном объекте.через 5 дней после съемок вы увидите смонтированное видео, а еще через 7 уже полностью готовое с цветокоррекцией и саунддизайном.',
+        description: 'В заказ подобного видео входит 2 дня съемки: 1 день в офисе и 1 день на строительном объекте.через 5 дней после съемок вы увидите смонтированное видео, а еще через 7 уже полностью готовое с цветокоррекцией и саунддизайном.',
         youtubeId: '961Ttgo-jZI'
     },
     {
         cityId: 1,
-        desc: 'desc',
+        description: 'description',
         productionTimeDays: '2',
         sphereId: 1,
         title: 'СВАДЕБНОЕ ВИДЕО',
@@ -51,7 +51,7 @@ const promos = [
     },
     {
         cityId: 1,
-        desc: 'В основном занимаюсь видео для строительных компаний уже более 3 лет.',
+        description: 'В основном занимаюсь видео для строительных компаний уже более 3 лет.',
         productionTimeDays: '2',
         sphereId: 1,
         title: 'Реклама строительной компании "Альфа-групп"',
@@ -61,7 +61,7 @@ const promos = [
     },
     {
         cityId: 1,
-        desc: 'Делаю видео для строительных компаний уже более 3-х лет. Знаю все тонкости съемки на строительных объектах, а также все\n' +
+        description: 'Делаю видео для строительных компаний уже более 3-х лет. Знаю все тонкости съемки на строительных объектах, а также все\n' +
             'техники безопасности, чтобы вы не угадили на штраф.',
         productionTimeDays: '2',
         sphereId: 3,
@@ -72,7 +72,7 @@ const promos = [
     },
     {
         cityId: 1,
-        desc: 'desc',
+        description: 'description',
         productionTimeDays: '1',
         sphereId: 2,
         title: 'title',
@@ -81,27 +81,27 @@ const promos = [
         youtubeId: '961Ttgo-jZI'
     }
 ];
-const promosServices = [
-    {price: 1000, promoId: 1, serviceId: 1, type: 1},
-    {price: 2200, promoId: 1, serviceId: 2, type: 2},
-    {price: 2070, promoId: 1, serviceId: 3, type: 1},
-    {price: 8000, promoId: 1, serviceId: 4, type: 2},
-    {price: 1000, promoId: 2, serviceId: 1, type: 1},
-    {price: 2200, promoId: 2, serviceId: 2, type: 2},
-    {price: 2070, promoId: 2, serviceId: 3, type: 1},
-    {price: 8000, promoId: 2, serviceId: 4, type: 1},
-    {price: 1800, promoId: 3, serviceId: 1, type: 1},
-    {price: 9200, promoId: 3, serviceId: 2, type: 2},
-    {price: 8070, promoId: 3, serviceId: 3, type: 2},
-    {price: 2000, promoId: 3, serviceId: 4, type: 1}
+const casesServices = [
+    {price: 1000, caseId: 1, serviceId: 1, type: 1},
+    {price: 2200, caseId: 1, serviceId: 2, type: 2},
+    {price: 2070, caseId: 1, serviceId: 3, type: 1},
+    {price: 8000, caseId: 1, serviceId: 4, type: 2},
+    {price: 1000, caseId: 2, serviceId: 1, type: 1},
+    {price: 2200, caseId: 2, serviceId: 2, type: 2},
+    {price: 2070, caseId: 2, serviceId: 3, type: 1},
+    {price: 8000, caseId: 2, serviceId: 4, type: 1},
+    {price: 1800, caseId: 3, serviceId: 1, type: 1},
+    {price: 9200, caseId: 3, serviceId: 2, type: 2},
+    {price: 8070, caseId: 3, serviceId: 3, type: 2},
+    {price: 2000, caseId: 3, serviceId: 4, type: 1}
 ];
 
 
 exports.up = (knex) => Promise.all([
     knex.table('users').insert(users),
-    knex.table('promos').insert(promos),
+    knex.table('cases').insert(cases),
     knex.table('cities').insert(cities),
-    knex.table('promosServices').insert(promosServices)
+    knex.table('casesServices').insert(casesServices)
 ]);
 
 

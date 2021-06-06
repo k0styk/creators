@@ -8,13 +8,13 @@ router.get('/users/getPersonalPage', getMethod(()=>'getPersonalPage'));
 router.get('/users/getProfile/:id',getMethod(()=>'getProfile'));
 
 
-router.get('/promos/getDataForCreate',getMethod(()=>'getDataForCreate'));
-router.post('/promos/create', getMethod(()=>'createPromo'));
-router.get('/promos/getParameters',getMethod(()=>'getParameters'));
-router.get('/promos/getRecommendations', getMethod(()=>'getRecommendations'));
-router.post('/promos/searchPromos',getMethod(()=>'searchPromos'));
-router.get('/promos/getDataForCreate', getMethod(()=>'getDataForCreate'));
-router.get('/promos/getPromo/:id', getMethod(()=>'getPromo'));
+router.get('/cases/getDataForCreate',getMethod(()=>'getDataForCreate'));
+router.post('/cases/create', getMethod(()=>'createCase'));
+router.get('/cases/getParameters',getMethod(()=>'getParameters'));
+router.get('/cases/getRecommendations', getMethod(()=>'getRecommendations'));
+router.post('/cases/searchCases',getMethod(()=>'searchCases'));
+router.get('/cases/getDataForCreate', getMethod(()=>'getDataForCreate'));
+router.get('/cases/getCase/:id', getMethod(()=>'getCase'));
 
 router.post('/upload', getMethod(()=>'upload'));
 

@@ -1,17 +1,17 @@
 'use strict';
 
-const {getUser} = require('./users/getUser');
-const {getCurrentUser} = require('./users/getCurrentUser');
-const {editUser} = require('./users/editUser');
-const {getPersonalPage} = require('./users/getPersonalPage');
+const {getUser} = require('./user/getUser');
+const {getCurrentUser} = require('./user/getCurrentUser');
+const {editUser} = require('./user/editUser');
+const {getPersonalPage} = require('./user/getPersonalPage');
+const {getProfile} = require('./user/getProfile');
 
-const {getDataForCreate} = require('./promo/getDataForCreate');
-const {createPromo} = require('./promo/createPromo');
-const {getParameters} = require('./promo/getParameters');
-const {getRecommendations} = require('./promo/getRecommendations');
-const {searchPromos} = require('./promo/searchPromos');
-const {getPromo} = require('./promo/getPromo');
-const {getProfile} = require('./users/getProfile');
+const {getDataForCreate} = require('./case/getDataForCreate');
+const {createCase} = require('./case/createCase');
+const {getParameters} = require('./case/getParameters');
+const {getRecommendations} = require('./case/getRecommendations');
+const {searchCases} = require('./case/searchCases');
+const {getCase} = require('./case/getCase');
 
 const {upload} = require('./upload');
 
@@ -22,11 +22,11 @@ module.exports = {
     getPersonalPage,
 
     getDataForCreate,
-    createPromo,
+    createCase,
     getParameters,
     getRecommendations,
-    searchPromos,
-    getPromo,
+    searchCases,
+    getCase,
     getProfile,
 
     upload

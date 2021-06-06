@@ -33,6 +33,7 @@ const StyledTextField = withStylesUi(({palette}) => createStyles({
     },
 
     '& [class*="MuiOutlinedInput-root"]': {
+      backgroundColor: 'white',
       'padding': '8px 12px',
       'borderRadius': '4px',
       'fontSize': '14px',

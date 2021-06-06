@@ -1,7 +1,7 @@
 import React from 'react';
 import {inject} from "mobx-react";
 import s from './Create.module.scss';
-import {Tooltip, TextField, IconButton, Divider, Chip, Button} from "@material-ui/core";
+import {TextField, Divider, Button} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 import MediaBlock from './MediaBlock';
 

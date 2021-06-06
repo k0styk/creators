@@ -1,7 +1,7 @@
 import React from 'react';
 import {inject, Provider} from "mobx-react";
 import SearchView from './SearchView';
-import SearchStore from "../../stores/PromoList/SearchStore";
+import SearchStore from "../../stores/CaseList/SearchStore";
 
 @inject(({RouterStore}) => {
     return {RouterStore};

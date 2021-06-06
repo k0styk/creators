@@ -5,16 +5,16 @@ class PersonalPageStore {
     routerStore = {};
     user = {};
     spheres = [];
-    promos = [];
-    promosCount = 0;
+    cases = [];
+    casesCount = 0;
     isEdit = false;
 
     constructor({RouterStore}) {
         console.log(PersonalPageStore);
         makeObservable(this, {
             user: observable,
-            promos: observable,
-            promosCount: observable,
+            cases: observable,
+            casesCount: observable,
             spheres: observable,
             setUser: action,
             initData: action,
@@ -24,22 +24,19 @@ class PersonalPageStore {
         })
         this.routerStore = RouterStore || {};
         this.getData();
-        console.log('34');
     }
 
     getData = async () => {
         try {
             const {
-                data: {
-                    user,
-                    promos,
-                    promosCount,
-                    spheres
-                }
+                user,
+                cases,
+                casesCount,
+                spheres
             } = await API.get('users/getPersonalPage');
 
             this.setUser(user);
-            this.initData({spheres, promos, promosCount});
+            this.initData({spheres, cases, casesCount});
         } catch (e) {
             console.log(e);
         }
@@ -49,10 +46,10 @@ class PersonalPageStore {
         this.user = user;
     }
 
-    initData = ({spheres, promos, promosCount}) => {
+    initData = ({spheres, cases, casesCount}) => {
         this.spheres = spheres;
-        this.promos = promos;
-        this.promosCount = promosCount;
+        this.cases = cases;
+        this.casesCount = casesCount;
     }
 
     toggleEdit = () => {
@@ -63,9 +60,8 @@ class PersonalPageStore {
         this.user[field] = value;
     }
 
-    loadFiled = async(files) => {
+    loadFiled = async (files) => {
         const data = new FormData();
-        console.log(files);
         data.append('file', files[0]);
 
         try {
@@ -75,10 +71,9 @@ class PersonalPageStore {
         } catch (e) {
             console.log(e);
         }
-
     }
 
-    updateUser = async() => {
+    updateUser = async () => {
         const {
             about,
             photoPath,
@@ -88,7 +83,7 @@ class PersonalPageStore {
         } = this.user;
 
         try {
-            const {data} = await API.post('users/editUser', {
+            await API.post('users/editUser', {
                 about,
                 photoPath,
                 lastName,

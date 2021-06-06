@@ -1,6 +1,7 @@
 import React from 'react';
 import {Provider} from "mobx-react";
 import ProfileStore from '../../stores/Profile';
+import FilterStore from '../../stores/Profile/FilterStore';
 import ProfileView from './ProfileView';
 import {inject} from 'mobx-react';
 
@@ -13,11 +14,12 @@ class Search extends React.Component {
         const {RouterStore} = this.props;
 
         this.ProfileStore = new ProfileStore({RouterStore});
+        this.FilterStore = new FilterStore({RouterStore});
     }
 
     render() {
         return (
-            <Provider ProfileStore={this.ProfileStore}>
+            <Provider FilterStore={this.FilterStore} ProfileStore={this.ProfileStore}>
                 <ProfileView />
             </Provider>
         );

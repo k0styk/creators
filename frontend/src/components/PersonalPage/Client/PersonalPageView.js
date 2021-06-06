@@ -2,9 +2,9 @@ import React from 'react';
 import {inject} from "mobx-react";
 import s from './PersonalPage.module.scss';
 import {Tooltip, IconButton, Divider} from "@material-ui/core";
-import Card from "../../../shared/PromoCard";
+import Card from "../../../shared/CaseCard";
 import AddIcon from '@material-ui/icons/Add';
-import Cards from "../../../shared/PromoCard/Cards";
+import Index from "../../../shared/CaseCard";
 
 @inject(({PersonalPageStore}) => {
     return {
@@ -13,7 +13,6 @@ import Cards from "../../../shared/PromoCard/Cards";
 })
 class PersonalPage extends React.Component {
     render() {
-        const {price} = this.props;
         const cards = [];
         for (let i = 1; i < 3; i++) {
             cards.push(<Card withActions={true} withIncludes={false}/>);
@@ -57,10 +56,10 @@ class PersonalPage extends React.Component {
                                 </Tooltip>
                                  </span>
                         <Divider/>
-                        <Cards promos={cards}/>
+                        <Index cases={cards}/>
                         <span className={s.titleWorks}>Исполненные заказы </span>
                         <Divider/>
-                        <Cards promos={cards}/>
+                        <Index cases={cards}/>
                     </div>
                 </div>
             </div>

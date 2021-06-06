@@ -15,6 +15,10 @@ class RouterStore {
         })
     }
 
+    @computed get urlIsEmpty() {
+        return !get(this.location, 'search');
+    }
+
     setRoute(location, match, history){
         this.location = location;
         this.match = match;

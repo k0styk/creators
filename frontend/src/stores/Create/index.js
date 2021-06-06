@@ -1,4 +1,4 @@
-import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import {observable, action, computed, makeObservable} from 'mobx';
 import API from "../../api";
 import getAddress from '../../api/dadata';
 import {Alert} from '../../routes';
@@ -63,7 +63,7 @@ class CreateStore {
 
     getData = async () => {
         try {
-            const {data: {types, services, spheres}} = await API.get('promos/getDataForCreate');
+            const {data: {types, services, spheres}} = await API.get('cases/getDataForCreate');
             this.spheres = spheres.map(({id, name}) => {
                 return {value: id, label: name}
             });
@@ -77,7 +77,6 @@ class CreateStore {
     }
 
     get addServices() {
-        console.log(this.services, this.checkedMainServices);
         return this.services.filter(({id}) => !this.checkedMainServices.includes(id));
     }
 
@@ -101,12 +100,9 @@ class CreateStore {
         const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
         const match = value.match(regExp);
         this.youtubeId = (match && match[7].length == 11) ? match[7] : false;
-        console.log((match && match[7].length == 11) ? match[7] : false);
     }
 
     onPriceChange = (price, serviceId) => {
-        console.log(price, serviceId);
-
         this.prices[serviceId] = price;
     }
 
@@ -115,7 +111,6 @@ class CreateStore {
     }
 
     onChangeCity = (city) => {
-        console.log(city);
         this.city = city;
     }
 
@@ -137,8 +132,6 @@ class CreateStore {
             Alert({type: 'error', title: 'Укажите, что включено'})
             return false
         }
-
-        console.log(this.checkedMainServices.length + this.checkedAddServices.length, Object.keys(this.prices).length)
         if (this.checkedMainServices.length + this.checkedAddServices.length !== Object.keys(this.prices).length) {
             Alert({type: 'error', title: 'Укажите стоимость услуг'})
             return false
@@ -189,7 +182,7 @@ class CreateStore {
 
 
         try {
-            await API.post('promos/create', res);
+            await API.post('cases/create', res);
             Alert({
                 type: 'success',
                 title: 'Успешно!',

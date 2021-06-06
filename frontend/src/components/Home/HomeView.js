@@ -6,7 +6,7 @@ import s from './Home.module.scss';
 import Index from '../../shared/Footer';
 
 const Home = () => (
-    <div>
+    <div className={s.wrapper}>
         <Header />
         <div className={s.contentContainer}>
             <Filter />

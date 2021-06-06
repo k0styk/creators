@@ -1,0 +1,15 @@
+@import '../style';
+
+.city {
+  font-size: 14px;
+  color: $gray-100;
+  font-weight: 500;
+  margin-top: 4px;
+  display: flex !important;
+  align-items: center;
+
+  .cityIcon {
+    margin-right: 4px;
+    font-size: 16px;
+  }
+}

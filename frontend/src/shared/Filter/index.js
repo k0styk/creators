@@ -5,6 +5,7 @@ import TextField from '../TextField';
 import {Button} from '@material-ui/core';
 import {inject} from "mobx-react";
 import {toJS} from "mobx";
+import ClearIcon from "@material-ui/icons/Clear";
 
 @inject(({FilterStore = {}}) => {
     return {
@@ -19,7 +20,10 @@ import {toJS} from "mobx";
         selectedType: toJS(FilterStore.selectedType),
         time: FilterStore.time,
         search: FilterStore.search,
-        filterIsEmpty: FilterStore.filterIsEmpty
+        fastFilter: FilterStore.fastFilter,
+        setFastFilter: FilterStore.setFastFilter,
+        filterIsEmpty: FilterStore.filterIsEmpty,
+        clear: FilterStore.clear
     };
 })
 class Filter extends React.Component {
@@ -34,6 +38,7 @@ class Filter extends React.Component {
 
     setFromPrice = ({target}) => this.props.setPrice('from', target.value);
     setToPrice = ({target}) => this.props.setPrice('to', target.value);
+    setFastFilter = ({target}) => this.props.setFastFilter(target.value);
 
     render() {
         const {
@@ -48,85 +53,112 @@ class Filter extends React.Component {
             selectedType,
             selectedSphere,
             time,
-            filterIsEmpty
+            fastFilter,
+            filterIsEmpty,
+            clear
         } = this.props;
 
-        console.log('selectedType', selectedType);
-
         return (
-            <div className={s.filter}>
-                <div>
-                    <span className={s.titleField}>Сфера</span>
-                    <Select
-                        isClearable
-                        value={selectedSphere}
-                        onChange={setSphere}
-                        className={s.select}
-                        placeholder={'Выберете сферу'}
-                        options={spheres}
-                    />
-                </div>
-                <div>
-                    <span className={s.titleField}> Тип видео </span>
-                    <Select
-                        isClearable
-                        value={selectedType}
-                        onChange={setType}
-                        className={s.select}
-                        placeholder={'Выберите тип видео'}
-                        options={types}
-                    />
-                </div>
-                <div>
-                    <span className={s.titleField}>Длительность </span>
-                    <Select
-                        isClearable
-                        value={time}
-                        onChange={setTime}
-                        className={s.select}
-                        placeholder={'Выберите длительность'}
-                        options={this.times}
-                    />
-                </div>
-                {/*<div>*/}
-                {/*    <span className={s.titleField}>Город </span>*/}
-                {/*    <Select*/}
-                {/*        placeholder={'Город'}*/}
-                {/*        options={this.mock}*/}
-                {/*    />*/}
-                {/*</div>*/}
-                <div>
-                    <span className={s.titleField}>Цена </span>
-                    <div className={s.priceBlock}>
-                        <TextField
-                            onChange={this.setFromPrice}
-                            value={price.from}
-                            className={s.priceField}
-                            placeholder={'От'}
-                            variant={'outlined'}
+            <div className={s.filterContainer}>
+                <div className={s.filter}>
+                    <div>
+                        <span className={s.titleField}>Сфера</span>
+                        <Select
+                            isClearable
+                            value={selectedSphere}
+                            onChange={setSphere}
+                            className={s.select}
+                            placeholder={'Выберете сферу'}
+                            options={spheres}
                         />
-                        <span className={s.divider}>  -  </span>
-                        <TextField
-                            onChange={this.setToPrice}
-                            value={price.to}
-                            className={s.priceField}
-                            placeholder={'До'}
-                            variant={'outlined'}
+                    </div>
+                    <div>
+                        <span className={s.titleField}> Тип видео </span>
+                        <Select
+                            isClearable
+                            value={selectedType}
+                            onChange={setType}
+                            className={s.select}
+                            placeholder={'Выберите тип видео'}
+                            options={types}
                         />
-                        <span className={s.divider}>  руб.  </span>
+                    </div>
+                    <div>
+                        <span className={s.titleField}>Длительность </span>
+                        <Select
+                            isClearable
+                            value={time}
+                            onChange={setTime}
+                            className={s.select}
+                            placeholder={'Выберите длительность'}
+                            options={this.times}
+                        />
+                    </div>
+                    {/*<div>*/}
+                    {/*    <span className={s.titleField}>Город </span>*/}
+                    {/*    <Select*/}
+                    {/*        placeholder={'Город'}*/}
+                    {/*        options={this.mock}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    <div>
+                        <span className={s.titleField}>Цена </span>
+                        <div className={s.priceBlock}>
+                            <TextField
+                                onChange={this.setFromPrice}
+                                value={price.from}
+                                className={s.priceField}
+                                placeholder={'От'}
+                                variant={'outlined'}
+                            />
+                            <span className={s.divider}>  -  </span>
+                            <TextField
+                                onChange={this.setToPrice}
+                                value={price.to}
+                                className={s.priceField}
+                                placeholder={'До'}
+                                variant={'outlined'}
+                            />
+                            <span className={s.divider}>  руб.  </span>
+                        </div>
                     </div>
                 </div>
-                <div className={s.button}>
-                    {
-                        withButton &&
-                        <Button onClick={search}
-                                color={'primary'}
-                                variant={'contained'}
-                                disabled={filterIsEmpty}
-                        >
-                            Найти
-                        </Button>
-                    }
+                <div className={s.filter}>
+                    <div>
+                        <TextField
+                            value={fastFilter}
+                            onChange={this.setFastFilter}
+                            className={s.fastFilter}
+                            variant={'outlined'}
+                            placeholder={'Найти кейс'}
+
+                        />
+                    </div>
+                    <div className={s.button}>
+                        {
+                            withButton &&
+                            <React.Fragment>
+                                <Button
+                                    onClick={search}
+                                    color={'primary'}
+                                    variant={'contained'}
+                                >
+                                    Найти
+                                </Button>
+                                {
+                                    !filterIsEmpty &&
+                                    <Button
+                                        className={s.delBut}
+                                        onClick={clear}
+                                        color="secondary"
+                                        startIcon={<ClearIcon className={s.clearButton}/>}
+                                    >
+                                        Очистить
+                                    </Button>
+                                }
+                            </React.Fragment>
+                        }
+                    </div>
                 </div>
             </div>
         );

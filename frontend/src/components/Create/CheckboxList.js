@@ -3,9 +3,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {List} from '@material-ui/core';
 import CheckboxListItem from '../../shared/CheckboxPrice/CheckboxListItem';
 import {inject} from "mobx-react";
-import CreateStore from "../../stores/Create";
 import s from "./Create.module.scss";
-import {action} from "mobx";
 
 const CheckList = withStyles((theme) => ({
     root: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {inject} from "mobx-react";
 import s from './Create.module.scss';
-import {Tooltip, TextField, IconButton, Divider, Chip} from "@material-ui/core";
+import {TextField} from "@material-ui/core";
 import YouTube from "react-youtube";
 import Select from "../../shared/Select";
 import BlockField from "../../shared/BlockField";

@@ -42,7 +42,7 @@ exports.up = async (knex) => Promise.all([
             .timestamps();
     }),
 
-    knex.schema.createTable("promoTypes", table => {
+    knex.schema.createTable("caseTypes", table => {
         table
             .increments("id")
             .primary();
@@ -70,7 +70,7 @@ exports.up = async (knex) => Promise.all([
             .unique();
     }),
 
-    knex.schema.createTable("promos", table => {
+    knex.schema.createTable("cases", table => {
         table
             .increments("id")
             .primary();
@@ -78,7 +78,7 @@ exports.up = async (knex) => Promise.all([
             .string("title")
             .notNullable();
         table
-            .string("desc");
+            .string("description");
         table.integer("productionTimeDays")
             .comment('Срок изготовления в днях');
         table.integer("productionTimeHours")
@@ -104,6 +104,8 @@ exports.up = async (knex) => Promise.all([
         table
             .timestamps();
         table
+            .specificType('tsvector', 'tsvector');
+        table
             .index("id");
     }),
 
@@ -122,12 +124,12 @@ exports.up = async (knex) => Promise.all([
             .string("tooltipAdditional");
     }),
 
-    knex.schema.createTable("promosServices", table => {
+    knex.schema.createTable("casesServices", table => {
         table
             .increments("id")
             .primary();
         table
-            .integer("promoId")
+            .integer("caseId")
             .notNullable()
             .comment("Идентификатор видео");
         table
@@ -143,7 +145,7 @@ exports.up = async (knex) => Promise.all([
             .notNullable()
             .comment("Стоимость");
         table
-            .index("promoId");
+            .index("caseId");
     }),
 
     knex.schema.createTable("deals", table => {
@@ -161,7 +163,13 @@ exports.up = async (knex) => Promise.all([
             .notNullable();
         table.index("clientId");
     }),
-    knex.table('promoTypes').insert(videoTypes),
+    knex.raw(`
+    CREATE INDEX ON "cases" USING gin("tsvector");
+    CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
+    ON cases FOR EACH ROW EXECUTE PROCEDURE
+    tsvector_update_trigger(tsvector, 'pg_catalog.russian', title, description);
+  `),
+    knex.table('caseTypes').insert(videoTypes),
     knex.table('sphereTypes').insert(spheres),
     knex.table('services').insert(services)
 ]);
@@ -170,9 +178,9 @@ exports.up = async (knex) => Promise.all([
 exports.down = function (knex) {
     return Promise.all([
         knex.schema.dropTable('sphereTypes'),
-        knex.schema.dropTable('promoTypes'),
-        knex.schema.dropTable('promosServices'),
-        knex.schema.dropTable('promos'),
+        knex.schema.dropTable('caseTypes'),
+        knex.schema.dropTable('casesServices'),
+        knex.schema.dropTable('cases'),
         knex.schema.dropTable('services'),
         knex.schema.dropTable('deals'),
         knex.schema.dropTable('users'),

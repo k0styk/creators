@@ -6,7 +6,7 @@ import TextField from "../../../shared/TextField";
 import EditIcon from '@material-ui/icons/Edit';
 import PersonIcon from '@material-ui/icons/Person';
 import formatPhone from '../../../tools/phoneTools';
-import PromosBlock from "./PromosBlock";
+import CasesBlock from "./CasesBlock";
 import {toJS} from 'mobx';
 import Dropzone from 'react-dropzone'
 import PublishIcon from '@material-ui/icons/Publish';
@@ -16,8 +16,8 @@ import DoneIcon from '@material-ui/icons/Done';
     return {
         user: toJS(PersonalPageStore.user),
         spheres: PersonalPageStore.spheres,
-        promosCount: PersonalPageStore.promosCount,
-        promos: PersonalPageStore.promos,
+        casesCount: PersonalPageStore.casesCount,
+        cases: PersonalPageStore.cases,
         isEdit: PersonalPageStore.isEdit,
         toggleEdit: PersonalPageStore.toggleEdit,
         setUserField: PersonalPageStore.setUserField,
@@ -30,7 +30,7 @@ class PersonalPage extends React.Component {
         const {
             user,
             spheres,
-            promosCount,
+            casesCount,
             isEdit,
             toggleEdit,
             setUserField,
@@ -85,8 +85,10 @@ class PersonalPage extends React.Component {
                                 )
                             }
                             {
-                                user.photoPath && <img src={user.photoPath}/>
-                                || <PersonIcon className={s.noPhoto}/>
+                                user.photoPath && <img
+                                    alt={user.fullName}
+                                    src={user.photoPath}
+                                /> || <PersonIcon className={s.noPhoto}/>
                             }
                         </div>
 
@@ -159,7 +161,7 @@ class PersonalPage extends React.Component {
                                     Количество кейсов
                                 </span>
                                 <span className={s.valueField}>
-                             <Chip className={s.chip} size="small" label={promosCount || 'Не указано'}/>
+                             <Chip className={s.chip} size="small" label={casesCount || 'Не указано'}/>
                         </span>
                             </div>
                             <div>
@@ -182,7 +184,7 @@ class PersonalPage extends React.Component {
                                 }
                             </div>
                         </div>
-                        <PromosBlock/>
+                        <CasesBlock/>
                     </div>
                 </div>
             </React.Fragment>

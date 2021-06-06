@@ -71,8 +71,8 @@ export default () => {
                     />
                     <Route
                         exact={true}
-                        path='/promo/:id'
-                        render={(props) => <Wrapper {...props} name={'promo'}/>}
+                        path='/case/:id'
+                        render={(props) => <Wrapper {...props} name={'case'}/>}
                     />
                     <Route
                         exact={true}
