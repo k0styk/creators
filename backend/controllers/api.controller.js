@@ -1,19 +1,10 @@
 const knex = require("../knex/index");
 const service = require('../service');
 
-const promiseFn = (fn, {res, params, body, files}) => {
-    fn({params, knex, body, files}).then((data) => {
-        if (data) {
-            data.status && res.status(data.status);
-            if (data.message) {
-                return res.json(data.message);
-            }
-
-            return res.json(data);
-        } else {
-            return res.json({message: 'error', status: 500});
-        }
-    });
+const promiseFn = (fn, {res, ...restParams}) => {
+    fn({...restParams, knex})
+        .then((data) => res.json(data))
+        .catch((error) => res.json({message: 'error', status: 500}));
 };
 
 module.exports = {
