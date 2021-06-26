@@ -46,18 +46,6 @@ class CreateView extends React.Component {
     setMinutes = (event) => this.changeTime(event, 60,'minutes')
     setHours =  (event) => this.changeTime(event, 24, 'hours')
 
-    opts = {
-        playerVars: {
-            rel: 0,
-            showinfo: 0,
-            iv_load_policy: 3,
-            modestbranding: 1,
-            fs: 0,
-            loop: 1,
-            controls: 0
-        },
-    };
-
     render() {
         const {
             youtubeId,
