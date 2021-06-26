@@ -33,8 +33,7 @@ class MediaCard extends React.Component {
             title,
             price,
             youtubeId,
-            createdAt,
-            userId
+            createdAt
         } = this.props;
 
         return (
@@ -57,7 +56,7 @@ class MediaCard extends React.Component {
                             {title && title.length > 60 ? `${title.slice(0, 60)}...` : title}
                         </span>
                             <span className={s.price}>
-                            {price && `${formatPrice(price)} руб` || 'Стоимость не указана'}
+                            {price && `${formatPrice(price)}` || 'Стоимость не указана'}
                         </span>
                             {
                                 withIncludes &&

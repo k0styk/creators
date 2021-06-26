@@ -1,4 +1,4 @@
-import {observable, get, action, reaction, computed, makeObservable, autorun} from 'mobx';
+import {observable, get, action, reaction, computed, makeObservable} from 'mobx';
 import API from "../../api";
 import {serviceType} from '../../enums';
 import formatTime from '../../tools/formatProductionTime';
@@ -36,11 +36,16 @@ class PromoStore {
         }
         this.setStatus(statusEnum.LOADING);
         try {
+            const result = await API.get(`cases/getCase/${this.caseId}`)
             const {
                 services,
                 userCases,
                 ...caseObject
-            } = await API.get(`cases/getCase/${this.caseId}`)
+            } = result
+            console.log(services,
+                userCases,
+                caseObject);
+
             this.setPromo(caseObject);
             this.setUserPromos(userCases);
             this.initServices(services || []);
@@ -68,6 +73,7 @@ class PromoStore {
     @action initServices = (services) => {
         this.checkedServices = services.filter(({type}) => type === serviceType.MAIN).map(({id}) => id);
         this.services = services;
+        console.log('services', services);
         this.changePrice();
     }
 

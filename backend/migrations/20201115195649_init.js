@@ -1,5 +1,4 @@
 "use strict";
-const {videoTypes, spheres, services, testUser} = require('./migrationsData/initData');
 
 exports.up = async (knex) => Promise.all([
     knex.schema.createTable("users", table => {
@@ -79,11 +78,7 @@ exports.up = async (knex) => Promise.all([
             .notNullable();
         table
             .string("description");
-        table.integer("productionTimeDays")
-            .comment('Срок изготовления в днях');
-        table.integer("productionTimeHours")
-            .comment('Срок изготовления в часах');
-        table.integer("productionTimeMinutes")
+        table.integer("productionTime")
             .comment('Срок изготовления в минутах');
         table
             .integer("userId")
@@ -168,10 +163,7 @@ exports.up = async (knex) => Promise.all([
     CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
     ON cases FOR EACH ROW EXECUTE PROCEDURE
     tsvector_update_trigger(tsvector, 'pg_catalog.russian', title, description);
-  `),
-    knex.table('caseTypes').insert(videoTypes),
-    knex.table('sphereTypes').insert(spheres),
-    knex.table('services').insert(services)
+  `)
 ]);
 
 

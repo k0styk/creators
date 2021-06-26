@@ -10,17 +10,24 @@ import {
 } from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 
-@inject(({CaseStore}) => {
+@inject(({CaseStore, RouterStore}) => {
     return {
         price: CaseStore.price,
         productionTime: (CaseStore.case || {}).productionTime,
         type: (CaseStore.case || {}).type,
         sphere: (CaseStore.case || {}).sphere,
         youtubeId:(CaseStore.case || {}).youtubeId,
-        user: (CaseStore.case || {}).user || {}
+        user: (CaseStore.case || {}).user || {},
+        RouterStore
     };
 })
 class Search extends React.Component {
+    goToChat = () => {
+        const {RouterStore} = this.props;
+        RouterStore.history.push({
+            pathname: '/chat/1'
+        })
+    }
     opts = {
         playerVars: {
             rel: 0,
@@ -76,6 +83,7 @@ class Search extends React.Component {
                     </span>
                     <CheckboxList/>
                     <Button
+                        onClick={this.goToChat}
                         variant='contained'
                         size={'small'}
                         color={'primary'}

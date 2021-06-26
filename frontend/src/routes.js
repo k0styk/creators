@@ -10,8 +10,8 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
     const opt = {
         container: "top-right",
         dismiss: {
-            duration: 3000,
-            onScreen: true
+            duration: 2000,
+            onScreen: false
         },
         showIcon: true
     };
@@ -52,7 +52,7 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
     }
 }
 
-// eslint-disable-next-line react/display-name
+// eslint-disable-next-line react/display-name,import/no-anonymous-default-export
 export default () => {
     return (
         <Provider RouterStore={RouterStore}>

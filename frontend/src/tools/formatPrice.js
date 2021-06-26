@@ -1,8 +1,9 @@
-const formatTime = (price) => {
+const formatPrice = (price, withCurrency = true) => {
     if(!price){
         return
     }
-    return `${new Intl.NumberFormat('ru-RU').format(price)}  руб.`
+    const clearPrice = typeof price === 'string' && price.replace(/\D+/g,'') || price;
+    return `${new Intl.NumberFormat('ru-RU').format(clearPrice)}${!!withCurrency && ' руб.' || ''}`
 };
 
-export default formatTime;
+export default formatPrice;

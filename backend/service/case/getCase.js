@@ -41,6 +41,7 @@ module.exports = {
                     'name',
                     'tooltipText',
                     'tooltipAdditional',
+                    'tooltipAdditionalType',
                     'price',
                     'type'
                 ])

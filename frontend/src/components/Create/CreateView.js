@@ -4,6 +4,8 @@ import s from './Create.module.scss';
 import {TextField, Divider, Button} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 import MediaBlock from './MediaBlock';
+import BlockField from "../../shared/BlockField";
+import TimeSlider from "./TimeSlider";
 
 @inject(({CreateStore}) => {
     return {
@@ -26,7 +28,7 @@ class CreateView extends React.Component {
     };
 
     render() {
-        const {onChangeDesc,  desc, sumbit} = this.props;
+        const {onChangeDesc, desc, sumbit} = this.props;
 
         return (
             <React.Fragment>
@@ -35,7 +37,7 @@ class CreateView extends React.Component {
                 </div>
                 <MediaBlock/>
                 <CheckboxList/>
-                <Divider />
+                <Divider/>
                 <TextField
                     onChange={onChangeDesc}
                     value={desc}

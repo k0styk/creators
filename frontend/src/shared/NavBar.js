@@ -22,6 +22,7 @@ const StyledBreadcrumb = withStyles((theme) => ({
 export default function CustomizedBreadcrumbs({items, ...props}) {
     const breadcrumbItems = items.map(({title}) =>
         <StyledBreadcrumb
+            key = {title}
             label={title}
         />
     )
