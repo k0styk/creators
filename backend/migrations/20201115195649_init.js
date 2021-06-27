@@ -158,11 +158,44 @@ exports.up = async (knex) => Promise.all([
             .notNullable();
         table.index("clientId");
     }),
+    knex.schema.createTable("favorites", table => {
+        table
+            .integer("userId")
+            .notNullable();
+        table
+            .integer("caseId")
+            .notNullable();
+        table.index("userId");
+        table.index("userId","caseId");
+    }),
+    knex.schema.createTable("documents", table => {
+        table
+            .string("word")
+            .unique();
+    }),
     knex.raw(`
-    CREATE INDEX ON "cases" USING gin("tsvector");
+    CREATE INDEX ON "cases" USING gin("tsvector"); 
+    CREATE INDEX ON documents USING GIN (word gin_trgm_ops);
+
+    CREATE OR REPLACE FUNCTION function_copy() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+    INSERT INTO
+        documents(word)
+    VALUES(unnest(tsvector_to_array(new.tsvector)))
+    ON CONFLICT (word) DO NOTHING;
+
+    RETURN new;
+    END;
+    $BODY$
+    language plpgsql;
+
     CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
     ON cases FOR EACH ROW EXECUTE PROCEDURE
     tsvector_update_trigger(tsvector, 'pg_catalog.russian', title, description);
+
+    CREATE TRIGGER wordsupdate BEFORE INSERT OR UPDATE
+    ON cases FOR EACH ROW EXECUTE PROCEDURE function_copy();
   `)
 ]);
 
@@ -177,5 +210,7 @@ exports.down = function (knex) {
         knex.schema.dropTable('deals'),
         knex.schema.dropTable('users'),
         knex.schema.dropTable('cities'),
+        knex.schema.dropTable('documents'),
+        knex.schema.dropTable('favorites'),
     ]);
 };

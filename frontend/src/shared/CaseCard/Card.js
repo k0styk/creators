@@ -36,6 +36,8 @@ class MediaCard extends React.Component {
             createdAt
         } = this.props;
 
+        console.log(this.props);
+
         return (
             <Card className={s.root}>
                 <CardActionArea onClick={this.onClick}>

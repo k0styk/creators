@@ -11,6 +11,7 @@ module.exports = {
                     'youtubeId',
                     'description',
                     'photoPath',
+                    'productionTime',
                     'cities.name as city',
                     'caseTypes.name as type',
                     'sphereTypes.name as sphere'
@@ -23,12 +24,6 @@ module.exports = {
                         'secondName', "secondName",
                         'photoPath', "photoPath"
                     ) as user`))
-                .select(knex.raw(`
-                    json_build_object(
-                        'days', "productionTimeDays",
-                        'hours',  "productionTimeHours",
-                        'minutes', "productionTimeMinutes"
-                    ) as "productionTime"`))
                 .leftJoin('users', 'users.id', 'userId')
                 .leftJoin('sphereTypes', 'sphereTypes.id', 'sphereId')
                 .leftJoin('caseTypes', 'caseTypes.id', 'typeId')
