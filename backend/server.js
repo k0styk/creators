@@ -1,20 +1,36 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const fileUpload = require('express-fileupload');
-const apiRoute = require('./routes/api.routes');
+require('dotenv').config();
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use(express.json({type: 'application/vnd.api+json'}));
-app.use(cors());
-app.use(fileUpload());
-app.use('/public', express.static(__dirname + '/public'));
-app.use('/api', apiRoute);
+const PORT = process.env['APP_PORT'] || '8000',
+    HOST = process.env['APP_HOST'] || 'localhost';
 
+(async () => {
+    async function listenCallback() {
+        try {
+            process.send && process.send('ready');
+            // if we have socket connection to DB or another
+        } catch (err) {
+            console.log('Some error occured');
+            console.log(err);
+        } finally {
+            console.log(`Server started at: http://${HOST}:${PORT}`);
+        }
+    }
 
-app.listen(3003, function () {
-    console.log('API app started');
+    require('./app').listen(PORT, HOST, listenCallback);
+})();
+
+/* PM2 BLOCK START */
+process.on('SIGINT', async () => {
+    console.log('Received SIGINT');
+    // disconnect DB if instance running
+    process.exit(0);
 });
 
-module.exports = app;
+process.on('message', async (msg) => {
+    if (msg === 'shutdown') {
+        console.log('Closing all connections...');
+        // disconnect DB if instance running
+        process.exit(0);
+    }
+});
+/* /* PM2 BLOCK END */
