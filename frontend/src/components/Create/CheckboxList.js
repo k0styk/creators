@@ -3,6 +3,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {List} from '@material-ui/core';
 import CheckboxListItem from '../../shared/CheckboxPrice/CheckboxListItem';
 import {inject} from "mobx-react";
+import {toJS} from "mobx";
 import s from "./Create.module.scss";
 
 const CheckList = withStyles((theme) => ({
@@ -27,7 +28,7 @@ const CheckList = withStyles((theme) => ({
         onCheckMainService:  CreateStore.onCheckMainService,
         addServices: CreateStore.addServices,
         onPriceChange:  CreateStore.onPriceChange,
-        prices: CreateStore.prices
+        prices: toJS(CreateStore.prices)
     };
 })
 class CheckboxList extends React.Component {

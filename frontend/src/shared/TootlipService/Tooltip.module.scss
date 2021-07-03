@@ -1,0 +1,17 @@
+.helpIcon {
+  font-size: 16px
+}
+.popper{
+  width: 500px;
+}
+.media {
+  height: 250px;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  span {
+    display: block;
+  }
+}

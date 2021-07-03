@@ -18,8 +18,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
   background-color: #f9f9fd;
+}
+
+.menu {
+  width: 200px;
+}
+
+.menuItem {
+  text-decoration: none;
+  color: #34373d;
 }
 
 .loader {
@@ -33,7 +42,7 @@ body {
 }
 
 .wrapper {
-  padding-top: 52px ;
+  padding-top: 52px;
   height: 100%;
   position: absolute;
   width: 100%;

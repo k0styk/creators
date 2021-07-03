@@ -30,8 +30,6 @@ module.exports = {
             .as('table')
             .limit(limit);
 
-        const query = knex.select().from(subQuery2);
-
         if (userId) {
             subQuery2.where('cases.userId', userId);
         }
@@ -45,20 +43,35 @@ module.exports = {
         }
 
         if (fastFilter) {
-            const sql = `"tsvector" @@ replace(to_tsquery('russian', ?)::text, '&', '|')::tsquery`;
+            const text = fastFilter.trim().replace(/[ ]+/g, ' ').split(' ');
+            if (text.length) {
+                const orFilter = `"word" % to_tsquery('russian', ?)::text`;
+                const whereRaw = `"tsvector" @@ (SELECT lemma FROM documents)::tsquery`;
 
-            subQuery2.whereRaw(sql, `'${fastFilter}':*`);
+                subQuery2
+                    .with('documents', (qb) => {
+                        qb.select(knex.raw(`string_agg(format('''%s''', word), ' | ') as lemma `)).from('documents');
+
+                        text.forEach((word) => {
+                            qb.orWhereRaw(orFilter, word);
+                        });
+                    })
+                    .whereRaw(whereRaw);
+            }
+
+            // const sql = `"tsvector" @@ replace(to_tsquery('russian', ?)::text, '&', '|')::tsquery`;
+            // subQuery2.whereRaw(sql, `'${fastFilter}':*`);
         }
 
         if (price) {
             if (price.to) {
-                query.whereRaw('price <= ?', Number(price.to));
+                subQuery1.whereRaw('price <= ?', Number(price.to));
             }
             if (price.from) {
-                query.andWhere('price', '>=', Number(price.from));
+                subQuery1.andWhere('price', '>=', Number(price.from));
             }
         }
 
-        return query;
+        return subQuery2;
     }
 };

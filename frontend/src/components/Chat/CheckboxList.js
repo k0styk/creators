@@ -17,11 +17,11 @@ const CheckList = withStyles((theme) => ({
     }
 }))(List);
 
-@inject(({CaseStore}) => {
+@inject(({ChatStore}) => {
     return {
-        checked: CaseStore.checked,
-        items: CaseStore.items,
-        onCheckService: CaseStore.onCheckService
+        checked: ChatStore.checked || [],
+        items: ChatStore.items || [],
+        onCheckService: ChatStore.onCheckService
     };
 })
 class CheckboxList extends React.Component {

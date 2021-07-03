@@ -2,7 +2,7 @@ import React from 'react';
 import {Provider} from "mobx-react";
 import ChatView from './ChatView';
 import {inject} from 'mobx-react';
-import CaseStore from '../../stores/Case';
+import ChatStore from '../../stores/Chat';
 
 @inject(({RouterStore}) => {
     return {RouterStore};
@@ -12,12 +12,12 @@ class PersonalPage extends React.Component {
         super(props);
         const {RouterStore} = this.props;
 
-       this.CaseStore = new CaseStore({RouterStore});
+       this.ChatStore = new ChatStore({RouterStore});
     }
 
     render() {
         return (
-           <Provider CaseStore={this.CaseStore}>
+           <Provider ChatStore={this.ChatStore}>
                 <ChatView />
            </Provider>
         );

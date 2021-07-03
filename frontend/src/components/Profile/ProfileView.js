@@ -1,7 +1,7 @@
 import React from 'react';
 import {inject} from "mobx-react";
 import s from './Profile.module.scss';
-import {Chip, Button, Divider} from "@material-ui/core";
+import {Chip, Button} from "@material-ui/core";
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Filter from "./Filter";
 import Cards from "../../shared/CaseCard";
@@ -33,6 +33,7 @@ class ProfileView extends React.Component {
                     <div className={s.leftSide}>
                         <div className={s.avatar}>
                             <img
+                                alt={user.firstName}
                                 src={user.photoPath}
                             />
                         </div>

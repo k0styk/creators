@@ -4,56 +4,28 @@ import getAddress from '../../api/dadata';
 import {Alert} from '../../routes';
 
 class CreateStore {
-    spheres = [];
-    types = [];
-    addresses = []
+    @observable spheres = [];
+    @observable  types = [];
+    @observable  addresses = []
 
-    youtubeId = '';
-    title = '';
-    selectedTypes = null;
-    selectedSpheres = null;
-    prices = {};
-    city = null;
+    @observable  youtubeId = '';
+    @observable  title = '';
+    @observable  selectedTypes = null;
+    @observable  selectedSpheres = null;
+    @observable  prices = {};
+    @observable  city = null;
 
-    services = [];
-    checkedMainServices = [];
-    checkedAddServices = [];
+    @observable  services = [];
+    @observable  checkedMainServices = [];
+    @observable  checkedAddServices = [];
 
-    desc = null;
+    @observable  desc = null;
+
+    @observable time = {};
 
     constructor({RouterStore}) {
-        makeObservable(this, {
-            youtubeId: observable,
-            setYoutubeId: action,
-            title: observable,
-            setTitle: action,
-            spheres: observable,
-            onChangeSpheres: action,
-            types: observable,
-            selectedTypes: observable,
-            selectedSpheres: observable,
-            onChangeTypes: action,
-            addresses: observable,
-            services: observable,
-
-            getData: action,
-            changeAddress: action,
-
-            addServices: computed,
-            onCheckAddService: action,
-            onCheckMainService: action,
-            checkedAddServices: observable,
-            checkedMainServices: observable,
-            prices: observable,
-            onPriceChange: action,
-
-            desc: observable,
-            onChangeDesc: action,
-
-            city: observable,
-            onChangeCity: action
-        })
-        this.routerStore = RouterStore || {};
+        makeObservable(this);
+        this.RouterStore = RouterStore || {};
         this.getData();
     }
 
@@ -61,9 +33,13 @@ class CreateStore {
         return getAddress(value);
     }
 
+    @action setTime = (field, val) => {
+        this.time[field] = val;
+    }
+
     getData = async () => {
         try {
-            const {data: {types, services, spheres}} = await API.get('cases/getDataForCreate');
+            const {types, services, spheres} = await API.get('cases/getDataForCreate');
             this.spheres = spheres.map(({id, name}) => {
                 return {value: id, label: name}
             });
@@ -80,50 +56,64 @@ class CreateStore {
         return this.services.filter(({id}) => !this.checkedMainServices.includes(id));
     }
 
-    onCheckAddService = (id) => {
+    get productionTime() {
+        const {hours, minutes, days} = this.time
+        let minutesAll = Number(minutes);
+        if (hours) {
+            minutesAll += hours * 60
+        }
+        if (days) {
+            minutesAll += days * 24 * 60
+        }
+
+        console.log(minutesAll)
+        return minutesAll;
+    }
+
+    @action onCheckAddService = (id) => {
         if (this.checkedAddServices.includes(id)) {
             this.checkedAddServices = this.checkedAddServices.filter((item) => item !== id)
         } else this.checkedAddServices = [...this.checkedAddServices, id];
     }
 
-    onCheckMainService = (id) => {
+    @action onCheckMainService = (id) => {
         if (this.checkedMainServices.includes(id)) {
             this.checkedMainServices = this.checkedMainServices.filter((item) => item !== id)
         } else this.checkedMainServices = [...this.checkedMainServices, id];
     }
 
-    setTitle = ({target: {value}}) => {
+    @action setTitle = ({target: {value}}) => {
         this.title = value
     }
 
-    setYoutubeId = ({target: {value}}) => {
+    @action setYoutubeId = ({target: {value}}) => {
         const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
         const match = value.match(regExp);
-        this.youtubeId = (match && match[7].length == 11) ? match[7] : false;
+        this.youtubeId = (match && match[7].length === 11) ? match[7] : false;
     }
 
-    onPriceChange = (price, serviceId) => {
-        this.prices[serviceId] = price;
+    @action onPriceChange = (price, serviceId) => {
+        this.prices[serviceId] = price
     }
 
-    onChangeDesc = ({target: {value}}) => {
+    @action onChangeDesc = ({target: {value}}) => {
         this.desc = value;
     }
 
-    onChangeCity = (city) => {
+    @action onChangeCity = (city) => {
         this.city = city;
     }
 
-    onChangeSpheres = (spheres) => {
+    @action onChangeSpheres = (spheres) => {
         this.selectedSpheres = spheres
     }
 
-    onChangeTypes = (types) => {
+    @action onChangeTypes = (types) => {
         this.selectedTypes = types;
     }
 
-    checkFields = () => {
-        if (!this.title || !this.youtubeId || !this.selectedSpheres || !this.selectedTypes) {
+    @action checkFields = () => {
+        if (!!(this.productionTime || this.title || this.youtubeId || this.selectedSpheres || this.selectedTypes)) {
             Alert({type: 'error', title: 'Заполните обязательные поля'})
             return false
         }
@@ -140,7 +130,7 @@ class CreateStore {
         return true;
     }
 
-    sumbit = async () => {
+    @action sumbit = async () => {
         if (!this.checkFields()) {
             return;
         }
@@ -157,8 +147,6 @@ class CreateStore {
             prices
         } = this;
 
-        console.log(title);
-
         const res = {
             city,
             desc,
@@ -169,17 +157,16 @@ class CreateStore {
             mainServices: mainServices.map((item) => {
                 return {
                     id: item,
-                    price: prices[item]
+                    price: prices[item].replace(/\D+/g, '')
                 }
             }),
             addServices: addServices.map((item) => {
                 return {
                     id: item,
-                    price: prices[item]
+                    price: prices[item].replace(/\D+/g, '')
                 }
             })
         }
-
 
         try {
             await API.post('cases/create', res);
@@ -188,6 +175,7 @@ class CreateStore {
                 title: 'Успешно!',
                 message: 'Ваше объявление будет опубликовано и проверено модерацией в течении 24 часов'
             })
+            this.RouterStore.history.push('/lk')
 
         } catch (_) {
             Alert({

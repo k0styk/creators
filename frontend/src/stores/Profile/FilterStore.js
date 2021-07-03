@@ -1,6 +1,5 @@
-import {action, computed, get, makeObservable} from 'mobx';
+import {computed, get, makeObservable} from 'mobx';
 import FilterBaseStore from '../FilterStore';
-import ProfileService from "./index";
 
 class FilterStore extends FilterBaseStore {
     RouterStore
@@ -12,12 +11,12 @@ class FilterStore extends FilterBaseStore {
         makeObservable(this);
     }
 
-    @computed userId = ()=>{
+    @computed get user(){
        return   Number(get(get(this.RouterStore.match, 'params'), 'id')) || null;
     }
 
     search = () => {
-        this.setUserId(this.userId);
+        this.setUserId(this.user);
         this.setParameters();
     }
 }

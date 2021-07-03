@@ -1,77 +1,45 @@
-import React, {Component} from 'react';
+import React from 'react';
 import s from './../main.module.scss';
-import {AppBar, Button, Menu, MenuItem, Toolbar, IconButton, Typography, Avatar} from '@material-ui/core';
+import {AppBar, Toolbar, IconButton} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuBlock from './Menu';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
+import UserBlock from './UserBlock';
 
 const useStyles = makeStyles((theme) => ({
-  appBarClient: {
-    background: '#288ad6',
-    padding: '0 10%',
-  },
-  appBarCreator: {
-    background: '#35d219',
-    padding: '0 10%',
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+    appBarClient: {
+        background: '#288ad6',
+        padding: '0 10%',
+    },
+    appBarCreator: {
+        background: '#35d219',
+        padding: '0 10%',
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
 }));
 
 export default function Header({userType = false}) {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+    const classes = useStyles();
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <AppBar className={userType && classes.appBarCreator || classes.appBarClient} position="fixed">
-      <Toolbar className={s.toolbar}>
-        <div>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon/>
-          </IconButton>
-          <Typography variant="h6"> Creators </Typography>
-        </div>
-        <div>
-          <IconButton
-          > <NotificationsNoneIcon className={s.favIcon}/>
-          </IconButton>
-          <IconButton
-          > <FavoriteBorderIcon className={s.favIcon}/>
-          </IconButton>
-          <Button onClick={handleClick} className={s.userButton}>
-            Кристина
-            <Avatar
-              className={s.avatar}
-              alt="Cindy Baker"
-              src="https://sun9-37.userapi.com/impg/DtbybJ1pculLMHN29oXM-HzAazNyjJ8hzNS7sw/p5wakIgVpaY.jpg?size=1350x1800&quality=96&sign=db049c6407e81ce1fe9c4f68f81a2f53&type=album"/>
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>My account</MenuItem>
-            <MenuItem>Logout</MenuItem>
-          </Menu>
-
-
-        </div>
-      </Toolbar>
-    </AppBar>
-  );
+    return (
+        <AppBar className={userType && classes.appBarCreator || classes.appBarClient} position="fixed">
+            <Toolbar className={s.toolbar}>
+                <MenuBlock/>
+                <div>
+                    <IconButton>
+                        <NotificationsNoneIcon className={s.favIcon}/>
+                    </IconButton>
+                    <IconButton>
+                        <FavoriteBorderIcon className={s.favIcon}/>
+                    </IconButton>
+                    <UserBlock/>
+                </div>
+            </Toolbar>
+        </AppBar>
+    );
 }
 
 

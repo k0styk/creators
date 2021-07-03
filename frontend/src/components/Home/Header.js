@@ -3,7 +3,7 @@ import s from './Home.module.scss';
 import logo from '../../shared/logo.png';
 import YouTube from 'react-youtube';
 import WorkIcon from '@material-ui/icons/WorkOutline';
-import {Avatar, CardActions, IconButton} from '@material-ui/core';
+import {Avatar, IconButton} from '@material-ui/core';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 class Header extends React.Component {
@@ -26,7 +26,11 @@ class Header extends React.Component {
         <div className={s.headerContainer}>
           <div className={s.header}>
             <div className={s.right}>
-              <img src = {logo} alt = "Logo" className={s.logo}/>
+              <img
+                  src = {logo}
+                  alt = "Logo"
+                  className={s.logo}
+              />
               <span> Creators</span>
             </div>
             <div className={s.left}>

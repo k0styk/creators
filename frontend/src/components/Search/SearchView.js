@@ -1,9 +1,5 @@
 import React from 'react';
-import s from './Search.module.scss';
-import Filter from '../../shared/Filter';
-import Cards from "../../shared/CaseCard";
 import {inject, Provider} from "mobx-react";
-import {toJS} from "mobx";
 import {status as statusEnum} from '../../enums';
 import Loader from '../../shared/Loader';
 import Error from '../../shared/Error';

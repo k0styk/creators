@@ -10,7 +10,6 @@ class PersonalPageStore {
     isEdit = false;
 
     constructor({RouterStore}) {
-        console.log(PersonalPageStore);
         makeObservable(this, {
             user: observable,
             cases: observable,
@@ -65,7 +64,7 @@ class PersonalPageStore {
         data.append('file', files[0]);
 
         try {
-            const {data: {file}} = await API.post('upload', data);
+            const {file} = await API.post('upload', data);
 
             this.setUserField('photoPath', file)
         } catch (e) {

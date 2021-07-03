@@ -31,7 +31,7 @@ const cities = [
 const cases = [
     {
         cityId: 1,
-        productionTimeHours: '2',
+        productionTime: '2',
         sphereId: 1,
         title: 'Рекламный ролик "ПромСтройСервис"',
         typeId: 1,
@@ -42,7 +42,7 @@ const cases = [
     {
         cityId: 1,
         description: 'description',
-        productionTimeDays: '2',
+        productionTime: '2',
         sphereId: 1,
         title: 'СВАДЕБНОЕ ВИДЕО',
         typeId: 1,
@@ -52,7 +52,7 @@ const cases = [
     {
         cityId: 1,
         description: 'В основном занимаюсь видео для строительных компаний уже более 3 лет.',
-        productionTimeDays: '2',
+        productionTime: '2',
         sphereId: 1,
         title: 'Реклама строительной компании "Альфа-групп"',
         typeId: 1,
@@ -63,7 +63,7 @@ const cases = [
         cityId: 1,
         description: 'Делаю видео для строительных компаний уже более 3-х лет. Знаю все тонкости съемки на строительных объектах, а также все\n' +
             'техники безопасности, чтобы вы не угадили на штраф.',
-        productionTimeDays: '2',
+        productionTime: '2',
         sphereId: 3,
         title: 'Рекламное видео для строительной компании',
         typeId: 4,
@@ -73,7 +73,7 @@ const cases = [
     {
         cityId: 1,
         description: 'description',
-        productionTimeDays: '1',
+        productionTime: '1',
         sphereId: 2,
         title: 'title',
         typeId: 2,

@@ -6,7 +6,7 @@ import RouterStore from './stores/Router';
 import 'react-notifications-component/dist/theme.css';
 import ReactNotification, { store } from 'react-notifications-component';
 
-const PrivateRoute = ({ component: Component, redirect, name, ...rest }) => (
+const PrivateRoute = ({redirect, name, ...rest }) => (
     <Route
         {...rest}
         render={(props) => {
@@ -24,7 +24,7 @@ const PrivateRoute = ({ component: Component, redirect, name, ...rest }) => (
             const user = JSON.parse(localStorage.getItem('user'));
 
             if (user) {
-                return <Component name {...props} />;
+                return <Wrapper name {...props} />;
             } else {
                 return redi();
             }
@@ -36,28 +36,27 @@ export const Alert = ({ type, title = ' ', message = ' ' }) => {
     const opt = {
         container: 'top-right',
         dismiss: {
-            duration: 3000,
-            onScreen: true,
+            duration: 2000,
+            onScreen: false
         },
-        showIcon: true,
+        showIcon: true
     };
 
-    // eslint-disable-next-line default-case
     switch (type) {
         case 'info':
             store.addNotification({
                 title: title,
                 message: message,
-                type: 'info',
-                ...opt,
+                type: "info",
+                ...opt
             });
             break;
         case 'success':
             store.addNotification({
                 title: title,
                 message: message,
-                type: 'success',
-                ...opt,
+                type: "success",
+                ...opt
             });
             break;
 
@@ -65,22 +64,21 @@ export const Alert = ({ type, title = ' ', message = ' ' }) => {
             store.addNotification({
                 title: title,
                 message: message,
-                type: 'warning',
-                ...opt,
+                type: "warning",
+                ...opt
             });
             break;
         case 'error':
             store.addNotification({
                 title: title,
                 message: message,
-                type: 'danger',
-                ...opt,
+                type: "danger",
+                ...opt
             });
     }
 };
 
-// eslint-disable-next-line react/display-name
-// eslint-disable-next-line import/no-anonymous-default-export
+// eslint-disable-next-line react/display-name,import/no-anonymous-default-export
 export default () => {
     return (
         <Provider RouterStore={RouterStore}>
@@ -89,20 +87,23 @@ export default () => {
                 <Switch>
                     <Route
                         exact={true}
-                        path="/"
-                        render={(props) => <Wrapper {...props} name={'home'} />}
+                        path='/'
+                        render={(props) => <Wrapper {...props} name={'home'}/>}
                     />
                     <Route
                         exact={true}
-                        path="/search"
-                        render={(props) => (
-                            <Wrapper {...props} name={'search'} />
-                        )}
+                        path='/search'
+                        render={(props) => <Wrapper {...props} name={'search'}/>}
                     />
                     <Route
                         exact={true}
-                        path="/case/:id"
-                        render={(props) => <Wrapper {...props} name={'case'} />}
+                        path='/case/:id'
+                        render={(props) => <Wrapper {...props} name={'case'}/>}
+                    />
+                    <Route
+                        exact={true}
+                        path='/profile/:id'
+                        render={(props) => <Wrapper {...props} name={'profile'}/>}
                     />
                     <Route
                         exact={true}
@@ -118,38 +119,23 @@ export default () => {
                             <Wrapper {...props} name={'register'} />
                         )}
                     />
-                    <Route
-                        exact={true}
-                        path="/profile/:id"
-                        render={(props) => (
-                            <Wrapper {...props} name={'profile'} />
-                        )}
-                    />
                     <PrivateRoute
                         exact
                         path="/lk"
                         name="lk"
                         redirect="/login"
-                        component={Wrapper}
-                        // render={(props) => <Wrapper {...props} name={'lk'} />}
                     />
                     <PrivateRoute
                         exact
                         path="/chat/:id"
                         name="chat"
                         redirect="/login"
-                        component={Wrapper}
-                        // render={(props) => <Wrapper {...props} name={'chat'} />}
                     />
                     <PrivateRoute
                         exact
                         path="/create"
                         name="create"
                         redirect="/login"
-                        component={Wrapper}
-                        // render={(props) => (
-                        //     <Wrapper {...props} name={'create'} />
-                        // )}
                     />
                     <Route render={() => <div>{'not found'}</div>} />
                 </Switch>
