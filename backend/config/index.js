@@ -1,14 +1,13 @@
 'use strict';
 
 module.exports = {
-    secretKey: "coconutSecretKey2020",
     development: {
         client: 'pg',
         connection: {
             host: 'localhost',
             database: 'creators',
-            user: 'test-user',
-            password: '3133',
+            user: 'postgres',
+            password: '123',
             port: '5432'
         },
         pool: {
@@ -20,7 +19,7 @@ module.exports = {
             tableName: 'knex_migrations'
         },
         seeds: {
-            directory: './seeds3133'
+            directory: './seeds'
         },
         useNullAsDefault: true
     },
@@ -29,8 +28,9 @@ module.exports = {
         client: 'pg',
         connection: {
             database: 'creators',
-            user: 'username',
-            password: 'password'
+            user: 'mars',
+            password: 'hGSuf$6j7C',
+            port: '5432'
         },
         pool: {
             min: 2,
