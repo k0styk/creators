@@ -42,21 +42,22 @@ export const Alert = ({ type, title = ' ', message = ' ' }) => {
         showIcon: true
     };
 
+    // eslint-disable-next-line default-case
     switch (type) {
         case 'info':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "info",
-                ...opt
+                type: 'info',
+                ...opt,
             });
             break;
         case 'success':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "success",
-                ...opt
+                type: 'success',
+                ...opt,
             });
             break;
 
@@ -64,16 +65,16 @@ export const Alert = ({ type, title = ' ', message = ' ' }) => {
             store.addNotification({
                 title: title,
                 message: message,
-                type: "warning",
-                ...opt
+                type: 'warning',
+                ...opt,
             });
             break;
         case 'error':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "danger",
-                ...opt
+                type: 'danger',
+                ...opt,
             });
     }
 };
