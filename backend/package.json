@@ -5,6 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+    "pm2": "pm2 start ./pm2/process.config.js",
+    "production": "pm2 start ./pm2/process.prod.config.js",
     "devstart": "nodemon server.js",
     "knex": "./node_modules/.bin/knex",
     "eslint": "eslint"
@@ -16,6 +18,9 @@
     "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "connect-redis": "^6.0.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
@@ -23,17 +28,21 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-promise-router": "^3.0.3",
+    "express-session": "^1.17.2",
+    "faker": "^5.0.0",
+    "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "0.21.15",
-    "knex-migrate": "^1.7.4",
     "pg": "8.5.1",
     "pg-promise": "^10.5.2",
     "postgres": "^1.0.2",
+    "redis": "^3.1.2",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "husky": "^4.2.5",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "knex-migrate": "^1.7.4"
   },
   "keywords": [],
   "description": ""

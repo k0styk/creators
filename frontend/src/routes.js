@@ -1,14 +1,40 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Wrapper from './main/routWrapper';
-import {Provider} from "mobx-react";
+import { Provider } from 'mobx-react';
 import RouterStore from './stores/Router';
-import 'react-notifications-component/dist/theme.css'
+import 'react-notifications-component/dist/theme.css';
 import ReactNotification, { store } from 'react-notifications-component';
 
-export const Alert = ({type, title = ' ', message = ' '}) => {
+const PrivateRoute = ({redirect, name, ...rest }) => (
+    <Route
+        {...rest}
+        render={(props) => {
+            const redi = () => (
+                <Redirect
+                    to={{
+                        pathname: redirect,
+                        state: {
+                            from: props.location,
+                        },
+                    }}
+                />
+            );
+            // maybe add check from backend or get from cookies, or use store
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (user) {
+                return <Wrapper name {...props} />;
+            } else {
+                return redi();
+            }
+        }}
+    />
+);
+
+export const Alert = ({ type, title = ' ', message = ' ' }) => {
     const opt = {
-        container: "top-right",
+        container: 'top-right',
         dismiss: {
             duration: 2000,
             onScreen: false
@@ -16,21 +42,22 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
         showIcon: true
     };
 
+    // eslint-disable-next-line default-case
     switch (type) {
         case 'info':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "info",
-                ...opt
+                type: 'info',
+                ...opt,
             });
             break;
         case 'success':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "success",
-                ...opt
+                type: 'success',
+                ...opt,
             });
             break;
 
@@ -38,26 +65,26 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
             store.addNotification({
                 title: title,
                 message: message,
-                type: "warning",
-                ...opt
+                type: 'warning',
+                ...opt,
             });
             break;
         case 'error':
             store.addNotification({
                 title: title,
                 message: message,
-                type: "danger",
-                ...opt
+                type: 'danger',
+                ...opt,
             });
     }
-}
+};
 
 // eslint-disable-next-line react/display-name,import/no-anonymous-default-export
 export default () => {
     return (
         <Provider RouterStore={RouterStore}>
             <BrowserRouter>
-                <ReactNotification/>
+                <ReactNotification />
                 <Switch>
                     <Route
                         exact={true}
@@ -81,23 +108,39 @@ export default () => {
                     />
                     <Route
                         exact={true}
-                        path='/lk'
-                        render={(props) => <Wrapper {...props} name={'lk'}/>}
+                        path="/login"
+                        render={(props) => (
+                            <Wrapper {...props} name={'login'} />
+                        )}
                     />
                     <Route
                         exact={true}
-                        path='/chat/:id'
-                        render={(props) => <Wrapper {...props} name={'chat'}/>}
+                        path="/register"
+                        render={(props) => (
+                            <Wrapper {...props} name={'register'} />
+                        )}
                     />
-                    <Route
-                        exact={true}
-                        path='/create'
-                        render={(props) => <Wrapper {...props} name={'create'}/>}
+                    <PrivateRoute
+                        exact
+                        path="/lk"
+                        name="lk"
+                        redirect="/login"
                     />
-                    <Route render={() => <div>{'not found'}</div>}/>
+                    <PrivateRoute
+                        exact
+                        path="/chat/:id"
+                        name="chat"
+                        redirect="/login"
+                    />
+                    <PrivateRoute
+                        exact
+                        path="/create"
+                        name="create"
+                        redirect="/login"
+                    />
+                    <Route render={() => <div>{'not found'}</div>} />
                 </Switch>
             </BrowserRouter>
         </Provider>
     );
 };
-

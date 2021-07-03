@@ -1,0 +1,39 @@
+import axios from 'axios';
+import authHeader from './authHeader';
+
+const API_URL = 'http://localhost:8000/auth';
+const baseQuery = axios.create({
+    baseURL: API_URL,
+    responseType: 'json',
+    headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Accept: 'application/json',
+        ...authHeader(),
+    },
+});
+
+class AuthService {
+    login({ email, password }) {
+        return baseQuery
+            .post('/login', { email, password })
+            .then(({ data }) => data);
+    }
+
+    logout() {
+        return baseQuery.post('/logout', {}).then(({ data }) => data);
+        // localStorage.removeItem('user');
+    }
+
+    register({ email, password, roleTypeId }) {
+        return baseQuery
+            .post('/register', { email, password, roleTypeId })
+            .then(({ data }) => data);
+    }
+
+    // getCurrentUser() {
+    //     // from store
+    //     // return JSON.parse(localStorage.getItem('user'));
+    // }
+}
+
+export default new AuthService();

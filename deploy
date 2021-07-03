@@ -1,0 +1,21 @@
+echo -e "Runnig \033[32mdeploy\033[0m script..."
+echo -e "\033[31mYou should have installed PM2 global package, before runnig this script\033[0m"
+echo Run install packages
+
+cd backend
+npm i
+cd ../frontend
+npm i
+
+echo -e "\033[32mBuilding\033[0m project"
+npm run build
+
+echo -e "\033[33mRemove\033[0m waste packages, cleaning project modules"
+npm prune --production
+cd ../backend
+npm prune --production
+
+echo Run services process
+npm run production
+
+echo -e "\033[33mDone baby!\033[0m"
