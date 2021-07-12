@@ -6,8 +6,8 @@ module.exports = {
         connection: {
             host: 'localhost',
             database: 'creators',
-            user: 'postgres',
-            password: '123',
+            user: 'test-user',
+            password: '3133',
             port: '5432'
         },
         pool: {

@@ -6,7 +6,8 @@ import Body from './bodyWrapper';
 import s from './main.module.scss';
 
 const Page = loadable(
-    ({ name }) => {
+    ({name}) => {
+        console.log('loadable');
         switch (name) {
             case 'home': {
                 return import('../components/Home');
@@ -35,6 +36,9 @@ const Page = loadable(
             case 'register': {
                 return import('../components/Register');
             }
+            case 'favorites': {
+                return import('../components/Favorites');
+            }
             default:
                 // return NOT FOUND
                 return;
@@ -43,22 +47,20 @@ const Page = loadable(
     {
         fallback: (
             <div className={s.loader}>
-                {' '}
-                <CircularProgress />{' '}
+                <CircularProgress/>
             </div>
         ),
-        cacheKey: ({ name }) => name,
+        cacheKey: ({name}) => name,
     }
 );
 
-const Wrapper = ({ name }) => {
-    if (name === 'home') {
-        return <Page name={name} />;
+const Wrapper = ({name}) => {
+    if (['home', 'login', 'register'].includes(name)) {
+        return <Page name={name}/>;
     }
     return (
         <Body>
-            {' '}
-            <Page name={name} />{' '}
+            <Page name={name}/>
         </Body>
     );
 };

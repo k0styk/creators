@@ -1,38 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Wrapper from './main/routWrapper';
-import { Provider } from 'mobx-react';
-import RouterStore from './stores/Router';
+import {Provider} from 'mobx-react';
 import 'react-notifications-component/dist/theme.css';
-import ReactNotification, { store } from 'react-notifications-component';
+import ReactNotification, {store} from 'react-notifications-component';
+import initStores from './main/initStores';
 
-const PrivateRoute = ({redirect, name, ...rest }) => (
-    <Route
-        {...rest}
-        render={(props) => {
-            const redi = () => (
-                <Redirect
-                    to={{
-                        pathname: redirect,
-                        state: {
-                            from: props.location,
-                        },
-                    }}
-                />
-            );
-            // maybe add check from backend or get from cookies, or use store
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (user) {
-                return <Wrapper name {...props} />;
-            } else {
-                return redi();
-            }
-        }}
-    />
-);
-
-export const Alert = ({ type, title = ' ', message = ' ' }) => {
+export const Alert = ({type, title = ' ', message = ' '}) => {
     const opt = {
         container: 'top-right',
         dismiss: {
@@ -81,10 +55,11 @@ export const Alert = ({ type, title = ' ', message = ' ' }) => {
 
 // eslint-disable-next-line react/display-name,import/no-anonymous-default-export
 export default () => {
+    const {stores} =  initStores();
     return (
-        <Provider RouterStore={RouterStore}>
+        <Provider {...stores}>
             <BrowserRouter>
-                <ReactNotification />
+                <ReactNotification/>
                 <Switch>
                     <Route
                         exact={true}
@@ -110,35 +85,47 @@ export default () => {
                         exact={true}
                         path="/login"
                         render={(props) => (
-                            <Wrapper {...props} name={'login'} />
+                            <Wrapper {...props} name={'login'}/>
                         )}
                     />
                     <Route
                         exact={true}
                         path="/register"
                         render={(props) => (
-                            <Wrapper {...props} name={'register'} />
+                            <Wrapper {...props} name={'register'}/>
                         )}
                     />
-                    <PrivateRoute
+                    <Route
                         exact
                         path="/lk"
                         name="lk"
-                        redirect="/login"
+                        render={(props) => (
+                            <Wrapper {...props} name={'lk'}/>
+                        )}
                     />
-                    <PrivateRoute
+                    <Route
                         exact
                         path="/chat/:id"
                         name="chat"
-                        redirect="/login"
+                        render={(props) => (
+                            <Wrapper {...props} name={'chat'}/>
+                        )}
                     />
-                    <PrivateRoute
+                    <Route
                         exact
                         path="/create"
-                        name="create"
-                        redirect="/login"
+                        render={(props) => (
+                            <Wrapper {...props} name={'create'}/>
+                        )}
                     />
-                    <Route render={() => <div>{'not found'}</div>} />
+                    <Route
+                        exact
+                        path="/favorites"
+                        render={(props) => (
+                            <Wrapper {...props} name={'favorites'}/>
+                        )}
+                    />
+                    <Route render={() => <div>{'not found'}</div>}/>
                 </Switch>
             </BrowserRouter>
         </Provider>

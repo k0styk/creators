@@ -6,9 +6,11 @@ const {
 } = require('./tools/queries');
 
 module.exports = {
-    getPersonalPage: async ({params, knex}) => {
+    getPersonalPage: async ({session, knex}) => {
 
-        const userId = 1;
+        const {user: {id: userId} = {}} = session;
+
+        console.log(userId);
 
         const [user, spheres, cases, casesCount] = await Promise.all([
             getUser(knex, userId, [

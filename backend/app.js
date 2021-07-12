@@ -10,7 +10,11 @@ const { session, headers } = require('./middleware');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorHandlers = require('./handlers/errorHandlers');
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    preflightContinue: true,
+    credentials: true,
+}));
 app.use(helmet());
 app.use(compression());
 app.use(express.json());

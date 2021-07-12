@@ -1,9 +1,10 @@
+@import '../../shared/style';
+
 .card {
-  background: #f1f1f1;
+  background: $gray-100-10;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   border-radius: 4px;
   padding: 1rem;
-  position: relative;
   position: fixed;
   left: 50%;
   top: 50%;
@@ -11,7 +12,7 @@
   transform: translate(-50%, -50%);
 
   .cardHeader {
-    background: #3f51b5;
+    background: $main-blue;
     color: #FFF;
     padding: 0.75rem 1.5rem;
     border-radius: 2px;
@@ -27,11 +28,20 @@
 
   .cardBody {
     margin-top: 2rem;
+
+    & > * {
+      margin-top: 20px;
+    }
   }
 
   .button-block {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 30px;
+
+    & > * {
+      background: $main-blue;
+    }
   }
 }

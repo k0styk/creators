@@ -3,6 +3,7 @@ import axios from "axios";
 const baseQuery = axios.create({
     baseURL: 'http://localhost:8000/api/',
     responseType: 'json',
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',

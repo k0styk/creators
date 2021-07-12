@@ -1,6 +1,9 @@
 module.exports = {
     getUser: async ({params, knex}) => {
         const {id} = params;
+
+        console.log(id);
+
         const user = await knex("users")
             .first([
                 'users.id',
@@ -13,7 +16,7 @@ module.exports = {
                 'photoPath',
             ])
             .where('users.id', id);
-
+        console.log(user);
         if (user) {
             return user;
         }

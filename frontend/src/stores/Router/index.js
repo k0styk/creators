@@ -1,11 +1,19 @@
 import {observable, get, action, makeObservable, computed} from 'mobx';
 
 class RouterStore {
-    location = {};
-    match = {};
-    history = {};
+    UserStore
 
-    constructor() {
+    location = {};
+    match = [];
+    history = [];
+
+    privateRoutes = ['lk', 'favorites']
+    authRoutes  = ['login', 'register']
+
+    @observable isPermitted;
+
+    constructor({UserStore}) {
+        this.UserStore = UserStore;
         makeObservable(this, {
             location: observable,
             match: observable,
@@ -19,7 +27,8 @@ class RouterStore {
         return !get(this.location, 'search');
     }
 
-    setRoute(location, match, history){
+
+    setRoute(location, match, history) {
         this.location = location;
         this.match = match;
         this.history = history;
@@ -33,4 +42,4 @@ class RouterStore {
     }
 }
 
-export default new RouterStore();
+export default RouterStore;

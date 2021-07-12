@@ -15,7 +15,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 // import { useHistory } from 'react-router-dom';
 
-import AuthService from '../../services/auth.service';
+import AuthService from '../../api/auth/auth.service';
 
 const useStyles = makeStyles((theme) => ({
     button: {

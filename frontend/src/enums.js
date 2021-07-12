@@ -8,7 +8,14 @@ const serviceType = {
     ADDITIONAL: 2
 };
 
-module.exports ={
+const authStatusEnum = {
+    IS_CHECKING: 1,
+    IS_AUTHENTICARED: 2,
+    AUTH_IS_FAILED: 3
+}
+
+module.exports = {
     status,
-    serviceType
+    serviceType,
+    authStatusEnum
 }

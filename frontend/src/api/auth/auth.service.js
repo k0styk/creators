@@ -5,6 +5,7 @@ const API_URL = 'http://localhost:8000/auth';
 const baseQuery = axios.create({
     baseURL: API_URL,
     responseType: 'json',
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         Accept: 'application/json',
@@ -16,12 +17,17 @@ class AuthService {
     login({ email, password }) {
         return baseQuery
             .post('/login', { email, password })
-            .then(({ data }) => data);
+            .then((data) => {
+
+                console.log(data)
+            return    data.data
+
+            });
     }
 
     logout() {
-        return baseQuery.post('/logout', {}).then(({ data }) => data);
-        // localStorage.removeItem('user');
+        return baseQuery.post('/logout', {})
+            .then(({ data }) => data);
     }
 
     register({ email, password, roleTypeId }) {
@@ -30,10 +36,11 @@ class AuthService {
             .then(({ data }) => data);
     }
 
-    // getCurrentUser() {
-    //     // from store
-    //     // return JSON.parse(localStorage.getItem('user'));
-    // }
+    getCurrentUser() {
+        return baseQuery
+            .get('/getCurrentUser')
+            .then(({ data }) => data);
+    }
 }
 
 export default new AuthService();
