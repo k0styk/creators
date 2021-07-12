@@ -26,7 +26,7 @@ app.use(fileUpload());
 app.use(headers);
 
 //Bring in the routes
-// app.use('/public', express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
 app.use('/api', apiRoute);
 app.use('/auth', authRoute);
 

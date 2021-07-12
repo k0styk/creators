@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     try {
-        const { email, password, roleTypeId, repeat } = req.body;
+        const {email, password, roleTypeId} = req.body;
 
         const hashPassword = await bcrypt.hash(
             password,
@@ -16,8 +16,9 @@ exports.register = async (req, res) => {
             type: roleTypeId,
         });
 
+
+        await this.login(req, res);
         res.redirect(200, '/auth/login');
-        return;
     } catch (err) {
         console.error('Register error');
         console.log(err);
@@ -26,8 +27,9 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+    console.log(12);
     try {
-        const { email, password, repeat } = req.body;
+        const { email, password} = req.body;
         const candidate = await knex('users')
             .first(['password', 'id', 'type'])
             .where('email', email);

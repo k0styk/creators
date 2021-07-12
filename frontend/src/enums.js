@@ -2,7 +2,13 @@ const status = {
     LOADING: 1,
     SUCCESS: 2,
     ERROR: 3
-}
+};
+
+const userType = {
+    CONSUMER: 1,
+    CREATOR: 2
+};
+
 const serviceType = {
     MAIN: 1,
     ADDITIONAL: 2
@@ -10,12 +16,13 @@ const serviceType = {
 
 const authStatusEnum = {
     IS_CHECKING: 1,
-    IS_AUTHENTICARED: 2,
+    IS_AUTHENTICATED: 2,
     AUTH_IS_FAILED: 3
 }
 
 module.exports = {
     status,
     serviceType,
-    authStatusEnum
+    authStatusEnum,
+    userType
 }

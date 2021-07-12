@@ -1,20 +1,31 @@
 import {observable, action, makeObservable} from 'mobx';
 import AuthService from '../../api/auth/auth.service';
-
+import {Alert} from "../../routes";
+import {authStatusEnum, userType} from '../../enums';
 
 class AuthStore {
     UserStore;
     RouterStore;
 
-    @observable email;
+    @observable email = '';
     @observable showPassword = 'password';
-    @observable password;
+    @observable password = '';
+    @observable isCreator;
+    @observable repeatPassword = '';
 
     constructor({UserStore, RouterStore}) {
         this.UserStore = UserStore;
         this.RouterStore = RouterStore;
 
         makeObservable(this)
+    }
+
+    @action setIsCreator = () => {
+        this.isCreator = !this.isCreator;
+    }
+
+    @action setRepeatPassword = ({target: {value}}) => {
+        this.repeatPassword = value;
     }
 
     @action setEmail = ({target: {value}}) => {
@@ -31,24 +42,61 @@ class AuthStore {
         this.password = value;
     }
 
-    loginUser = () => {
+    checkPassword = () => this.password === this.repeatPassword;
+
+    check = () => {
+        if (!this.email || !this.password || !this.repeatPassword) {
+            Alert({type: 'error', title: 'Заполните обязательные поля'})
+            return false
+        }
+
+        if (!this.checkPassword()) {
+            Alert({type: 'error', title: 'Пароли не совпадают'})
+            return false
+        }
+
+        return true
+    }
+
+    loginUser = async () => {
         const {email, password} = this;
 
         try {
-            AuthService.login({email, password})
-                .then((data) => {
-                    const userId = data.id;
+            const {id: userId} = await AuthService.login({email, password})
 
-                    this.UserStore.setUserId(userId);
-                    this.RouterStore.history.push({pathname: '/',});
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            this.UserStore.setUserId(userId);
+            this.UserStore.setAuthStatus(authStatusEnum.IS_AUTHENTICATED);
+            this.RouterStore.history.push({pathname: '/lk',});
         } catch (err) {
+            Alert({type: 'error', title: 'Ошибка входа'})
+            this.UserStore.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
             console.error(err);
         }
     };
+
+    registerUser = async () => {
+        const {email, password, isCreator} = this;
+
+        if (!this.check()) {
+            return
+        }
+
+        try {
+            const roleTypeId = isCreator && userType.CREATOR || userType.CONSUMER;
+
+            await AuthService.register({email, password, roleTypeId});
+            await this.UserStore.getCurrentUser();
+
+            this.UserStore.setAuthStatus(authStatusEnum.IS_AUTHENTICATED)
+            this.RouterStore.history.push({pathname: '/lk',});
+        } catch (err) {
+            Alert({type: 'error', title: 'При регистрации возникла ошибка'})
+            this.UserStore.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+            console.error(err);
+        }
+
+    };
 }
+
 
 export default AuthStore;

@@ -1,4 +1,4 @@
-@import '../../../shared/style';
+@import '../../shared/style';
 
 .content {
   display: flex;
@@ -13,7 +13,6 @@
     font-size: 14px;
   }
 }
-
 
 .noPhoto {
   font-size: 56px;
@@ -33,6 +32,7 @@
     margin-right: 10px;
   }
 }
+
 .saveButton{
   font-size: 16px;
   color: $main-green;
@@ -84,6 +84,8 @@
 }
 
 .works {
+  margin-top: 0;
+  width: 100%;
   display: flex;
   flex-direction: column !important;
 
@@ -107,6 +109,9 @@
   color: $green-100;
 }
 
+.editBlock{
+  width: 700px;
+}
 .userInfo {
   display: flex;
   flex-direction: column !important;
@@ -127,5 +132,13 @@
 
 .titleField {
   font-weight: 400;
+  color: $gray-100;
+}
+
+.noCases{
+  height: 50px;
+  padding: 20px;
+  text-align: center;
+  font-size: 16px;
   color: $gray-100;
 }

@@ -1,0 +1,37 @@
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  min-height: min-content !important;
+  padding: 0 !important;
+
+  & > * {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+
+  .favIcon {
+    color: white;
+  }
+
+  .userButton {
+    text-transform: capitalize;
+    color: white;
+  }
+
+  .avatar {
+    margin-left: 10px;
+  }
+}
+.menu {
+   width: 230px;
+ }
+
+.menuItem {
+  text-decoration: none;
+  color: #34373d;
+}

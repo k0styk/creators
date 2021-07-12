@@ -2,25 +2,17 @@ import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
 import API from "../../api";
 
 class PersonalPageStore {
-    routerStore = {};
-    user = {};
-    spheres = [];
-    cases = [];
-    casesCount = 0;
-    isEdit = false;
+    @observable routerStore = {};
+    @observable user = {};
+    @observable spheres = [];
+    @observable cases = [];
+    @observable casesCount = 0;
+    @observable isEdit = false;
+    @observable activeCases = [];
+    @observable completedCases = [];
 
     constructor({RouterStore}) {
-        makeObservable(this, {
-            user: observable,
-            cases: observable,
-            casesCount: observable,
-            spheres: observable,
-            setUser: action,
-            initData: action,
-            isEdit: observable,
-            toggleEdit: action,
-            setUserField: action
-        })
+        makeObservable(this)
         this.routerStore = RouterStore || {};
         this.getData();
     }
@@ -31,31 +23,40 @@ class PersonalPageStore {
                 user,
                 cases,
                 casesCount,
-                spheres
+                spheres,
+                activeCases,
+                completedCases
             } = await API.get('users/getPersonalPage');
 
+            console.log('getData', user)
             this.setUser(user);
-            this.initData({spheres, cases, casesCount});
+            this.initData({
+                spheres,
+                cases,
+                casesCount,
+                activeCases,
+                completedCases
+            });
         } catch (e) {
             console.log(e);
         }
     }
 
-    setUser = (user) => {
+    @action setUser = (user) => {
         this.user = user;
     }
 
-    initData = ({spheres, cases, casesCount}) => {
+    @action initData = ({spheres, cases, casesCount}) => {
         this.spheres = spheres;
         this.cases = cases;
         this.casesCount = casesCount;
     }
 
-    toggleEdit = () => {
+    @action toggleEdit = () => {
         this.isEdit = !this.isEdit;
     }
 
-    setUserField = (field, value) => {
+    @action  setUserField = (field, value) => {
         this.user[field] = value;
     }
 

@@ -3,24 +3,18 @@ import {observable, get, action, makeObservable, computed} from 'mobx';
 class RouterStore {
     UserStore
 
-    location = {};
-    match = [];
-    history = [];
+    @observable location = {};
+    @observable match = [];
+    @observable history = [];
 
     privateRoutes = ['lk', 'favorites']
-    authRoutes  = ['login', 'register']
+    authRoutes = ['login', 'register']
 
     @observable isPermitted;
 
     constructor({UserStore}) {
         this.UserStore = UserStore;
-        makeObservable(this, {
-            location: observable,
-            match: observable,
-            history: observable,
-            setRoute: action,
-            getParam: action
-        })
+        makeObservable(this)
     }
 
     @computed get urlIsEmpty() {
@@ -28,7 +22,7 @@ class RouterStore {
     }
 
 
-    setRoute(location, match, history) {
+    @action setRoute(location, match, history) {
         this.location = location;
         this.match = match;
         this.history = history;

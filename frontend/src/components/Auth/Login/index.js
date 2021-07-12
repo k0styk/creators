@@ -1,7 +1,6 @@
-import './login.scss';
 import React from 'react';
 import {inject, Provider} from "mobx-react";
-import AuthStore from "../../stores/User/AuthStore";
+import AuthStore from "../../../stores/User/AuthStore";
 import LoginView from './LoginView';
 
 

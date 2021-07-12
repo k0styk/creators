@@ -14,7 +14,6 @@ class UserStore {
 
 
     @action setAuthStatus = (staus) => {
-        console.log(staus);
         this.authStatus = staus;
     }
 
@@ -23,7 +22,7 @@ class UserStore {
     }
 
     @action setUserId = (userId) => {
-        this.userId = userId
+        this.userId = userId;
     }
 
     @action setUser = (user) => {
@@ -36,8 +35,12 @@ class UserStore {
         try {
             const user = await API.get(`users/getCurrentUser`)
 
-            this.setUser(user);
-            this.setAuthStatus(authStatusEnum.IS_AUTHENTICARED)
+            if (user) {
+                this.setUser(user);
+                this.setAuthStatus(authStatusEnum.IS_AUTHENTICATED)
+            } else {
+                this.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+            }
 
         } catch (err) {
             this.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)

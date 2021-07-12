@@ -1,7 +1,7 @@
 module.exports = {
-    editUser: async ({body, knex}) => {
+    editUser: async ({body, session, knex}) => {
         const {firstName, about, lastName, secondName, photoPath} = body;
-        const userId = 1;
+        const {user: {id} = {}} = session;
         try {
             await knex("users")
                 .update({
@@ -11,7 +11,7 @@ module.exports = {
                     secondName,
                     photoPath
                 })
-                .where('users.id', userId);
+                .where('users.id', id);
             return {status: 200};
         } catch (error) {
             console.log(e);

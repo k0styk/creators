@@ -17,12 +17,7 @@ class AuthService {
     login({ email, password }) {
         return baseQuery
             .post('/login', { email, password })
-            .then((data) => {
-
-                console.log(data)
-            return    data.data
-
-            });
+            .then(({data}) => data);
     }
 
     logout() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {inject} from "mobx-react";
-import s from './PersonalPage.module.scss';
+import s from '../PersonalPage.module.scss';
 import {Tooltip, IconButton, Button, Chip} from "@material-ui/core";
 import TextField from "../../../shared/TextField";
 import EditIcon from '@material-ui/icons/Edit';
@@ -42,8 +42,8 @@ class PersonalPage extends React.Component {
             <React.Fragment>
                 <div className={s.userName}>
                     <span>
-                        {`${user.secondName} ${user.firstName} ${user.lastName} `}
-                    </span>
+                        {`${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''} `}
+                     </span>
                     {
                         !isEdit && (
                             <Tooltip
@@ -106,9 +106,10 @@ class PersonalPage extends React.Component {
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Баланс </span>
-                            <span>  28 000 руб </span>
+                            <span>  {'-'} </span>
                         </div>
                     </div>
+
                     <div>
                         <div className={s.userInfo}>
                             {

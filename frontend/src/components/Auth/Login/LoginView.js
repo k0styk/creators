@@ -1,6 +1,5 @@
-import './login.scss';
+import '../Auth.scss';
 import React from 'react';
-
 import {
     Button,
     InputLabel,
@@ -9,8 +8,6 @@ import {
     Input,
 } from '@material-ui/core';
 import {Visibility, VisibilityOff} from '@material-ui/icons';
-import {makeStyles} from '@material-ui/core/styles';
-
 import {inject} from "mobx-react";
 
 @inject(({AuthStore}) => {

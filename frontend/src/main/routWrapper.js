@@ -43,7 +43,7 @@ class StoreWrapper extends Component {
                 </div>
             )
         }
-        if (authStatus === authStatusEnum.IS_AUTHENTICARED && RouterStore.authRoutes.includes(name)) {
+        if (authStatus === authStatusEnum.IS_AUTHENTICATED && RouterStore.authRoutes.includes(name)) {
             return <Redirect to='/'/>;
         }
         if (authStatus === authStatusEnum.AUTH_IS_FAILED && RouterStore.privateRoutes.includes(name)) {

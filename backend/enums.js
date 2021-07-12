@@ -3,6 +3,11 @@ const serviceType = {
     ADDITIONAL: 2
 };
 
+const userType = {
+    CONSUMER: 1,
+    CREATOR: 2
+};
+
 const equipmentPriceCategory = {
     weekday: 1,
     weekend: 2,
@@ -13,4 +18,5 @@ const equipmentPriceCategory = {
 module.exports = {
     serviceType,
     equipmentPriceCategory,
+    userType
 };

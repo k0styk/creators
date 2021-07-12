@@ -1,10 +1,11 @@
 import React from 'react';
-import s from './../main.module.scss';
+import s from './header.module.scss';
 import {SwipeableDrawer, ListItemText, ListItemIcon, ListItem, List, IconButton,} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
+import PersonIcon from '@material-ui/icons/Person';
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -23,6 +24,9 @@ export default function Header() {
         },
         {
             title: 'Поиск', link: '/search', icon: <SearchIcon/>
+        },
+        {
+            title: 'Личный кабинет', link: '/lk', icon: <PersonIcon/>
         }
     ];
 

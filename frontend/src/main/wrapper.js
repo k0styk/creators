@@ -31,10 +31,10 @@ const Page = loadable(
                 return import('../components/Create');
             }
             case 'login': {
-                return import('../components/Login');
+                return import('../components/Auth/Login');
             }
             case 'register': {
-                return import('../components/Register');
+                return import('../components/Auth/Register');
             }
             case 'favorites': {
                 return import('../components/Favorites');
