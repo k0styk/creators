@@ -90,11 +90,11 @@ const users = [
         firstName: 'Алексей',
         lastName: 'Стен',
         password: 'password',
-        phone: 8922796092,
+        phone: 8922716092,
         secondName: 'Монархов',
         type: 1,
         cityId: 1,
-        email: 'email',
+        email: 'email_1',
         photoPath: 'https://antonenko-media.com/wp-content/uploads/2021/02/234fghgf-1024x683.jpg'
     },
     {
@@ -105,14 +105,14 @@ const users = [
         secondName: 'Монархова',
         type: 1,
         cityId: 1,
-        email: 'email2',
+        email: 'email_2',
         photoPath: 'https://276709.selcdn.ru/proektoria/new/professions/2020/03/24/8fe0093bb30d6f8c31474bd0764e6ac0/2019-11-02_15-54-06.jpg'
     },
 ];
 
 const cities = [
-    {name: 'Тюмень'},
-    {name: 'Москва'}
+    {name: 'Тюмень', id: 7200000000000},
+    {name: 'Москва', id: 7700000000000}
 ];
 
 const cases = [

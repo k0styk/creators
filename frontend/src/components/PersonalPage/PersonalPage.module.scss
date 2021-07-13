@@ -35,13 +35,13 @@
   }
 }
 
-.saveButton{
+.saveButton {
   right: 0;
   font-size: 16px;
   color: $main-green;
 }
 
-.loadBlock{
+.loadBlock {
   width: 350px;
   height: 350px;
   position: absolute;
@@ -54,12 +54,12 @@
   justify-content: center;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     background: rgba(0, 0, 0, 0.4);
   }
 }
 
-.userBlock{
+.userBlock {
   width: 350px;
 }
 
@@ -71,7 +71,7 @@
   overflow: hidden;
   border-radius: 4px;
 
-  &:hover .loadBlock{
+  &:hover .loadBlock {
     display: flex;
   }
 
@@ -116,13 +116,15 @@
   color: $green-100;
 }
 
-.fullBlock{
+.fullBlock {
   width: 100%;
 }
-.editBlock{
+
+.editBlock {
   max-width: 900px;
   min-width: 800px;
 }
+
 .userInfo {
   max-width: 900px;
   min-width: 800px;
@@ -148,7 +150,7 @@
   color: $gray-100;
 }
 
-.noCases{
+.noCases {
   height: 50px;
   padding: 20px;
   text-align: center;
