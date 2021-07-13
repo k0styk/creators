@@ -4,6 +4,7 @@ import s from '../PersonalPage.module.scss';
 import {Tooltip, IconButton, Divider, Link} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import Cards from "../../../shared/CaseCard";
+import NoCasesView from "../noCases";
 
 @inject(({PersonalPageStore}) => {
     return {
@@ -26,23 +27,31 @@ class CasesBlock extends React.Component {
                 </Tooltip>
               </Link>
             </span>
-            <Divider/>
-            <Cards
-                cases={cases}
-                withActions={true}
-                user={user}
-                withIncludes={false}
-            />
-            <span className={s.titleWorks}>
-                Исполненные заказы
+                <Divider/>
+                {
+                    cases.length &&
+                    <Cards
+                        cases={cases}
+                        withActions={true}
+                        user={user}
+                        withIncludes={false}
+                    /> || <NoCasesView text={'У вас еще нет кейсов :('}/>
+                }
+                <span className={s.titleWorks}>
+                Выполненные заказы
             </span>
-            <Divider/>
-            <Cards
-                user ={user}
-                cases={cases}
-                withActions={true}
-                withIncludes={false}
-            />
+                <Divider/>
+                {
+                    cases.length &&
+                    <Cards
+                        user={user}
+                        cases={cases}
+                        withActions={true}
+                        withIncludes={false}
+                    /> || <NoCasesView text={'У вас нет выполненных заказов :('}/>
+                }
+
+
             </div>
 
         );

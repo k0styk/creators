@@ -5,7 +5,7 @@ import {Tooltip, IconButton, Divider} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import CaseCard from "../../../shared/CaseCard";
 import PersonIcon from "@material-ui/icons/Person";
-import NoCasesView from "./noCases";
+import NoCasesView from "../noCases";
 import formatPhone from "../../../tools/phoneTools";
 import EditIcon from "@material-ui/icons/Edit";
 
@@ -26,12 +26,15 @@ class PersonalPage extends React.Component {
             completedCases,
             activeCases
         } = this.props;
-
+        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''}`;
+        if (!fullName.trim().length) {
+            fullName = 'Заполните данные о себе'
+        }
         return (
             <React.Fragment>
                 <div className={s.userName}>
                     <span>
-                        {`${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''} `}
+                        {fullName}
                       </span>
                     <Tooltip
                         onClick={toggleEdit}
@@ -45,7 +48,7 @@ class PersonalPage extends React.Component {
 
                 </div>
                 <div className={s.content}>
-                    <div>
+                    <div className={s.userBlock}>
                         <div className={s.avatar}>
                             {
                                 user.photoPath && <img
@@ -56,7 +59,7 @@ class PersonalPage extends React.Component {
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Город </span>
-                            <span> {user.city} </span>
+                            <span> {user.city?.name} </span>
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Телефон </span>

@@ -9,6 +9,6 @@ module.exports = {
         }
 
         //поменять на env
-        return {file: `http://localhost:3002/public/${imageFile.name}`};
+        return {file: `http://localhost:8000/public/${imageFile.name}`};
     }
 };

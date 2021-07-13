@@ -46,7 +46,7 @@ class StoreWrapper extends Component {
         if (authStatus === authStatusEnum.IS_AUTHENTICATED && RouterStore.authRoutes.includes(name)) {
             return <Redirect to='/'/>;
         }
-        if (authStatus === authStatusEnum.AUTH_IS_FAILED && RouterStore.privateRoutes.includes(name)) {
+        if (authStatus === authStatusEnum.IS_NOT_AUTHENTICATED && RouterStore.privateRoutes.includes(name)) {
             return <Redirect to='/login'/>;
         }
         return (

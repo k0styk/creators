@@ -18,7 +18,6 @@ exports.register = async (req, res) => {
 
 
         await this.login(req, res);
-        res.redirect(200, '/auth/login');
     } catch (err) {
         console.error('Register error');
         console.log(err);

@@ -17,7 +17,7 @@ const serviceType = {
 const authStatusEnum = {
     IS_CHECKING: 1,
     IS_AUTHENTICATED: 2,
-    AUTH_IS_FAILED: 3
+    IS_NOT_AUTHENTICATED: 3
 }
 
 module.exports = {

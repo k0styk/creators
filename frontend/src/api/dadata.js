@@ -29,7 +29,7 @@ const getAddress = async (query) => {
         cities = suggestions.map(({value, data}) =>
         {
             return {
-                label: value,
+                name: value,
                 id: data.city_kladr_id
             }
         });

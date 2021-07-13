@@ -6,7 +6,8 @@ import {inject} from "mobx-react";
 
 @inject(({UserStore}) => {
     return {
-        user: UserStore.user || {}
+        user: UserStore.user || {},
+        logout: UserStore.logout
     };
 })
 class Header extends React.Component {
@@ -24,6 +25,12 @@ class Header extends React.Component {
     handleClose = () => {
         this.setState({anchorEl: null})
     };
+
+    handleCloseLogout = () => {
+        const {logout} = this.props;
+        logout();
+        this.handleClose()
+    }
 
 
     render() {
@@ -51,7 +58,7 @@ class Header extends React.Component {
                             Личный кабинет
                         </MenuItem>
                     </Link>
-                    <MenuItem>
+                    <MenuItem onClick={this.handleCloseLogout}>
                         Выход
                     </MenuItem>
                 </Menu>

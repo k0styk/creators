@@ -37,12 +37,15 @@ class PersonalPage extends React.Component {
             loadFiled,
             updateUser
         } = this.props;
-
+        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''}`;
+        if (!fullName.trim().length) {
+            fullName = 'Заполните данные о себе'
+        }
         return (
             <React.Fragment>
                 <div className={s.userName}>
                     <span>
-                        {`${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''} `}
+                        {fullName}
                      </span>
                     {
                         !isEdit && (
@@ -67,7 +70,7 @@ class PersonalPage extends React.Component {
                     }
                 </div>
                 <div className={s.content}>
-                    <div>
+                    <div className={s.userBlock}>
                         <div className={s.avatar}>
                             {
                                 isEdit && (
@@ -91,10 +94,9 @@ class PersonalPage extends React.Component {
                                 /> || <PersonIcon className={s.noPhoto}/>
                             }
                         </div>
-
                         <div className={s.field}>
                             <span className={s.titleField}> Город </span>
-                            <span> {user.city} </span>
+                            <span> {user.city?.name} </span>
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Телефон </span>
@@ -109,8 +111,7 @@ class PersonalPage extends React.Component {
                             <span>  {'-'} </span>
                         </div>
                     </div>
-
-                    <div>
+                    <div className={s.fullBlock}>
                         <div className={s.userInfo}>
                             {
                                 isEdit && <React.Fragment>
@@ -140,7 +141,6 @@ class PersonalPage extends React.Component {
                                     </div>
                                 </React.Fragment>
                             }
-
                             <div>
                                 <span className={s.titleField}>Деятельность </span>
                                 <span>
@@ -177,6 +177,7 @@ class PersonalPage extends React.Component {
                                     !isEdit && (<span>{user.about || 'Не указано'}</span>)
                                     || (
                                         <TextField
+                                            variant={'outlined'}
                                             onChange={({target}) => setUserField('about', target.value)}
                                             value={user.about}
                                             multiline={true}

@@ -6,7 +6,6 @@ import {Alert} from '../../routes';
 class CreateStore {
     @observable spheres = [];
     @observable  types = [];
-    @observable  addresses = []
 
     @observable  youtubeId = '';
     @observable  title = '';
@@ -27,10 +26,6 @@ class CreateStore {
         makeObservable(this);
         this.RouterStore = RouterStore || {};
         this.getData();
-    }
-
-    changeAddress = (value) => {
-        return getAddress(value);
     }
 
     @action setTime = (field, val) => {

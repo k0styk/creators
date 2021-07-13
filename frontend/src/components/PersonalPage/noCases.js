@@ -1,5 +1,5 @@
 import React from 'react';
-import s from '../PersonalPage.module.scss';
+import s from './PersonalPage.module.scss';
 
 const NoCasesView = ({text}) => {
         return (

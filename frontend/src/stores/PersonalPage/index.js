@@ -74,13 +74,17 @@ class PersonalPageStore {
     }
 
     updateUser = async () => {
+        console.log('1');
         const {
             about,
             photoPath,
             lastName,
             secondName,
-            firstName
+            firstName,
+            city
         } = this.user;
+
+        console.log('1');
 
         try {
             await API.post('users/editUser', {
@@ -88,7 +92,8 @@ class PersonalPageStore {
                 photoPath,
                 lastName,
                 secondName,
-                firstName
+                firstName,
+                city
             });
 
             this.toggleEdit();

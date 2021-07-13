@@ -1,6 +1,7 @@
 import {observable, action, makeObservable} from 'mobx';
 import API from "../../api";
 import {authStatusEnum} from '../../enums';
+import AuthService from "../../api/auth/auth.service";
 
 class UserStore {
     @observable userId;
@@ -39,13 +40,21 @@ class UserStore {
                 this.setUser(user);
                 this.setAuthStatus(authStatusEnum.IS_AUTHENTICATED)
             } else {
-                this.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+                this.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
             }
 
         } catch (err) {
-            this.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+            this.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
             console.error(err);
         }
+    }
+
+    @action logout = async() =>{
+        this.userId = null;
+        this.user = null;
+        this.authStatus = authStatusEnum.IS_NOT_AUTHENTICATED;
+        await AuthService.logout()
+
     }
 }
 

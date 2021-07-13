@@ -62,14 +62,13 @@ class AuthStore {
         const {email, password} = this;
 
         try {
-            const {id: userId} = await AuthService.login({email, password})
+            await AuthService.login({email, password})
+            await this.UserStore.getCurrentUser();
 
-            this.UserStore.setUserId(userId);
-            this.UserStore.setAuthStatus(authStatusEnum.IS_AUTHENTICATED);
             this.RouterStore.history.push({pathname: '/lk',});
         } catch (err) {
             Alert({type: 'error', title: 'Ошибка входа'})
-            this.UserStore.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
             console.error(err);
         }
     };
@@ -87,11 +86,10 @@ class AuthStore {
             await AuthService.register({email, password, roleTypeId});
             await this.UserStore.getCurrentUser();
 
-            this.UserStore.setAuthStatus(authStatusEnum.IS_AUTHENTICATED)
             this.RouterStore.history.push({pathname: '/lk',});
         } catch (err) {
             Alert({type: 'error', title: 'При регистрации возникла ошибка'})
-            this.UserStore.setAuthStatus(authStatusEnum.AUTH_IS_FAILED)
+            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
             console.error(err);
         }
 

@@ -9,7 +9,6 @@ const {userType} = require('../../enums');
 module.exports = {
     getPersonalPage: async ({session, knex}) => {
         const {user: {id: userId} = {}} = session;
-
         const user = await getUser(knex, userId, [
             'users.type',
             'users.id',
@@ -19,10 +18,14 @@ module.exports = {
             'secondName',
             'email',
             'about',
-            'cityId',
             'photoPath',
-            'cities.name as city'
-        ]);
+            knex.raw(`(
+            CASE WHEN "cityId" IS NOT NULL
+                 THEN json_build_object('name', cities.name, 'id', cities.id)
+                 ELSE NULL
+             END
+            ) as city`)
+        ]).catch(err => console.log(err));
 
         if (!user) {
             return {};
