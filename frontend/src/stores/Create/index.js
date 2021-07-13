@@ -53,7 +53,7 @@ class CreateStore {
 
     get productionTime() {
         const {hours, minutes, days} = this.time
-        let minutesAll = Number(minutes);
+        let minutesAll = Number(minutes || 0);
         if (hours) {
             minutesAll += hours * 60
         }
@@ -108,7 +108,8 @@ class CreateStore {
     }
 
     @action checkFields = () => {
-        if (!!(this.productionTime || this.title || this.youtubeId || this.selectedSpheres || this.selectedTypes)) {
+        console.log(this.productionTime, this.title, this.youtubeId, this.selectedSpheres, this.selectedTypes);
+        if (!this.productionTime || !this.title || !this.youtubeId || !this.selectedSpheres || !this.selectedTypes) {
             Alert({type: 'error', title: 'Заполните обязательные поля'})
             return false
         }

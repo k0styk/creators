@@ -129,6 +129,7 @@ class CreateView extends React.Component {
                     />
                     <BlockField
                         title={'Срок реализации'}
+                        isRequiered={true}
                         value={<div>
                             <TextField
                                 InputProps={{
