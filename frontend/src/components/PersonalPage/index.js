@@ -23,8 +23,6 @@ class PersonalPage extends React.Component {
     render() {
         const {user} = this.props;
 
-        console.log(user);
-
         return (
             <Provider PersonalPageStore={this.PersonalPageStore}>
                 {(user.type === userType.CONSUMER && <ClientView/>) || <CreatorView/>}

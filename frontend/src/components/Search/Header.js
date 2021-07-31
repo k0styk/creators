@@ -1,10 +1,10 @@
 import React from 'react';
 import s from './Search.module.scss';
 import {inject, Provider} from "mobx-react";
-import {Avatar, Button} from '@material-ui/core';
+import {Avatar} from '@material-ui/core';
 import {Link} from "react-router-dom";
 import Filter from "../../shared/Filter";
-import ClearIcon from '@material-ui/icons/Clear';
+
 
 @inject(({SearchStore}) => {
     return {
@@ -25,7 +25,7 @@ class Header extends React.Component {
             <React.Fragment>
                 <div className={s.header}>
                     {
-                        !!userId && <Link to={`profile/${userId}`}>
+                        !!userId && <Link to={`/profile/${userId}`}>
                             <div className={s.user}>
                           <span className={s.avatar}>
                             <Avatar

@@ -23,18 +23,11 @@ import ClearIcon from "@material-ui/icons/Clear";
         fastFilter: FilterStore.fastFilter,
         setFastFilter: FilterStore.setFastFilter,
         filterIsEmpty: FilterStore.filterIsEmpty,
-        clear: FilterStore.clear
+        clear: FilterStore.clear,
+        times: FilterStore.times
     };
 })
 class Filter extends React.Component {
-    times = [
-        {label: 'до 15 сеĸ', value: 1, to: '15'},
-        {label: '15-30 сеĸ', value: 2, from: '15', to: '30'},
-        {label: '30-60 сеĸ', value: 3, from: '30', to: '60'},
-        {label: '1-3 мин', value: 4, from: '60', to: '180'},
-        {label: '3-10 мин', value: 5, from: '180', to: '600'},
-        {label: 'более 10 мин', value: 6, from: '600'}
-    ];
 
     setFromPrice = ({target}) => this.props.setPrice('from', target.value);
     setToPrice = ({target}) => this.props.setPrice('to', target.value);
@@ -55,7 +48,8 @@ class Filter extends React.Component {
             time,
             fastFilter,
             filterIsEmpty,
-            clear
+            clear,
+            times
         } = this.props;
 
         return (
@@ -91,7 +85,7 @@ class Filter extends React.Component {
                             onChange={setTime}
                             className={s.select}
                             placeholder={'Выберите длительность'}
-                            options={this.times}
+                            options={times}
                         />
                     </div>
                     {/*<div>*/}

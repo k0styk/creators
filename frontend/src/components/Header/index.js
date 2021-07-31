@@ -31,12 +31,12 @@ export default function Header({userType = false}) {
             className={userType === userTypeEnum.CREATOR && classes.appBarCreator || classes.appBarClient}
             position="fixed">
             <Toolbar className={s.toolbar}>
-                <MenuBlock/>
+                <MenuBlock userType={userType}/>
                 <div>
                     <IconButton>
                         <NotificationsNoneIcon className={s.favIcon}/>
                     </IconButton>
-                    <Link to={`favorites`}>
+                    <Link to={`/favorites`}>
                         <IconButton
                             color={'primary'}
                         > <FavoriteBorderIcon className={s.favIcon}/>

@@ -1,6 +1,5 @@
 import {observable, get, action, computed, makeObservable} from 'mobx';
 import API from "../../api";
-import formatPrice from '../../tools/formatPrice';
 
 class ProfileService {
     routerStore = {};

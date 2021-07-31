@@ -1,5 +1,5 @@
 import React from 'react';
-import {inject, Provider} from "mobx-react";
+import {inject} from "mobx-react";
 import {status as statusEnum} from '../../enums';
 import Loader from '../../shared/Loader';
 import Error from '../../shared/Error';

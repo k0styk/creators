@@ -9,15 +9,16 @@ const SelectAddress = (props) => {
     const {
         city,
         onChangeCity,
+        withNull
     } = props;
-    const cityOptions = [
+    const cityOptions = withNull && [
         {id: 'helper', name: 'Введите город', isDisabled: true},
         {id: 0, name: 'Не имеет значения'}
-    ]
+    ] || [{id: 'helper', name: 'Введите город', isDisabled: true}]
 
     return (
         <Select
-            getOptionLabel={({name})=>name}
+            getOptionLabel={({name}) => name}
             value={city}
             onChange={onChangeCity}
             size={'small'}

@@ -7,10 +7,11 @@ import {
     IconButton,
     Input,
 } from '@material-ui/core';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
-import {inject} from "mobx-react";
+import { Visibility,VisibilityOff } from '@material-ui/icons';
+import { inject } from "mobx-react";
+import { Link } from "react-router-dom";
 
-@inject(({AuthStore}) => {
+@inject(({ AuthStore }) => {
     return {
         login: AuthStore.loginUser,
         email: AuthStore.email,
@@ -69,7 +70,7 @@ class LoginPage extends React.Component {
                                         onClick={toggleShowPassword}
                                     >
                                         {
-                                            showPassword ? (<Visibility/>) : (<VisibilityOff/>)
+                                            showPassword ? (<Visibility />) : (<VisibilityOff />)
                                         }
                                     </IconButton>
                                 </InputAdornment>
@@ -87,6 +88,10 @@ class LoginPage extends React.Component {
                         ВОЙТИ
                     </Button>
                 </div>
+
+                <Link to={`/register`} className={'registerLink'}>
+                    Регистрация
+                </Link>
             </div>
         );
     };

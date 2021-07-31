@@ -1,24 +1,30 @@
 const {serviceType} = require('../../enums');
 
 module.exports = {
-    searchCases: async ({body, knex}) => {
+    searchCases: async ({body, session, knex}) => {
         const {
             type,
             sphere,
-            time,
             price,
             userId,
             fastFilter,
-            limit = 10
+            onlyFavorites,
+            limit,
+            time
         } = body;
+        const {user: {id: userIdCurrent} = {}} = session || {};
 
-        const subQuery1 = knex.raw('(select sum(price) from "casesServices" where "caseId" = cases.id) as price');
-        const subQuery2 = knex("cases").select([
+
+        const subQuery = knex("cases").select([
             'cases.id',
             'title',
             'cases.created_at as createdAt',
             'youtubeId',
-            subQuery1
+            'sphereTypes.name as sphere',
+            'caseTypes.name as type',
+            'cases.created_at as createdAt',
+            knex.raw('sum(price) as price'),
+            knex.raw(`COALESCE(json_agg(services.name) FILTER (WHERE services.name IS NOT NULL), '[]')  as services`)
         ])
             .select(knex.raw(`
                     json_build_object(
@@ -27,19 +33,50 @@ module.exports = {
                         'photoPath', "photoPath"
                     ) as user`))
             .leftJoin('users', 'userId', 'users.id')
+            .leftJoin('casesServices', 'casesServices.caseId', 'cases.id')
+            .leftJoin('services', 'services.id', 'casesServices.serviceId')
+            .leftJoin('caseTypes', 'caseTypes.id', 'cases.typeId')
+            .leftJoin('sphereTypes', 'sphereTypes.id', 'cases.sphereId')
             .as('table')
-            .limit(limit);
+            .groupBy(['cases.id', 'users.id', 'caseTypes.name', 'sphereTypes.name']);
+
+
+        if (limit) {
+            subQuery.limit(limit);
+        }
 
         if (userId) {
-            subQuery2.where('cases.userId', userId);
+            subQuery.where('cases.userId', userId);
+        }
+
+        if (onlyFavorites) {
+            subQuery.select(knex.raw(`favorites."caseId" as "inFavorite"`))
+                .join('favorites', function () {
+                    this.on(function () {
+                        this.on('favorites.userId', '=', userIdCurrent);
+                        this.andOn('favorites.caseId', '=', 'cases.id');
+                    });
+                })
+                .groupBy('favorites.caseId');
+        }
+
+        if (!onlyFavorites && userIdCurrent) {
+            subQuery.select(knex.raw(`favorites."caseId" as "inFavorite"`))
+                .leftJoin('favorites', function () {
+                    this.on(function () {
+                        this.on('favorites.userId', '=', userIdCurrent);
+                        this.andOn('favorites.caseId', '=', 'cases.id');
+                    });
+                })
+                .groupBy('favorites.caseId');
         }
 
         if (type) {
-            subQuery2.where('typeId', type);
+            subQuery.where('typeId', type);
         }
 
         if (sphere) {
-            subQuery2.where('sphereId', sphere);
+            subQuery.where('sphereId', sphere);
         }
 
         if (fastFilter) {
@@ -48,7 +85,7 @@ module.exports = {
                 const orFilter = `"word" % to_tsquery('russian', ?)::text`;
                 const whereRaw = `"tsvector" @@ (SELECT lemma FROM documents)::tsquery`;
 
-                subQuery2
+                subQuery
                     .with('documents', (qb) => {
                         qb.select(knex.raw(`string_agg(format('''%s''', word), ' | ') as lemma `)).from('documents');
 
@@ -60,18 +97,27 @@ module.exports = {
             }
 
             // const sql = `"tsvector" @@ replace(to_tsquery('russian', ?)::text, '&', '|')::tsquery`;
-            // subQuery2.whereRaw(sql, `'${fastFilter}':*`);
+            // subQuery.whereRaw(sql, `'${fastFilter}':*`);
         }
 
         if (price) {
-            if (price.to) {
-                subQuery1.whereRaw('price <= ?', Number(price.to));
+            if (Number(price.to)) {
+                subQuery.havingRaw('sum(price) <= ?', Number(price.to));
             }
-            if (price.from) {
-                subQuery1.andWhere('price', '>=', Number(price.from));
+            if (Number(price.from)) {
+                subQuery.havingRaw('sum(price) >= ?', Number(price.from));
             }
         }
 
-        return subQuery2;
+        if (time) {
+            if (Number(time.to)) {
+                subQuery.where('time', '<', Number(time.to));
+            }
+            if (Number(time.from)) {
+                subQuery.where('time', '>', Number(time.from));
+            }
+        }
+
+        return subQuery;
     }
 };

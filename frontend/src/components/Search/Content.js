@@ -7,6 +7,7 @@ import {Divider} from '@material-ui/core';
 @inject(({SearchStore}) => {
     return {
         cases: SearchStore.cases || [],
+        setFavorite: SearchStore.setFavorite,
         urlIsEmpty: SearchStore.urlIsEmpty,
     };
 })
@@ -15,6 +16,7 @@ class Content extends React.Component {
         const {
             cases,
             urlIsEmpty,
+            setFavorite
         } = this.props;
 
         if (!cases.length) {
@@ -32,7 +34,7 @@ class Content extends React.Component {
                         <Divider/>
                     </React.Fragment>
                 }
-                <Cards cases={cases} withIncludes={true}/>
+                <Cards setFavorite={setFavorite} cases={cases} withIncludes={true}/>
             </React.Fragment>
         );
     }

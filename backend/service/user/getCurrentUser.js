@@ -1,7 +1,7 @@
 const {getUser} = require("./getUser");
 
 module.exports = {
-    getCurrentUser: async ({params, session, knex}) => {
+    getCurrentUser: async ({session, knex}) => {
         const {user: {id} = {}} = session;
         if (!id) {
             return;

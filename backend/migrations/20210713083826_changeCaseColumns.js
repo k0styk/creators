@@ -11,12 +11,20 @@ exports.up = async (knex) => {
                 .comment('kladrId')
                 .primary();
         }),
-
         knex.schema.alterTable('users', (table) => {
             table
                 .bigInteger('cityId')
                 .comment('kladrId города')
                 .alter();
+        }),
+        knex.schema.table('cases', (table) => {
+            table
+                .bigInteger('cityId')
+                .comment('kladrId')
+                .alter();
+            table
+                .bigInteger('time')
+                .comment('Время ролика');
         }),
     ]);
 };

@@ -32,7 +32,7 @@ class CasesBlock extends React.Component {
                     cases.length &&
                     <Cards
                         cases={cases}
-                        withActions={true}
+                        withActions={false}
                         user={user}
                         withIncludes={false}
                     /> || <NoCasesView text={'У вас еще нет кейсов :('}/>
@@ -42,11 +42,11 @@ class CasesBlock extends React.Component {
             </span>
                 <Divider/>
                 {
-                    cases.length &&
+                    !cases.length &&
                     <Cards
                         user={user}
                         cases={cases}
-                        withActions={true}
+                        withActions={false}
                         withIncludes={false}
                     /> || <NoCasesView text={'У вас нет выполненных заказов :('}/>
                 }

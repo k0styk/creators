@@ -1,10 +1,10 @@
 const {
     getUser,
     getUserCountCases,
-    getUserCases,
     getUserSphereTypes,
     getUserSumPrice
 } = require('./tools/queries');
+const {searchCases} = require("../case/searchCases");
 
 module.exports = {
     getProfile: async ({params: {id: userId}, knex}) => {
@@ -20,7 +20,7 @@ module.exports = {
                 'cities.name as city'
             ]),
             getUserSphereTypes(knex, userId),
-            getUserCases(knex, userId),
+            searchCases({body: {userId}, knex}),
             getUserCountCases(knex, userId),
             getUserSumPrice(knex, userId)
         ]);

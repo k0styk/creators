@@ -3,7 +3,7 @@ import ReactSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 const customStyles = {
-    control: (provided, state) => ({
+    control: (provided,state) => ({
         ...provided,
         'padding': '0 2px',
         'borderColor': 'rgba(226, 226, 226, 0.6)',
@@ -13,7 +13,7 @@ const customStyles = {
         },
         fontSize: '14px'
     }),
-    placeholder: (provided, state) => ({
+    placeholder: (provided,state) => ({
         ...provided,
         position: 'relative',
         whiteSpace: 'nowrap',
@@ -24,17 +24,17 @@ const customStyles = {
         transform: 'none',
         'marginRight': '10px'
     }),
-    input: (provided, state) => ({
+    input: (provided,state) => ({
         ...provided,
         position: 'absolute',
     }),
-    valueContainer: (provided, state) => ({
+    valueContainer: (provided,state) => ({
         ...provided,
         'padding': '0',
         'minHeight': '20px',
         'minWidth': '150px',
     }),
-    singleValue: (provided, state) => ({
+    singleValue: (provided,state) => ({
         ...provided,
         position: 'relative',
         whiteSpace: 'nowrap',
@@ -44,11 +44,11 @@ const customStyles = {
         transform: 'none',
         fontSize: '14px'
     }),
-    menu: (provided, state) => ({
+    menu: (provided,state) => ({
         ...provided,
         fontSize: '14px'
     }),
-    option: (provided, state) => ({
+    option: (provided,state) => ({
         ...provided,
         background: state.isSelected && 'rgba(146, 153, 167, 0.1)',
         color: state.isSelected && 'black'
@@ -59,12 +59,14 @@ class Select extends React.Component {
     defaultPlaceholder = 'Выберете значение'
 
     render() {
-        const {placeholder, options, loadOptions, defaultOptions, value} = this.props;
+        const { placeholder,options,loadOptions,defaultOptions,value } = this.props;
         let selected;
 
         if (typeof value === 'number') {
-            selected = options.find(({value: val}) => Number(val) === Number(value));
-        }
+            selected = options.find(({ value: val }) => Number(val) === Number(value));
+        } else
+            selected = value;
+
 
         return (
             !loadOptions && <ReactSelect

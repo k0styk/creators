@@ -1,9 +1,8 @@
-import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import {action, makeObservable} from 'mobx';
 import API from "../../api";
 import FilterStore from '../FilterStore';
 
 class HomeStore extends FilterStore {
-    @observable recommendations = [];
 
     constructor({RouterStore}) {
         super({RouterStore});
@@ -22,7 +21,7 @@ class HomeStore extends FilterStore {
     }
 
     @action setRecommendations = (cases) => {
-        this.recommendations = cases;
+        this.cases = cases;
     }
 
     search = () => this.setParameters();

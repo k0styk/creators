@@ -4,12 +4,13 @@ const {
     getUserCases,
     getUserSphereTypes
 } = require('./tools/queries');
-const {userType} = require('../../enums');
+const { userType } = require('../../enums');
+const { searchCases } = require("../case/searchCases");
 
 module.exports = {
-    getPersonalPage: async ({session, knex}) => {
-        const {user: {id: userId} = {}} = session;
-        const user = await getUser(knex, userId, [
+    getPersonalPage: async ({ session,knex }) => {
+        const { user: { id: userId } = {} } = session;
+        const user = await getUser(knex,userId,[
             'users.type',
             'users.id',
             'firstName',
@@ -32,10 +33,10 @@ module.exports = {
         }
 
         if (user.type === userType.CREATOR) {
-            const [spheres, cases, casesCount] = await Promise.all([
-                getUserSphereTypes(knex, userId),
-                getUserCases(knex, userId),
-                getUserCountCases(knex, userId)
+            const [spheres,cases,casesCount] = await Promise.all([
+                getUserSphereTypes(knex,userId),
+                searchCases({ body: { userId },knex }),
+                getUserCountCases(knex,userId)
             ]);
 
             return {

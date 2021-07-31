@@ -1,7 +1,20 @@
 @import '../style';
 
 .root {
-  maxWidth: 345
+  maxWidth: 345;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.types{
+padding: 5px 0;
+
+.chip {
+  background-color: $main-blue-10;
+  font-size: 12px;
+  margin-right: 10px;
+}
 }
 
 .media {
@@ -26,10 +39,12 @@
   }
 
   .videoTitle {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     line-height: 20px;
     height: 40px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -54,8 +69,13 @@
   display: flex;
   justify-content: space-between;
 
-  .favIcon {
+  .favIconDis {
     font-size: 20px;
+  }
+
+  .favIconEn{
+    font-size: 20px;
+    color:red;
   }
 }
 
@@ -81,6 +101,6 @@
   display: grid;
   grid-column-gap: 10px;
   grid-row-gap: 1em;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-auto-rows: minmax(300px, auto);
 }

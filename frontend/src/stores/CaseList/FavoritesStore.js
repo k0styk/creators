@@ -1,20 +1,32 @@
-import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import {action, makeObservable} from 'mobx';
 import API from "../../api";
+import FilterStore from '../FilterStore';
+import {status as statusEnum} from '../../enums';
 
-class HomeStore {
-    @observable recommendations = [];
+class HomeStore extends FilterStore {
 
-    constructor() {
+    constructor({RouterStore}) {
+        super({RouterStore});
+
         makeObservable(this)
+        this.getFavorites();
     }
 
-    getRecommendations = async () => {
+    getFavorites = async () => {
         try {
-            const cases = await API.get('cases/getRecommendations');
-            this.setRecommendations(cases)
+            this.setStatus(statusEnum.LOADING);
+            const cases = await API.get('favorites/getFavorites');
+
+            this.setFavorites(cases);
+            this.setStatus(statusEnum.SUCCESS);
         } catch (e) {
             console.log(e);
+            this.setStatus(statusEnum.ERROR);
         }
+    }
+
+    @action setFavorites = (cases) => {
+        this.cases = cases;
     }
 }
 

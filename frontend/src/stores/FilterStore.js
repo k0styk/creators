@@ -1,12 +1,13 @@
 import {observable, makeObservable, action, toJS, computed} from 'mobx';
 import API from "../api";
+import {status as statusEnum} from '../enums';
 
 class FilterStore {
     RouterStore;
 
     @observable spheres = []
     @observable types = []
-
+    @observable cases = [];
     @observable userId;
     @observable selectedSphere = null;
     @observable selectedCity = null;
@@ -14,6 +15,16 @@ class FilterStore {
     @observable time = {};
     @observable price = {};
     @observable fastFilter;
+    @observable status = statusEnum.LOADING;
+
+    times = [
+        {label: 'до 15 сеĸ', value: 1, to: '15'},
+        {label: '15-30 сеĸ', value: 2, from: '15', to: '30'},
+        {label: '30-60 сеĸ', value: 3, from: '30', to: '60'},
+        {label: '1-3 мин', value: 4, from: '60', to: '180'},
+        {label: '3-10 мин', value: 5, from: '180', to: '600'},
+        {label: 'более 10 мин', value: 6, from: '600'}
+    ];
 
     constructor({RouterStore}) {
         this.RouterStore = RouterStore;
@@ -31,11 +42,38 @@ class FilterStore {
         return this.RouterStore.urlIsEmpty
     }
 
+    @action setTimeObject = (timeto, timefrom) => {
+        this.time = this.times.find(({to, from}) =>
+            Number(timeto) && Number(timefrom) && Number(to) === Number(timeto) && Number(from) === Number(timefrom)
+            || Number(timeto) === Number(to) || Number(timefrom) === Number(from));
+    }
+
+    @action setStatus = (status) => {
+        this.status = status;
+    }
+
+    @action setFavorite = async (caseId, action) => {
+        try {
+            await API.post('favorites/setFavorite', {caseId, action});
+            this.cases = this.cases.map((item) => {
+                if (item.id === caseId) {
+                    return {
+                        ...item, inFavorite: action
+                    }
+                }
+                return item;
+            })
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     @action setPrice = (field, val) => {
         this.price[field] = val;
     }
 
-    @action  setTime = (val) => {
+    @action setTime = (val) => {
         this.time = val;
     }
 
@@ -56,7 +94,6 @@ class FilterStore {
     }
 
     @action initParameters = (types, spheres) => {
-
         this.spheres = spheres.map(({id, name}) => {
             return {
                 label: name,
@@ -80,7 +117,6 @@ class FilterStore {
             fastFilter,
             userId
         } = this;
-
         const params = {
             type: toJS(selectedType || {}).value || selectedType,
             sphere: toJS(selectedSphere || {}).value || selectedSphere,

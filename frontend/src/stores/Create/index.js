@@ -1,6 +1,5 @@
-import {observable, action, computed, makeObservable} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import API from "../../api";
-import getAddress from '../../api/dadata';
 import {Alert} from '../../routes';
 
 class CreateStore {
@@ -61,7 +60,6 @@ class CreateStore {
             minutesAll += days * 24 * 60
         }
 
-        console.log(minutesAll)
         return minutesAll;
     }
 
@@ -69,12 +67,20 @@ class CreateStore {
         if (this.checkedAddServices.includes(id)) {
             this.checkedAddServices = this.checkedAddServices.filter((item) => item !== id)
         } else this.checkedAddServices = [...this.checkedAddServices, id];
+
+        if (this.checkedMainServices.includes(id)) {
+            this.checkedMainServices = this.checkedMainServices.filter((item) => item !== id)
+        }
     }
 
     @action onCheckMainService = (id) => {
         if (this.checkedMainServices.includes(id)) {
             this.checkedMainServices = this.checkedMainServices.filter((item) => item !== id)
         } else this.checkedMainServices = [...this.checkedMainServices, id];
+
+        if (this.checkedAddServices.includes(id)) {
+            this.checkedAddServices = this.checkedAddServices.filter((item) => item !== id)
+        }
     }
 
     @action setTitle = ({target: {value}}) => {
@@ -108,7 +114,6 @@ class CreateStore {
     }
 
     @action checkFields = () => {
-        console.log(this.productionTime, this.title, this.youtubeId, this.selectedSpheres, this.selectedTypes);
         if (!this.productionTime || !this.title || !this.youtubeId || !this.selectedSpheres || !this.selectedTypes) {
             Alert({type: 'error', title: 'Заполните обязательные поля'})
             return false
@@ -140,7 +145,8 @@ class CreateStore {
             title,
             checkedMainServices: mainServices,
             checkedAddServices: addServices,
-            prices
+            prices,
+            productionTime
         } = this;
 
         const res = {
@@ -148,8 +154,9 @@ class CreateStore {
             desc,
             youtubeId,
             typeId: type.value,
-            sphereId: type.value,
+            sphereId: sphere.value,
             title,
+            productionTime,
             mainServices: mainServices.map((item) => {
                 return {
                     id: item,

@@ -1,13 +1,15 @@
 import axios from "axios";
+import authHeader from './auth/authHeader';
 
+const API_URL = 'http://localhost:8000/api';
 const baseQuery = axios.create({
-    baseURL: 'http://localhost:8000/api/',
+    baseURL: API_URL,
     responseType: 'json',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        // authorization: `Bearer ${localStorage.token}`
+        ...authHeader(),
     }
 })
 

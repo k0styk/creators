@@ -1,4 +1,4 @@
-import {observable, get, action, toJS, computed, makeObservable} from 'mobx';
+import {observable, action, makeObservable} from 'mobx';
 import API from "../../api";
 
 class PersonalPageStore {
@@ -28,7 +28,6 @@ class PersonalPageStore {
                 completedCases
             } = await API.get('users/getPersonalPage');
 
-            console.log('getData', user)
             this.setUser(user);
             this.initData({
                 spheres,
@@ -74,7 +73,6 @@ class PersonalPageStore {
     }
 
     updateUser = async () => {
-        console.log('1');
         const {
             about,
             photoPath,
@@ -83,8 +81,6 @@ class PersonalPageStore {
             firstName,
             city
         } = this.user;
-
-        console.log('1');
 
         try {
             await API.post('users/editUser', {

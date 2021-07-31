@@ -1,11 +1,7 @@
-const {searchCases} = require('./searchCases');
+const {searchCases} = require("../case/searchCases");
 
 module.exports = {
-    getCase: async ({params, knex}) => {
-        const userId = 1;
-        // const cards = await knex("cases")
-        //        fisrt
-        //            .join
-        // return cards;
+    getFavorites: async ({knex, session}) => {
+        return searchCases({body: {onlyFavorites: true}, session, knex});
     }
 };

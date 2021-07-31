@@ -30,4 +30,5 @@ const formatTime = ({days, hours, minutes}) => {
     return result
 };
 
+
 export default formatTime;

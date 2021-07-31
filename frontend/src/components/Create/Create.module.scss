@@ -1,8 +1,5 @@
 @import '../../shared/style';
 
-.div{
-  width: 1000px;
-}
 .stepperContainer {
   margin: auto 0;
   margin-right: 10px;
@@ -42,10 +39,12 @@
 .titleBox {
   margin: 20px 0;
 }
-.time{
-  width:40px;
+
+.time {
+  width: 40px;
   margin-right: 20px;
 }
+
 .services {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -71,4 +70,9 @@
 
 .isRequiered {
   color: $red;
+}
+
+.maxTime {
+  color: $gray-100-40;
+  font-size: 12px;
 }

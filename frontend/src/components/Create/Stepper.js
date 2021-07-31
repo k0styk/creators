@@ -5,7 +5,6 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import CreateIcon from '@material-ui/icons/Create';
 import {withStyles} from '@material-ui/core/styles';
 import s from './Create.module.scss';
-import {Link} from "react-router-dom";
 
 const ColorlibConnector = withStyles({
     alternativeLabel: {

@@ -6,6 +6,7 @@ import YouTube from "react-youtube";
 import Select from "../../shared/Select";
 import BlockField from "../../shared/BlockField";
 import Stepper from './Stepper';
+import SelectAddress from '../../shared/AddressSelect';
 
 @inject(({CreateStore}) => {
     return {
@@ -28,23 +29,20 @@ import Stepper from './Stepper';
     };
 })
 class CreateView extends React.Component {
-    changeTime = (event, max, onChange) =>{
-        console.log(event.target.value );
+    changeTime = (event, max, onChange) => {
         const newValue = event.target.value;
         event.target.value = newValue.replace(/\D+/g, '');
-        console.log(event.target.value );
 
         if (Number(event.target.value) > max) {
             event.target.value = max;
         } else {
             event.target.value = Number(event.target.value);
-            console.log(event.target.value );
         }
         this.props.setTime(onChange, event.target.value);
-}
-    setDays  = (event) => this.changeTime(event, 15, 'days')
-    setMinutes = (event) => this.changeTime(event, 60,'minutes')
-    setHours =  (event) => this.changeTime(event, 24, 'hours')
+    }
+    setDays = (event) => this.changeTime(event, 15, 'days')
+    setMinutes = (event) => this.changeTime(event, 60, 'minutes')
+    setHours = (event) => this.changeTime(event, 24, 'hours')
 
     render() {
         const {
@@ -54,8 +52,6 @@ class CreateView extends React.Component {
             setTitle,
             types,
             spheres,
-            changeAddress,
-            addresses,
             city,
             onChangeCity,
             onChangeSpheres,
@@ -63,11 +59,6 @@ class CreateView extends React.Component {
             time
         } = this.props;
 
-
-        const cityOptions = [
-            {id: 'helper', label: 'Введите город', isDisabled: true},
-            {id: 0, label: 'Не имеет значения'}
-        ]
 
         return (
             <div className={s.videoBlock}>
@@ -116,52 +107,55 @@ class CreateView extends React.Component {
                                 onChange={onChangeTypes}
                             />}
                     />
+
                     <BlockField
                         title={'Город'}
-                        value={<Select
-                            value={city}
-                            onChange={onChangeCity}
-                            size={'small'}
-                            loadOptions={changeAddress}
-                            options={addresses}
-                            defaultOptions={cityOptions}
-                        />}
+                        value={
+                            <SelectAddress
+                                withNull={true}
+                                city={city}
+                                onChangeCity={onChangeCity}
+                            />
+                        }
                     />
                     <BlockField
                         title={'Срок реализации'}
                         isRequiered={true}
-                        value={<div>
-                            <TextField
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">д</InputAdornment>,
-                                }}
-                                defaultValue={0}
-                                className={s.time}
-                                size={'small'}
-                                value={time.days}
-                                onChange={this.setDays}
-                            />
-                            <TextField
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">ч</InputAdornment>,
-                                }}
-                                defaultValue={0}
-                                className={s.time}
-                                size={'small'}
-                                value={time.hours}
-                                onChange={this.setHours}
-                            />
-                            <TextField
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">м</InputAdornment>,
-                                }}
-                                defaultValue={0}
-                                className={s.time}
-                                size={'small'}
-                                value={time.minutes}
-                                onChange={this.setMinutes}
-                            />
-                        </div>}
+                        value=
+                            {<div>
+                                <TextField
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">д</InputAdornment>,
+                                    }}
+                                    defaultValue={0}
+                                    className={s.time}
+                                    size={'small'}
+                                    value={time.days}
+                                    onChange={this.setDays}
+                                />
+                                <TextField
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">ч</InputAdornment>,
+                                    }}
+                                    defaultValue={0}
+                                    className={s.time}
+                                    size={'small'}
+                                    value={time.hours}
+                                    onChange={this.setHours}
+                                />
+                                <TextField
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">м</InputAdornment>,
+                                    }}
+                                    defaultValue={0}
+                                    className={s.time}
+                                    size={'small'}
+                                    value={time.minutes}
+                                    onChange={this.setMinutes}
+                                />
+                                <div className={s.maxTime}> Максимум 15 дней</div>
+                            </div>
+                            }
                     />
                 </div>
             </div>

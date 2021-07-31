@@ -7,7 +7,8 @@ import {inject} from "mobx-react";
 @inject(({UserStore}) => {
     return {
         user: UserStore.user || {},
-        logout: UserStore.logout
+        logout: UserStore.logout,
+        userId: UserStore.userId
     };
 })
 class Header extends React.Component {
@@ -35,11 +36,11 @@ class Header extends React.Component {
 
     render() {
         const {anchorEl} = this.state;
-        const {user, withName = true} = this.props;
+        const {user, userId, withName = true} = this.props;
         return (
             <React.Fragment>
                 <Button onClick={this.handleClick} className={s.userButton}>
-                     {withName && user?.firstName}
+                    {withName && user?.firstName}
                     <Avatar
                         className={s.avatar}
                         alt={user?.firstName}
@@ -53,14 +54,24 @@ class Header extends React.Component {
                     open={!!anchorEl}
                     onClose={this.handleClose}
                 >
-                    <Link to={`/lk`} className={s.menuItem}>
-                        <MenuItem>
-                            Личный кабинет
-                        </MenuItem>
-                    </Link>
-                    <MenuItem onClick={this.handleCloseLogout}>
-                        Выход
-                    </MenuItem>
+                    {
+                        userId &&
+                        <React.Fragment>
+                            <Link to={`/lk`} className={s.menuItem}>
+                                <MenuItem>
+                                    Личный кабинет
+                                </MenuItem>
+                            </Link>
+                            <MenuItem onClick={this.handleCloseLogout}>
+                                Выход
+                            </MenuItem>
+                        </React.Fragment>
+                        || <Link to={`/login`} className={s.menuItem}>
+                            <MenuItem>
+                                Вход
+                            </MenuItem>
+                        </Link>
+                    }
                 </Menu>
             </React.Fragment>
         );

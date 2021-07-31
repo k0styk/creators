@@ -7,7 +7,6 @@ import s from './main.module.scss';
 
 const Page = loadable(
     ({name}) => {
-        console.log('loadable');
         switch (name) {
             case 'home': {
                 return import('../components/Home');

@@ -15,10 +15,8 @@ export default function CheckboxList({text, tooltipAdditional, tooltipAdditional
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
-
     const image = tooltipAdditionalType === 'iframe' ? `https://www.youtube.com/embed/${tooltipAdditional}` : tooltipAdditional;
 
-    console.log(tooltipAdditional, tooltipAdditionalType);
     return (
         <React.Fragment>
             <IconButton edge="end" onClick={handleClick}>

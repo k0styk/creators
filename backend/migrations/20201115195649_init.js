@@ -174,6 +174,8 @@ exports.up = async (knex) => Promise.all([
             .unique();
     }),
     knex.raw(`  
+    CREATE EXTENSION IF NOT EXISTS pg_trgm;
+    
     CREATE INDEX ON "cases" USING gin("tsvector"); 
     CREATE INDEX ON documents USING GIN (word gin_trgm_ops);
 

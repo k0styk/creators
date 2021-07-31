@@ -12,9 +12,12 @@ router.get('/cases/getDataForCreate',getMethod(()=>'getDataForCreate'));
 router.post('/cases/create', getMethod(()=>'createCase'));
 router.get('/cases/getParameters',getMethod(()=>'getParameters'));
 router.get('/cases/getRecommendations', getMethod(()=>'getRecommendations'));
-router.post('/cases/searchCases',getMethod(()=>'searchCases'));
+router.post('/cases/searchCases', getMethod(()=>'searchCases'));
 router.get('/cases/getDataForCreate', getMethod(()=>'getDataForCreate'));
 router.get('/cases/getCase/:id', getMethod(()=>'getCase'));
+
+router.post('/favorites/setFavorite', getMethod(()=>'setFavorite'));
+router.get('/favorites/getFavorites', getMethod(()=>'getFavorites'));
 
 router.post('/upload', getMethod(()=>'upload'));
 

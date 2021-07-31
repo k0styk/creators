@@ -15,6 +15,9 @@ const {getCase} = require('./case/getCase');
 
 const {upload} = require('./upload');
 
+const {setFavorite} = require('./favorites/setFavorite');
+const {getFavorites} = require('./favorites/getUserFavorites');
+
 module.exports = {
     getUser,
     getCurrentUser,
@@ -29,5 +32,7 @@ module.exports = {
     getCase,
     getProfile,
 
-    upload
+    upload,
+    setFavorite,
+    getFavorites
 };

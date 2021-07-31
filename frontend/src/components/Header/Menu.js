@@ -6,8 +6,13 @@ import {Link} from "react-router-dom";
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
 import PersonIcon from '@material-ui/icons/Person';
+import {userType as userTypeEnum} from '../../enums';
+import AddIcon from '@material-ui/icons/Add';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-export default function Header() {
+export default function Header({userType}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -26,9 +31,29 @@ export default function Header() {
             title: 'Поиск', link: '/search', icon: <SearchIcon/>
         },
         {
+            title: 'Избранное', link: '/favorites', icon: <FavoriteIcon/>
+        },
+        {
             title: 'Личный кабинет', link: '/lk', icon: <PersonIcon/>
         }
     ];
+
+    if (userType === userTypeEnum.CREATOR) {
+        menuItems.push({
+            title: 'Создать кейс', link: '/create', icon: <AddIcon/>
+        })
+    }
+
+    if (!userType) {
+        menuItems.push(
+            {
+                title: 'Регистрация', link: '/register', icon: <AccountCircleIcon/>
+            },
+            {
+                title: 'Вход', link: '/login', icon: <ExitToAppIcon/>
+            }
+        )
+    }
 
     return (
         <div>

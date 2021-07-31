@@ -1,7 +1,7 @@
 const {searchCases} = require('./searchCases');
 
 module.exports = {
-    getCase: async ({params, knex}) => {
+    getCase: async ({params, session, knex}) => {
         const {id} = params;
         const [caseCard, services] = await Promise.all([
             knex("cases")
@@ -14,7 +14,8 @@ module.exports = {
                     'productionTime',
                     'cities.name as city',
                     'caseTypes.name as type',
-                    'sphereTypes.name as sphere'
+                    'sphereTypes.name as sphere',
+                    'cases.created_at as createdAt'
                 ])
                 .select(knex.raw(`
                     json_build_object(
@@ -52,6 +53,7 @@ module.exports = {
                 userId: caseCard.user && caseCard.user.id,
                 limit: 4
             },
+            session,
             knex
         });
         return {...caseCard, services, userCases};

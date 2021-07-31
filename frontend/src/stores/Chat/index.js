@@ -1,10 +1,5 @@
-import {observable, get, action, reaction, computed, makeObservable} from 'mobx';
-import API from "../../api";
-import {serviceType} from '../../enums';
-import formatTime from '../../tools/formatProductionTime';
-import formatPrice from '../../tools/formatPrice';
-import {status as statusEnum} from '../../enums';
-import {Alert} from '../../routes';
+import {observable, get, computed, makeObservable} from 'mobx';
+
 
 class PromoStore {
     RouterStore = {};

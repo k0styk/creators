@@ -7,23 +7,30 @@ import {
     CardActions,
     CardContent,
     IconButton,
+    Chip
 } from '@material-ui/core';
 import s from './Cards.module.scss';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import CheckIcon from '@material-ui/icons/Check';
 import formatPrice from '../../tools/formatPrice';
-import {inject} from "mobx-react";
-import {Link} from "react-router-dom";
+import { inject } from "mobx-react";
+import { Link } from "react-router-dom";
+import dayjs from 'dayjs';
 
-@inject(({RouterStore}) => {
-    return {RouterStore};
+dayjs.locale('RU')
+
+@inject(({ RouterStore }) => {
+    return { RouterStore };
 })
 class MediaCard extends React.Component {
 
     onClick = () => {
-        const {id, RouterStore} = this.props;
+        const { id,RouterStore } = this.props;
         RouterStore.history.push(`/case/${id}`);
     }
+
+    setFavorite = () => this.props.setFavorite(this.props.id,!this.props.inFavorite);
 
     render() {
         const {
@@ -33,10 +40,12 @@ class MediaCard extends React.Component {
             title,
             price,
             youtubeId,
-            createdAt
+            createdAt,
+            inFavorite,
+            services,
+            sphere,
+            type
         } = this.props;
-
-        console.log(this.props);
 
         return (
             <Card className={s.root}>
@@ -51,31 +60,35 @@ class MediaCard extends React.Component {
                         className={s.content}
                     >
                         <div className={s.header}>
-                        <span className={s.date}>
-                            {createdAt}
-                        </span>
-                            <span className={s.videoTitle}>
-                            {title && title.length > 60 ? `${title.slice(0, 60)}...` : title}
-                        </span>
-                            <span className={s.price}>
-                            {price && `${formatPrice(price)}` || 'Стоимость не указана'}
-                        </span>
-                            {
-                                withIncludes &&
-                                <span className={s.inludes}>
-                                Включено:
-                                <span> <CheckIcon className={s.checkIcon}/> Съемка </span>
-                                <span> <CheckIcon className={s.checkIcon}/> Монтаж </span>
-                                <span> <CheckIcon className={s.checkIcon}/> Цветокоррекция </span>
-                                <span>  <CheckIcon className={s.checkIcon}/> Инфографика </span>
+                            <span className={s.date}>
+                                {createdAt && dayjs(createdAt).format('MMM D, YYYY hh:mm')}
                             </span>
+                            <span className={s.types}>
+                                <Chip className={s.chip} label={sphere} size="small" />
+                                <Chip className={s.chip} label={type} size="small" />
+                            </span>
+                            <span className={s.videoTitle}>
+                                {title && title.length > 50 ? `${title.slice(0,50)}...` : title}
+                            </span>
+                            <span className={s.price}>
+                                {price && `${formatPrice(price)}` || 'Стоимость не указана'}
+                            </span>
+                            {
+                                withIncludes && services && services.length &&
+                                <span className={s.inludes}>
+                                    Включено:
+                                    {
+                                        services.map((service) => <span> <CheckIcon className={s.checkIcon} /> {service} </span>)
+                                    }
+                                </span> || null
                             }
+
                         </div>
                     </CardContent>
                 </CardActionArea>
                 {
                     withActions && <CardActions className={s.actions}>
-                        <Link to={`profile/${user.id}`}>
+                        <Link to={`/profile/${user.id}`}>
                             <div className={s.user}>
                                 <Avatar
                                     className={s.avatar}
@@ -86,8 +99,15 @@ class MediaCard extends React.Component {
                             </div>
                         </Link>
                         <IconButton
+                            onClick={this.setFavorite}
                             size={'small'}
-                        > <FavoriteBorderIcon className={s.favIcon}/>
+                        >
+                            {
+                                inFavorite &&
+                                <FavoriteIcon className={s.favIconEn} />
+                                || <FavoriteBorderIcon className={s.favIconDis} />
+                            }
+
                         </IconButton>
                     </CardActions>
                 }

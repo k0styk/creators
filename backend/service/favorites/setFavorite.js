@@ -1,12 +1,15 @@
-
 module.exports = {
-    setFavorite: async ({body, knex}) => {
+    setFavorite: async ({body, session, knex}) => {
         const {
             caseId,
             action
         } = body;
 
-        const userId = 1;
+        const {user: {id: userId} = {}} = session;
+
+        if (!userId) {
+            return;
+        }
 
         if (action) {
             await knex('favorites')

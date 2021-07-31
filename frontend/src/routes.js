@@ -5,6 +5,7 @@ import {Provider} from 'mobx-react';
 import 'react-notifications-component/dist/theme.css';
 import ReactNotification, {store} from 'react-notifications-component';
 import initStores from './main/initStores';
+import NotFound from './shared/NotFound';
 
 export const Alert = ({type, title = ' ', message = ' '}) => {
     const opt = {
@@ -55,7 +56,7 @@ export const Alert = ({type, title = ' ', message = ' '}) => {
 
 // eslint-disable-next-line react/display-name,import/no-anonymous-default-export
 export default () => {
-    const {stores} =  initStores();
+    const {stores} = initStores();
     return (
         <Provider {...stores}>
             <BrowserRouter>
@@ -125,7 +126,7 @@ export default () => {
                             <Wrapper {...props} name={'favorites'}/>
                         )}
                     />
-                    <Route render={() => <div>{'not found'}</div>}/>
+                    <Route render={() => <NotFound/>}/>
                 </Switch>
             </BrowserRouter>
         </Provider>

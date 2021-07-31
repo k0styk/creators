@@ -6,10 +6,9 @@ import {status as statusEnum} from '../../enums';
 class SearchStore extends FilterStore {
     RouterStore
 
-    @observable cases = [];
     @observable user = {};
     @observable inited = false;
-    @observable status = statusEnum.LOADING;
+
 
     constructor({RouterStore}) {
         super({RouterStore})
@@ -26,13 +25,10 @@ class SearchStore extends FilterStore {
     }
 
     @action initParams = () => {
-        console.log('initParams');
-
         this.setType(Number(this.RouterStore.getParam('type')));
         this.setSphere(Number(this.RouterStore.getParam('sphere')));
         this.setPrice('to', this.RouterStore.getParam('priceto'));
-        this.setPrice('from', this.RouterStore.getParam('pricefrom'));
-        this.setTime(Number(this.RouterStore.getParam('time')));
+        this.setTimeObject(this.RouterStore.getParam('timeto'), this.RouterStore.getParam('timefrom'));
         this.setFastFilter(this.RouterStore.getParam('fastFilter'));
         this.setUserId(this.RouterStore.getParam('user'));
         this.inited = true;
@@ -44,10 +40,6 @@ class SearchStore extends FilterStore {
 
     @action setCases = (cases) => {
         this.cases = cases;
-    }
-
-    @action setStatus = (status) => {
-        this.status = status;
     }
 
     @action clear = () => {
@@ -91,8 +83,6 @@ class SearchStore extends FilterStore {
         if (fastFilter) {
             body.fastFilter = fastFilter
         }
-
-        console.log('suuka', selectedType)
 
         if (selectedType && typeof selectedType === 'object') {
             body.type = selectedType.value;

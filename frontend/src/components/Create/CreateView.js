@@ -4,8 +4,6 @@ import s from './Create.module.scss';
 import {TextField, Divider, Button} from "@material-ui/core";
 import CheckboxList from "./CheckboxList";
 import MediaBlock from './MediaBlock';
-import BlockField from "../../shared/BlockField";
-import TimeSlider from "./TimeSlider";
 
 @inject(({CreateStore}) => {
     return {

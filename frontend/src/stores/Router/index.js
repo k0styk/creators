@@ -7,7 +7,7 @@ class RouterStore {
     @observable match = [];
     @observable history = [];
 
-    privateRoutes = ['lk', 'favorites']
+    privateRoutes = ['lk', 'favorites', 'create', 'chat']
     authRoutes = ['login', 'register']
 
     @observable isPermitted;
