@@ -10,11 +10,15 @@ const { session, headers } = require('./middleware');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorHandlers = require('./handlers/errorHandlers');
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    preflightContinue: true,
-    credentials: true,
-}));
+app.enable('trust proxy');
+app.use(headers);
+app.use(
+    cors({
+        origin: ['http://socket.test', 'http://localhost:3000'],
+        preflightContinue: true,
+        credentials: true,
+    })
+);
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
@@ -23,10 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session);
 app.use(fileUpload());
-app.use(headers);
 
 //Bring in the routes
-app.use('/public', express.static(__dirname + '/public'));
 app.use('/api', apiRoute);
 app.use('/auth', authRoute);
 
