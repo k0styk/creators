@@ -35,3 +35,9 @@
   text-decoration: none;
   color: #34373d;
 }
+
+.listItem {
+  &:hover {
+    background-color: #cacaca;
+  }
+}

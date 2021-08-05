@@ -1,7 +1,7 @@
-import {observable, action, makeObservable} from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import AuthService from '../../api/auth/auth.service';
-import {Alert} from "../../routes";
-import {authStatusEnum, userType} from '../../enums';
+import { Alert } from '../../routes';
+import { authStatusEnum, userType } from '../../enums';
 
 class AuthStore {
     UserStore;
@@ -13,88 +13,87 @@ class AuthStore {
     @observable isCreator;
     @observable repeatPassword = '';
 
-    constructor({UserStore, RouterStore}) {
+    constructor({ UserStore, RouterStore }) {
         this.UserStore = UserStore;
         this.RouterStore = RouterStore;
 
-        makeObservable(this)
+        makeObservable(this);
     }
 
     @action setIsCreator = () => {
         this.isCreator = !this.isCreator;
-    }
+    };
 
-    @action setRepeatPassword = ({target: {value}}) => {
+    @action setRepeatPassword = ({ target: { value } }) => {
         this.repeatPassword = value;
-    }
+    };
 
-    @action setEmail = ({target: {value}}) => {
+    @action setEmail = ({ target: { value } }) => {
         this.email = value;
-    }
+    };
 
     @action toggleShowPassword = () => {
-        this.showPassword === 'password' ?
-            this.showPassword = 'text' :
-            this.showPassword = 'password';
-    }
+        this.showPassword === 'password'
+            ? (this.showPassword = 'text')
+            : (this.showPassword = 'password');
+    };
 
-    @action setPassword = ({target: {value}}) => {
+    @action setPassword = ({ target: { value } }) => {
         this.password = value;
-    }
+    };
 
     checkPassword = () => this.password === this.repeatPassword;
 
     check = () => {
         if (!this.email || !this.password || !this.repeatPassword) {
-            Alert({type: 'error', title: 'Заполните обязательные поля'})
-            return false
+            Alert({ type: 'error', title: 'Заполните обязательные поля' });
+            return false;
         }
 
         if (!this.checkPassword()) {
-            Alert({type: 'error', title: 'Пароли не совпадают'})
-            return false
+            Alert({ type: 'error', title: 'Пароли не совпадают' });
+            return false;
         }
 
-        return true
-    }
+        return true;
+    };
 
     loginUser = async () => {
-        const {email, password} = this;
+        const { email, password } = this;
 
         try {
-            await AuthService.login({email, password})
+            await AuthService.login({ email, password });
             await this.UserStore.getCurrentUser();
 
-            this.RouterStore.history.push({pathname: '/lk',});
+            this.RouterStore.history.push({ pathname: '/lk' });
         } catch (err) {
-            Alert({type: 'error', title: 'Ошибка входа'})
-            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
+            Alert({ type: 'error', title: 'Ошибка входа' });
+            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED);
             console.error(err);
         }
     };
 
     registerUser = async () => {
-        const {email, password, isCreator} = this;
+        const { email, password, isCreator } = this;
 
         if (!this.check()) {
-            return
+            return;
         }
 
         try {
-            const roleTypeId = isCreator && userType.CREATOR || userType.CONSUMER;
+            const roleTypeId =
+                (isCreator && userType.CREATOR) || userType.CONSUMER;
 
-            await AuthService.register({email, password, roleTypeId});
+            await AuthService.register({ email, password, roleTypeId });
             await this.UserStore.getCurrentUser();
 
-            this.RouterStore.history.push({pathname: '/lk',});
+            this.RouterStore.history.push({ pathname: '/lk' });
         } catch (err) {
-            Alert({type: 'error', title: 'При регистрации возникла ошибка'})
-            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED)
+            Alert({ type: 'error', title: 'При регистрации возникла ошибка' });
+            this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED);
             console.error(err);
         }
-
     };
 }
-
 
 export default AuthStore;

@@ -3,27 +3,23 @@ import s from './Home.module.scss';
 import logo from '../../shared/logo.png';
 import YouTube from 'react-youtube';
 import WorkIcon from '@material-ui/icons/WorkOutline';
-import {IconButton} from '@material-ui/core';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import {inject} from "mobx-react";
-import {Link} from "react-router-dom";
+import { inject } from 'mobx-react';
 import UserBlock from '../Header/UserBlock';
 
-@inject(({UserStore, RouterStore}) => {
+@inject(({ UserStore, RouterStore }) => {
     return {
         user: UserStore.user || {},
         logout: UserStore.logout,
         userId: UserStore.userId,
-        RouterStore: RouterStore
+        RouterStore: RouterStore,
     };
 })
 class Header extends React.Component {
-
     handleCreator = () => {
-        const {userId, logout, RouterStore} = this.props;
+        const { userId, logout, RouterStore } = this.props;
         userId && logout();
         RouterStore.history.push('/register');
-    }
+    };
 
     //opts вынести в шаред
     opts = {
@@ -42,23 +38,13 @@ class Header extends React.Component {
         return (
             <div className={s.headerContainer}>
                 <div className={s.header}>
-                    <div className={s.right}>
-                        <img
-                            src={logo}
-                            alt="Logo"
-                            className={s.logo}
-                        />
+                    <div className={s.left}>
+                        <img src={logo} alt="Logo" className={s.logo} />
                         <span> Creators</span>
                     </div>
-                    <div className={s.left}>
+                    <div className={s.right}>
                         <div className={s.user}>
-                            <Link to={`/favorites`}>
-                                <IconButton
-                                    color={'primary'}
-                                > <FavoriteBorderIcon className={s.favIcon}/>
-                                </IconButton>
-                            </Link>
-                            <UserBlock withName={false}/>
+                            <UserBlock withName={false} />
                         </div>
                     </div>
                 </div>
@@ -66,10 +52,10 @@ class Header extends React.Component {
                     <div className={s.helperText}>
                         <span>Посмотри видео, чтобы узнать </span>
                         <span className={s.bold}>
-              КАК НАЙТИ ПОДХОДЯЩЕГО КРЕАТОРА
-            </span>
+                            КАК НАЙТИ ПОДХОДЯЩЕГО КРЕАТОРА
+                        </span>
                         <div className={s.link} onClick={this.handleCreator}>
-                            <WorkIcon className={s.workIcon}/>
+                            <WorkIcon className={s.workIcon} />
                             cтать исполнителем
                         </div>
                     </div>

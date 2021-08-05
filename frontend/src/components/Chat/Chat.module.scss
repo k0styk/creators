@@ -1,6 +1,6 @@
 @import '../../shared/style';
 
-.title{
+.title {
   font-size: 20px;
   font-weight: 500;
   margin: 20px 0;
@@ -9,55 +9,80 @@
 .content {
   display: flex;
   flex-direction: row;
-  height: min-content;
+  flex-grow: 1;
 
-  .chat {
-    min-width: 700px;
-    height: 100%
+  .dialogs {
+    position: relative;
+    overflow-y: auto;
+    flex: 0 0 400px;
+    // background-color: $gray-100;
+
+    .dialogsList {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 
-  .info {
-    width: 100%;
-    margin: 0 40px;
-    padding: 10px 0;
-    min-height: 350px;
+  .messagesDialog {
+    // background-color: $gray-main;
 
-    .header {
-      display: flex;
-      justify-content: space-between;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
 
-      .user {
+    .messages {
+      flex: 0 0 600px;
+    }
+
+    .details {
+      flex: 1 0 auto;
+      background: aliceblue;
+
+      // width: 100%;
+      // margin: 0 40px;
+      // padding: 10px 0;
+      // min-height: 350px;
+
+      .header {
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        justify-content: space-between;
 
-        & > * {
-          margin-left: 10px;
+        .user {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          &>* {
+            margin-left: 10px;
+          }
+        }
+
+        .price {
+          display: block;
+          font-size: 18px;
+          font-weight: 600;
+        }
+
+        .dates {
+          display: block;
+          font-size: 14px;
+          font-weight: 400;
+          color: $gray-100;
         }
       }
 
-      .price {
+      .titleBox {
         display: block;
-        font-size: 18px;
-        font-weight: 600;
+        margin-top: 10px;
       }
 
-      .dates {
-        display: block;
-        font-size: 14px;
-        font-weight: 400;
-        color: $gray-100;
+      .buttonLink {
+        margin-top: 20px;
+        text-transform: none;
       }
-    }
-
-    .titleBox {
-      display: block;
-      margin-top: 10px;
-    }
-
-    .buttonLink {
-      margin-top: 20px;
-      text-transform: none;
     }
   }
 }

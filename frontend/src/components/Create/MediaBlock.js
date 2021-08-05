@@ -1,14 +1,14 @@
 import React from 'react';
-import {inject} from "mobx-react";
+import { inject } from 'mobx-react';
 import s from './Create.module.scss';
-import {TextField, InputAdornment} from "@material-ui/core";
-import YouTube from "react-youtube";
-import Select from "../../shared/Select";
-import BlockField from "../../shared/BlockField";
+import { TextField, InputAdornment } from '@material-ui/core';
+import YouTube from 'react-youtube';
+import Select from '../../shared/Select';
+import BlockField from '../../shared/BlockField';
 import Stepper from './Stepper';
 import SelectAddress from '../../shared/AddressSelect';
 
-@inject(({CreateStore}) => {
+@inject(({ CreateStore }) => {
     return {
         youtubeId: CreateStore.youtubeId,
         setYoutubeId: CreateStore.setYoutubeId,
@@ -25,7 +25,7 @@ import SelectAddress from '../../shared/AddressSelect';
         selectedTypes: CreateStore.selectedTypes,
         selectedSpheres: CreateStore.selectedSpheres,
         setTime: CreateStore.setTime,
-        time: CreateStore.time
+        time: CreateStore.time,
     };
 })
 class CreateView extends React.Component {
@@ -39,10 +39,10 @@ class CreateView extends React.Component {
             event.target.value = Number(event.target.value);
         }
         this.props.setTime(onChange, event.target.value);
-    }
-    setDays = (event) => this.changeTime(event, 15, 'days')
-    setMinutes = (event) => this.changeTime(event, 60, 'minutes')
-    setHours = (event) => this.changeTime(event, 24, 'hours')
+    };
+    setDays = (event) => this.changeTime(event, 15, 'days');
+    setMinutes = (event) => this.changeTime(event, 60, 'minutes');
+    setHours = (event) => this.changeTime(event, 24, 'hours');
 
     render() {
         const {
@@ -56,27 +56,27 @@ class CreateView extends React.Component {
             onChangeCity,
             onChangeSpheres,
             onChangeTypes,
-            time
+            time,
         } = this.props;
-
 
         return (
             <div className={s.videoBlock}>
-                {
-                    youtubeId && <YouTube
+                {youtubeId ? (
+                    <YouTube
                         className={s.video}
                         videoId={youtubeId}
                         opts={this.opts}
-                    /> || <Stepper/>
-                }
+                    />
+                ) : (
+                    <Stepper />
+                )}
                 <div>
                     <BlockField
                         isRequiered={true}
                         title={'Ссылка на youtube'}
                         value={
-                            <TextField
-                                size={'small'}
-                                onChange={setYoutubeId}/>}
+                            <TextField size={'small'} onChange={setYoutubeId} />
+                        }
                     />
                     <BlockField
                         isRequiered={true}
@@ -85,7 +85,9 @@ class CreateView extends React.Component {
                             <TextField
                                 size={'small'}
                                 value={title}
-                                onChange={setTitle}/>}
+                                onChange={setTitle}
+                            />
+                        }
                     />
                     <BlockField
                         isRequiered={true}
@@ -95,7 +97,8 @@ class CreateView extends React.Component {
                                 size={'small'}
                                 options={spheres}
                                 onChange={onChangeSpheres}
-                            />}
+                            />
+                        }
                     />
                     <BlockField
                         isRequiered={true}
@@ -105,7 +108,8 @@ class CreateView extends React.Component {
                                 size={'small'}
                                 options={types}
                                 onChange={onChangeTypes}
-                            />}
+                            />
+                        }
                     />
 
                     <BlockField
@@ -121,11 +125,15 @@ class CreateView extends React.Component {
                     <BlockField
                         title={'Срок реализации'}
                         isRequiered={true}
-                        value=
-                            {<div>
+                        value={
+                            <div>
                                 <TextField
                                     InputProps={{
-                                        endAdornment: <InputAdornment position="end">д</InputAdornment>,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                д
+                                            </InputAdornment>
+                                        ),
                                     }}
                                     defaultValue={0}
                                     className={s.time}
@@ -135,7 +143,11 @@ class CreateView extends React.Component {
                                 />
                                 <TextField
                                     InputProps={{
-                                        endAdornment: <InputAdornment position="end">ч</InputAdornment>,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                ч
+                                            </InputAdornment>
+                                        ),
                                     }}
                                     defaultValue={0}
                                     className={s.time}
@@ -145,7 +157,11 @@ class CreateView extends React.Component {
                                 />
                                 <TextField
                                     InputProps={{
-                                        endAdornment: <InputAdornment position="end">м</InputAdornment>,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                м
+                                            </InputAdornment>
+                                        ),
                                     }}
                                     defaultValue={0}
                                     className={s.time}
@@ -153,9 +169,12 @@ class CreateView extends React.Component {
                                     value={time.minutes}
                                     onChange={this.setMinutes}
                                 />
-                                <div className={s.maxTime}> Максимум 15 дней</div>
+                                <div className={s.maxTime}>
+                                    {' '}
+                                    Максимум 15 дней
+                                </div>
                             </div>
-                            }
+                        }
                     />
                 </div>
             </div>

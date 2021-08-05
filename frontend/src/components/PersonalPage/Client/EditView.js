@@ -1,14 +1,14 @@
 import React from 'react';
-import { inject } from "mobx-react";
-import { toJS } from "mobx";
+import { inject } from 'mobx-react';
+import { toJS } from 'mobx';
 import s from '../PersonalPage.module.scss';
-import { Button } from "@material-ui/core";
-import PersonIcon from "@material-ui/icons/Person";
-import DoneIcon from "@material-ui/icons/Done";
-import Dropzone from "react-dropzone";
-import PublishIcon from "@material-ui/icons/Publish";
-import TextField from "../../../shared/TextField";
-import SelectAddress from "../../../shared/AddressSelect";
+import { Button } from '@material-ui/core';
+import PersonIcon from '@material-ui/icons/Person';
+import DoneIcon from '@material-ui/icons/Done';
+import Dropzone from 'react-dropzone';
+import PublishIcon from '@material-ui/icons/Publish';
+import TextField from '../../../shared/TextField';
+import SelectAddress from '../../../shared/AddressSelect';
 
 @inject(({ PersonalPageStore }) => {
     return {
@@ -17,30 +17,26 @@ import SelectAddress from "../../../shared/AddressSelect";
         completedCases: PersonalPageStore.completedCases,
         setUserField: PersonalPageStore.setUserField,
         loadFiled: PersonalPageStore.loadFiled,
-        updateUser: PersonalPageStore.updateUser
+        updateUser: PersonalPageStore.updateUser,
     };
 })
 class PersonalPage extends React.Component {
     render() {
-        const {
-            user,
-            setUserField,
-            loadFiled,
-            updateUser
-        } = this.props;
-        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''}`;
+        const { user, setUserField, loadFiled, updateUser } = this.props;
+        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${
+            user?.lastName || ''
+        }`;
         if (!fullName.trim().length) {
-            fullName = 'Заполните данные о себе'
+            fullName = 'Заполните данные о себе';
         }
         return (
             <React.Fragment>
                 <div className={s.userName}>
-                    <span>
-                        {fullName}
-                    </span>
+                    <span>{fullName}</span>
 
-                    <Button className={s.saveButton}
-                        size='small'
+                    <Button
+                        className={s.saveButton}
+                        size="small"
                         color="primary"
                         onClick={updateUser}
                     >
@@ -52,9 +48,12 @@ class PersonalPage extends React.Component {
                     <div className={s.userBlock}>
                         <div className={s.avatar}>
                             <Dropzone onDrop={loadFiled}>
-                                {({ getRootProps,getInputProps }) => (
+                                {({ getRootProps, getInputProps }) => (
                                     <section>
-                                        <div className={s.loadBlock} {...getRootProps()}>
+                                        <div
+                                            className={s.loadBlock}
+                                            {...getRootProps()}
+                                        >
                                             <input {...getInputProps()} />
                                             <p>Загрузить фотографию </p>
                                             <PublishIcon />
@@ -62,12 +61,11 @@ class PersonalPage extends React.Component {
                                     </section>
                                 )}
                             </Dropzone>
-                            {
-                                user.photoPath && <img
-                                    alt={user.fullName}
-                                    src={user.photoPath}
-                                /> || <PersonIcon className={s.noPhoto} />
-                            }
+                            {user.photoPath ? (
+                                <img alt={user.fullName} src={user.photoPath} />
+                            ) : (
+                                <PersonIcon className={s.noPhoto} />
+                            )}
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Почта </span>
@@ -75,7 +73,7 @@ class PersonalPage extends React.Component {
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Баланс </span>
-                            <span>  {'-'} </span>
+                            <span> {'-'} </span>
                         </div>
                     </div>
 
@@ -85,7 +83,9 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Фамилия </span>
                                 <TextField
                                     placeholder={'Введите фамилию'}
-                                    onChange={({ target }) => setUserField('secondName',target.value)}
+                                    onChange={({ target }) =>
+                                        setUserField('secondName', target.value)
+                                    }
                                     value={user.secondName}
                                     multiline={true}
                                 />
@@ -94,7 +94,9 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Имя </span>
                                 <TextField
                                     placeholder={'Введите имя'}
-                                    onChange={({ target }) => setUserField('firstName',target.value)}
+                                    onChange={({ target }) =>
+                                        setUserField('firstName', target.value)
+                                    }
                                     value={user.firstName}
                                     multiline={true}
                                 />
@@ -103,7 +105,9 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Отчество </span>
                                 <TextField
                                     placeholder={'Введите отчество'}
-                                    onChange={({ target }) => setUserField('lastName',target.value)}
+                                    onChange={({ target }) =>
+                                        setUserField('lastName', target.value)
+                                    }
                                     value={user.lastName}
                                     multiline={true}
                                 />
@@ -113,7 +117,9 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Телефон </span>
                                 <TextField
                                     placeholder={'Введите номер'}
-                                    onChange={({ target }) => setUserField('phone',target.value)}
+                                    onChange={({ target }) =>
+                                        setUserField('phone', target.value)
+                                    }
                                     value={user.phone}
                                     multiline={true}
                                 />
@@ -123,7 +129,9 @@ class PersonalPage extends React.Component {
                                 <SelectAddress
                                     withNull={false}
                                     city={user.city}
-                                    onChangeCity={(val) => setUserField('city',val)}
+                                    onChangeCity={(val) =>
+                                        setUserField('city', val)
+                                    }
                                 />
                             </div>
                         </div>

@@ -1,15 +1,15 @@
 import React from 'react';
-import {inject} from "mobx-react";
+import { inject } from 'mobx-react';
 import s from '../PersonalPage.module.scss';
-import {Tooltip, IconButton, Divider} from "@material-ui/core";
+import { Tooltip, IconButton, Divider } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import CaseCard from "../../../shared/CaseCard";
-import PersonIcon from "@material-ui/icons/Person";
-import NoCasesView from "../noCases";
-import formatPhone from "../../../tools/phoneTools";
-import EditIcon from "@material-ui/icons/Edit";
+import CaseCard from '../../../shared/CaseCard';
+import PersonIcon from '@material-ui/icons/Person';
+import NoCasesView from '../noCases';
+import formatPhone from '../../../tools/phoneTools';
+import EditIcon from '@material-ui/icons/Edit';
 
-@inject(({PersonalPageStore}) => {
+@inject(({ PersonalPageStore }) => {
     return {
         price: PersonalPageStore.price,
         user: PersonalPageStore.user,
@@ -20,42 +20,33 @@ import EditIcon from "@material-ui/icons/Edit";
 })
 class PersonalPage extends React.Component {
     render() {
-        const {
-            user,
-            toggleEdit,
-            completedCases,
-            activeCases
-        } = this.props;
-        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${user?.lastName || ''}`;
+        const { user, toggleEdit, completedCases, activeCases } = this.props;
+        let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${
+            user?.lastName || ''
+        }`;
         if (!fullName.trim().length) {
-            fullName = 'Заполните данные о себе'
+            fullName = 'Заполните данные о себе';
         }
         return (
             <React.Fragment>
                 <div className={s.userName}>
-                    <span>
-                        {fullName}
-                      </span>
+                    <span>{fullName}</span>
                     <Tooltip
                         onClick={toggleEdit}
-                        placement="right" title={'Редактировать'}>
-                        <IconButton
-                            size='small'
-                            color="primary">
-                            <EditIcon className={s.addIcon}/>
+                        placement="right"
+                        title={'Редактировать'}
+                    >
+                        <IconButton size="small" color="primary">
+                            <EditIcon className={s.addIcon} />
                         </IconButton>
                     </Tooltip>
-
                 </div>
                 <div className={s.content}>
                     <div className={s.userBlock}>
                         <div className={s.avatar}>
-                            {
-                                user.photoPath && <img
-                                    alt={user.fullName}
-                                    src={user.photoPath}
-                                /> || <PersonIcon className={s.noPhoto}/>
-                            }
+                            {(user.photoPath && (
+                                <img alt={user.fullName} src={user.photoPath} />
+                            )) || <PersonIcon className={s.noPhoto} />}
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Город </span>
@@ -63,7 +54,11 @@ class PersonalPage extends React.Component {
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Телефон </span>
-                            <span>  {user.phone && formatPhone.formatPhone(user.phone)} </span>
+                            <span>
+                                {' '}
+                                {user.phone &&
+                                    formatPhone.formatPhone(user.phone)}{' '}
+                            </span>
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Почта </span>
@@ -71,33 +66,36 @@ class PersonalPage extends React.Component {
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Баланс </span>
-                            <span>  {'-'} </span>
+                            <span> {'-'} </span>
                         </div>
                     </div>
 
                     <div className={s.works}>
-                            <span className={s.titleWorks}>Активные заказы
-                                <Tooltip placement="right" title={'Сделать заказ'}>
-                                    <IconButton size='small' color="primary">
-                                    <AddIcon className={s.addIcon}/>
-                                </IconButton>
-                                </Tooltip>
-                                 </span>
-                        <Divider/>
-                        {
-                            activeCases.length &&
-                            <CaseCard cases={activeCases}/> ||
-                            <NoCasesView text={'У вас нет активных заказов :('}/>
-                        }
                         <span className={s.titleWorks}>
-                            Выполненные заказы
+                            Активные заказы
+                            <Tooltip placement="right" title={'Сделать заказ'}>
+                                <IconButton size="small" color="primary">
+                                    <AddIcon className={s.addIcon} />
+                                </IconButton>
+                            </Tooltip>
                         </span>
-                        <Divider/>
-                        {
-                            completedCases.length &&
-                            <CaseCard cases={completedCases}/> ||
-                            <NoCasesView text={'У вас нет выполненных заказов :('}/>
-                        }
+                        <Divider />
+                        {(activeCases.length && (
+                            <CaseCard cases={activeCases} />
+                        )) || (
+                            <NoCasesView
+                                text={'У вас нет активных заказов :('}
+                            />
+                        )}
+                        <span className={s.titleWorks}>Выполненные заказы</span>
+                        <Divider />
+                        {(completedCases.length && (
+                            <CaseCard cases={completedCases} />
+                        )) || (
+                            <NoCasesView
+                                text={'У вас нет выполненных заказов :('}
+                            />
+                        )}
                     </div>
                 </div>
             </React.Fragment>

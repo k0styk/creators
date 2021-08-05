@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     try {
-        const {email, password, roleTypeId} = req.body;
+        const { email, password, roleTypeId } = req.body;
 
         const hashPassword = await bcrypt.hash(
             password,
@@ -16,9 +16,9 @@ exports.register = async (req, res) => {
             type: roleTypeId,
         });
 
-
         await this.login(req, res);
     } catch (err) {
+        res.sendStatus(500);
         console.error('Register error');
         console.log(err);
         throw err;
@@ -26,14 +26,16 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    console.log(12);
     try {
-        const { email, password} = req.body;
+        const { email, password } = req.body;
         const candidate = await knex('users')
             .first(['password', 'id', 'type'])
             .where('email', email);
 
+        console.log(candidate);
+
         if (!candidate) {
+            console.log('not found');
             return res
                 .status(404)
                 .location('/auth/login')
@@ -46,6 +48,7 @@ exports.login = async (req, res) => {
         );
 
         if (!passwordIsValid) {
+            console.log('not valid');
             return res
                 .status(401)
                 .location('/auth/login')
@@ -64,18 +67,14 @@ exports.login = async (req, res) => {
         req.session.accessToken = token;
         req.session.isAuthenticated = true;
 
-        req.session.save((err) => {
-            if (err) {
-                throw err;
-            }
-            res.status(200).send({
-                id: candidate.id,
-                email: candidate.email,
-                roleTypeId: candidate.type,
-                accessToken: token,
-            });
+        res.status(200).send({
+            id: candidate.id,
+            email: candidate.email,
+            roleTypeId: candidate.type,
+            accessToken: token,
         });
     } catch (err) {
+        res.sendStatus(500);
         console.error('Login error');
         console.log(err);
         throw err;

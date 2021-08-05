@@ -1,6 +1,4 @@
 const router = require('express').Router();
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const userController = require('../controllers/user');
 const { verifySignUp } = require('../middleware');
 // const regEmail = require('../emails/registration');
@@ -22,13 +20,13 @@ router.post('/logout', async (req, res) => {
 });
 
 router.get('/login', async (req, res) => {
-    res.status(200);
+    res.sendStatus(200);
 });
 
 router.post('/login', userController.login);
 
 router.get('/register', async (req, res) => {
-    res.status(200);
+    res.sendStatus(200);
 });
 
 router.post(

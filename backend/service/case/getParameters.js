@@ -1,10 +1,10 @@
 module.exports = {
-    getParameters:async ({knex}) => {
+    getParameters: async ({ knex }) => {
         const [types, spheres] = await Promise.all([
-            knex("caseTypes").select(),
-            knex("sphereTypes").select()
+            knex('caseTypes').select(),
+            knex('sphereTypes').select(),
         ]);
 
-        return {types, spheres};
-    }
+        return { types, spheres };
+    },
 };

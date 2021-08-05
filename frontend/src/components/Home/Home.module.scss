@@ -26,7 +26,7 @@ body {
     align-items: center;
   }
 
-  .right {
+  .left {
     display: flex;
     align-items: center;
     font: bold 20px/1.5 arial;
@@ -37,7 +37,7 @@ body {
 
   }
 
-  .left {
+  .right {
     .user {
       display: flex;
       flex-direction: row;

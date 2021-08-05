@@ -37,8 +37,8 @@ app.use(session);
 app.use(fileUpload());
 
 //Bring in the routes
-app.use('/api', apiRoute);
 app.use('/auth', authRoute);
+app.use('/api', apiRoute);
 
 app.use(errorHandlers.notFound);
 if (process.env.NODE_ENV === 'dev') {

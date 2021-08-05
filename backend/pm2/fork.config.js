@@ -5,10 +5,11 @@ module.exports = {
             script: './server.js',
             watch: ['./'],
             ignore_watch: [
-                './migrations',
                 './.logs',
+                './migrations',
                 './node_modules',
                 './.env',
+                './.nginx.conf',
                 './.gitignore',
                 './packae.json',
                 './packae-lock.json',
@@ -21,10 +22,7 @@ module.exports = {
             max_restarts: 4,
             restart_delay: 5000,
             env: {
-                NODE_ENV: 'dev',
-            },
-            env_production: {
-                NODE_ENV: 'production',
+                NODE_ENV: 'development',
             },
             shutdown_with_message: true,
         },

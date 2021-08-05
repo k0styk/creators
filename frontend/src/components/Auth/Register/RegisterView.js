@@ -6,13 +6,13 @@ import {
     IconButton,
     Checkbox,
     FormControlLabel,
-    TextField
+    TextField,
 } from '@material-ui/core';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
-import {inject} from "mobx-react";
-import {Link} from "react-router-dom";
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { inject } from 'mobx-react';
+import { Link } from 'react-router-dom';
 
-@inject(({AuthStore}) => {
+@inject(({ AuthStore }) => {
     return {
         registerUser: AuthStore.registerUser,
         email: AuthStore.email,
@@ -24,10 +24,9 @@ import {Link} from "react-router-dom";
         setEmail: AuthStore.setEmail,
         toggleShowPassword: AuthStore.toggleShowPassword,
         isCreator: AuthStore.isCreator,
-        setIsCreator: AuthStore.setIsCreator
+        setIsCreator: AuthStore.setIsCreator,
     };
 })
-
 class RegisterPage extends React.Component {
     render() {
         const {
@@ -41,14 +40,12 @@ class RegisterPage extends React.Component {
             toggleShowPassword,
             registerUser,
             setIsCreator,
-            isCreator
+            isCreator,
         } = this.props;
 
         return (
             <div className="card">
-                <div className="cardHeader">
-                    Регистрация
-                </div>
+                <div className="cardHeader">Регистрация</div>
                 <div className="cardBody">
                     <TextField
                         fullWidth
@@ -70,18 +67,20 @@ class RegisterPage extends React.Component {
                         onChange={setPassword}
                         helperText={'Пароль должен быь не меньше 6 символов'}
                         InputProps={{
-                            endAdornment:
+                            endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
                                         onClick={toggleShowPassword}
                                     >
-                                        {
-                                            showPassword ? (<Visibility/>) : (<VisibilityOff/>)
-                                        }
+                                        {showPassword ? (
+                                            <Visibility />
+                                        ) : (
+                                            <VisibilityOff />
+                                        )}
                                     </IconButton>
                                 </InputAdornment>
-
+                            ),
                         }}
                     />
                     <TextField
@@ -93,18 +92,20 @@ class RegisterPage extends React.Component {
                         value={repeatPassword}
                         onChange={setRepeatPassword}
                         InputProps={{
-                            endAdornment:
+                            endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
                                         onClick={toggleShowPassword}
                                     >
-                                        {
-                                            showPassword ? (<Visibility/>) : (<VisibilityOff/>)
-                                        }
+                                        {showPassword ? (
+                                            <Visibility />
+                                        ) : (
+                                            <VisibilityOff />
+                                        )}
                                     </IconButton>
                                 </InputAdornment>
-
+                            ),
                         }}
                     />
                     <FormControlLabel
@@ -126,16 +127,16 @@ class RegisterPage extends React.Component {
                         type="submit"
                         onClick={registerUser}
                     >
-                        ВОЙТИ
+                        зарегистрироваться
                     </Button>
                 </div>
 
                 <Link to={`/login`} className={'registerLink'}>
-                    Уже есть аккаунт
+                    Уже есть аккаунт?
                 </Link>
             </div>
         );
-    };
+    }
 }
 
 export default RegisterPage;

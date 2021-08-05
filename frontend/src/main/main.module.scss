@@ -34,7 +34,7 @@ body {
 
 .wrapper {
   padding-top: 52px;
-  height: 100%;
+  height: calc(100% - 52px);
   position: absolute;
   width: 100%;
   display: flex;
@@ -43,6 +43,8 @@ body {
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 0 10%;
 }
