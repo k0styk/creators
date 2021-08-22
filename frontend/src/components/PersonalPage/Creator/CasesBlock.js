@@ -1,12 +1,12 @@
 import React from 'react';
-import { inject } from 'mobx-react';
+import {inject} from 'mobx-react';
 import s from '../PersonalPage.module.scss';
-import { Tooltip, IconButton, Divider, Link } from '@material-ui/core';
+import {Button, Divider, Link} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Cards from '../../../shared/CaseCard';
 import NoCasesView from '../noCases';
 
-@inject(({ PersonalPageStore }) => {
+@inject(({PersonalPageStore}) => {
     return {
         cases: PersonalPageStore.cases,
         user: PersonalPageStore.user,
@@ -14,7 +14,7 @@ import NoCasesView from '../noCases';
 })
 class CasesBlock extends React.Component {
     render() {
-        const { cases, user } = this.props;
+        const {cases, user} = this.props;
 
         return (
             <div className={s.works}>
@@ -22,14 +22,10 @@ class CasesBlock extends React.Component {
                     {' '}
                     Ваши кейсы
                     <Link href={'create'}>
-                        <Tooltip placement="right" title={'Создать кейс'}>
-                            <IconButton size="small" color="primary">
-                                <AddIcon className={s.addIcon} />
-                            </IconButton>
-                        </Tooltip>
+                            <Button size="small" color="primary"> Добавить кейс</Button>
                     </Link>
                 </span>
-                <Divider />
+                <Divider/>
                 {cases.length ? (
                     <Cards
                         cases={cases}
@@ -38,10 +34,10 @@ class CasesBlock extends React.Component {
                         withIncludes={false}
                     />
                 ) : (
-                    <NoCasesView text={'У вас еще нет кейсов :('} />
+                    <NoCasesView text={'У вас еще нет кейсов :('}/>
                 )}
                 <span className={s.titleWorks}>Выполненные заказы</span>
-                <Divider />
+                <Divider/>
                 {(!cases.length && (
                     <Cards
                         user={user}
@@ -49,7 +45,7 @@ class CasesBlock extends React.Component {
                         withActions={false}
                         withIncludes={false}
                     />
-                )) || <NoCasesView text={'У вас нет выполненных заказов :('} />}
+                )) || <NoCasesView text={'У вас нет выполненных заказов :('}/>}
             </div>
         );
     }

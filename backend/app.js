@@ -9,7 +9,7 @@ const { session, headers } = require('./middleware');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorHandlers = require('./handlers/errorHandlers');
 
-const origin = process.env['ORIGIN']?.split(' ') || [
+const origin = process.env['ORIGIN'] && process.env['ORIGIN'].split(' ') || [
     'http://socket.test',
     'http://localhost:3000',
 ];
@@ -37,6 +37,7 @@ app.use(session);
 app.use(fileUpload());
 
 //Bring in the routes
+app.use('/public', express.static(__dirname + '/public'));
 app.use('/auth', authRoute);
 app.use('/api', apiRoute);
 

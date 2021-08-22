@@ -66,12 +66,12 @@ class MediaCard extends React.Component {
                             </span>
                             <span className={s.types}>
                                 <Chip
-                                    className={s.chip}
+                                    className={s.chipSphere}
                                     label={sphere}
                                     size="small"
                                 />
                                 <Chip
-                                    className={s.chip}
+                                    className={s.chipType}
                                     label={type}
                                     size="small"
                                 />

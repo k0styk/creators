@@ -65,9 +65,10 @@
 
 .avatar {
   display: flex;
+  flex-direction: column;
   margin: 20px 0;
   width: 350px;
-  height: 350px;
+  min-height: 350px;
   overflow: hidden;
   border-radius: 4px;
 
@@ -156,4 +157,8 @@
   text-align: center;
   font-size: 16px;
   color: $gray-100;
+}
+
+.upButton {
+  margin-top: 10px;
 }

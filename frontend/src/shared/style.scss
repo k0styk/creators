@@ -9,12 +9,14 @@ $main-blue: #288ad6;
 $main-blue-40: rgba(25, 118, 210, 0.4);
 $main-blue-10: rgba(25, 118, 210, 0.1);
 
+$main-pink: rgba(234, 198, 211, 0.33);
 $main-green: rgba(27, 194, 3, 0.96);
 $green-100: rgba(109, 170, 143, 0.96);
 
 $red: #ea0505;
 
 :export {
+  main-pink: $main-pink;
   main-blue: $main-blue;
   gray-100: $gray-100;
   gray-100-10: $gray-100-10;

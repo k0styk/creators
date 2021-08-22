@@ -87,7 +87,7 @@ class AuthStore {
             await AuthService.register({ email, password, roleTypeId });
             await this.UserStore.getCurrentUser();
 
-            this.RouterStore.history.push({ pathname: '/lk' });
+            this.RouterStore.history.push({ pathname: '/' });
         } catch (err) {
             Alert({ type: 'error', title: 'При регистрации возникла ошибка' });
             this.UserStore.setAuthStatus(authStatusEnum.IS_NOT_AUTHENTICATED);

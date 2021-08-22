@@ -8,11 +8,11 @@ import {
     FormControlLabel,
     TextField,
 } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { inject } from 'mobx-react';
-import { Link } from 'react-router-dom';
+import {Visibility, VisibilityOff, Close} from '@material-ui/icons';
+import {inject} from 'mobx-react';
+import {Link} from 'react-router-dom';
 
-@inject(({ AuthStore }) => {
+@inject(({AuthStore, RouterStore}) => {
     return {
         registerUser: AuthStore.registerUser,
         email: AuthStore.email,
@@ -25,9 +25,17 @@ import { Link } from 'react-router-dom';
         toggleShowPassword: AuthStore.toggleShowPassword,
         isCreator: AuthStore.isCreator,
         setIsCreator: AuthStore.setIsCreator,
+        RouterStore
     };
 })
 class RegisterPage extends React.Component {
+
+    toHome = () => {
+        this.props.RouterStore.history.push({
+            pathname: '/'
+        });
+    }
+
     render() {
         const {
             email,
@@ -46,97 +54,98 @@ class RegisterPage extends React.Component {
         return (
             <div className="card">
                 <div className="cardHeader">Регистрация</div>
-                <div className="cardBody">
-                    <TextField
-                        fullWidth
-                        required
-                        label={'Email'}
-                        value={email}
-                        onChange={setEmail}
-                        autoComplete="off"
-                        placeholder={'Введите email'}
-                    />
-                    <TextField
-                        label={'Пароль'}
-                        placeholder={'Введите пароль'}
-                        fullWidth
-                        required
-                        id="password"
-                        type={showPassword}
-                        value={password}
-                        onChange={setPassword}
-                        helperText={'Пароль должен быь не меньше 6 символов'}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={toggleShowPassword}
-                                    >
-                                        {showPassword ? (
-                                            <Visibility />
-                                        ) : (
-                                            <VisibilityOff />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <TextField
-                        label={'Повторите пароль'}
-                        placeholder={'Введите пароль'}
-                        fullWidth
-                        required
-                        type={showPassword}
-                        value={repeatPassword}
-                        onChange={setRepeatPassword}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={toggleShowPassword}
-                                    >
-                                        {showPassword ? (
-                                            <Visibility />
-                                        ) : (
-                                            <VisibilityOff />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={setIsCreator}
-                                checked={!!isCreator}
-                                name="role"
-                                color="primary"
-                            />
-                        }
-                        label="Вы креатор?"
-                    />
-                </div>
-                <div className="button-block">
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                        onClick={registerUser}
-                    >
-                        зарегистрироваться
-                    </Button>
-                </div>
+                <IconButton className={"close"} onClick = {this.toHome}><Close/></IconButton>
+                    <div className="cardBody">
+                        <TextField
+                            fullWidth
+                            required
+                            label={'Email'}
+                            value={email}
+                            onChange={setEmail}
+                            autoComplete="off"
+                            placeholder={'Введите email'}
+                        />
+                        <TextField
+                            label={'Пароль'}
+                            placeholder={'Введите пароль'}
+                            fullWidth
+                            required
+                            id="password"
+                            type={showPassword}
+                            value={password}
+                            onChange={setPassword}
+                            helperText={'Пароль должен быь не меньше 6 символов'}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={toggleShowPassword}
+                                        >
+                                            {showPassword ? (
+                                                <Visibility/>
+                                            ) : (
+                                                <VisibilityOff/>
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <TextField
+                            label={'Повторите пароль'}
+                            placeholder={'Введите пароль'}
+                            fullWidth
+                            required
+                            type={showPassword}
+                            value={repeatPassword}
+                            onChange={setRepeatPassword}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={toggleShowPassword}
+                                        >
+                                            {showPassword ? (
+                                                <Visibility/>
+                                            ) : (
+                                                <VisibilityOff/>
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={setIsCreator}
+                                    checked={!!isCreator}
+                                    name="role"
+                                    color="primary"
+                                />
+                            }
+                            label="Вы креатор?"
+                        />
+                    </div>
+                    <div className="button-block">
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                            onClick={registerUser}
+                        >
+                            зарегистрироваться
+                        </Button>
+                    </div>
 
-                <Link to={`/login`} className={'registerLink'}>
-                    Уже есть аккаунт?
-                </Link>
+                    <Link to={`/login`} className={'registerLink'}>
+                        Уже есть аккаунт?
+                    </Link>
             </div>
-        );
+    );
     }
-}
+    }
 
-export default RegisterPage;
+    export default RegisterPage;

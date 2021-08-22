@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
     upload: async ({files}) => {
         const imageFile = files.file;
@@ -5,10 +7,11 @@ module.exports = {
         try {
             await imageFile.mv(`public/${imageFile.name}`);
         } catch (error) {
+            console.log(error);
             return error;
         }
 
         //поменять на env
-        return {file: `http://localhost:8000/public/${imageFile.name}`};
+        return {file: `http://${process.env.APP_HOST}:${process.env.APP_PORT}/public/${imageFile.name}`};
     }
 };

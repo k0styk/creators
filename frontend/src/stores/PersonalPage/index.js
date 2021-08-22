@@ -10,6 +10,7 @@ class PersonalPageStore {
     @observable isEdit = false;
     @observable activeCases = [];
     @observable completedCases = [];
+    sumPrice = 0;
 
     constructor({RouterStore}) {
         makeObservable(this)
@@ -25,7 +26,8 @@ class PersonalPageStore {
                 casesCount,
                 spheres,
                 activeCases,
-                completedCases
+                completedCases,
+                sumPrice
             } = await API.get('users/getPersonalPage');
 
             this.setUser(user);
@@ -34,7 +36,8 @@ class PersonalPageStore {
                 cases,
                 casesCount,
                 activeCases,
-                completedCases
+                completedCases,
+                sumPrice
             });
         } catch (e) {
             console.log(e);
@@ -45,10 +48,11 @@ class PersonalPageStore {
         this.user = user;
     }
 
-    @action initData = ({spheres, cases, casesCount}) => {
+    @action initData = ({spheres, cases, casesCount, sumPrice}) => {
         this.spheres = spheres;
         this.cases = cases;
         this.casesCount = casesCount;
+        this.sumPrice = sumPrice;
     }
 
     @action toggleEdit = () => {

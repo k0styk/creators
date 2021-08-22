@@ -2,9 +2,9 @@ import React from 'react';
 import s from './Home.module.scss';
 import logo from '../../shared/logo.png';
 import YouTube from 'react-youtube';
-import WorkIcon from '@material-ui/icons/WorkOutline';
 import { inject } from 'mobx-react';
 import UserBlock from '../Header/UserBlock';
+import {Button} from '@material-ui/core';
 
 @inject(({ UserStore, RouterStore }) => {
     return {
@@ -16,8 +16,7 @@ import UserBlock from '../Header/UserBlock';
 })
 class Header extends React.Component {
     handleCreator = () => {
-        const { userId, logout, RouterStore } = this.props;
-        userId && logout();
+        const {RouterStore } = this.props;
         RouterStore.history.push('/register');
     };
 
@@ -35,6 +34,7 @@ class Header extends React.Component {
     };
 
     render() {
+        const {userId } = this.props;
         return (
             <div className={s.headerContainer}>
                 <div className={s.header}>
@@ -54,10 +54,15 @@ class Header extends React.Component {
                         <span className={s.bold}>
                             КАК НАЙТИ ПОДХОДЯЩЕГО КРЕАТОРА
                         </span>
-                        <div className={s.link} onClick={this.handleCreator}>
-                            <WorkIcon className={s.workIcon} />
-                            cтать исполнителем
-                        </div>
+                        {
+                            !userId && <Button
+                                variant={'contained'}
+                                className={s.link}
+                                onClick={this.handleCreator}
+                            >
+                                Зарегистрироваться
+                            </Button>
+                        }
                     </div>
                     <YouTube
                         className={s.video}
