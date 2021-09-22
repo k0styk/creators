@@ -1,5 +1,4 @@
-import {observable, get, computed, makeObservable} from 'mobx';
-
+import { observable, action, get, computed, makeObservable } from 'mobx';
 
 class PromoStore {
     RouterStore = {};
@@ -11,8 +10,12 @@ class PromoStore {
     @observable userCases = [];
     @observable status;
 
-    constructor({RouterStore}) {
-        makeObservable(this,)
+    @observable dialogs = [];
+    @observable messages = [];
+    @observable selectedDialog = -1;
+
+    constructor({ RouterStore }) {
+        makeObservable(this);
         this.RouterStore = RouterStore || {};
     }
 
@@ -22,6 +25,14 @@ class PromoStore {
 
     close = () => {
         this.disposerAutorunPromo();
+    };
+
+    @action selectDialog = (dialogIndex) => {
+        this.selectedDialog = dialogIndex;
+    };
+
+    @computed get isDialogSelected() {
+        return Boolean(~this.selectedDialog);
     }
 }
 

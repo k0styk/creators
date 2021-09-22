@@ -1,45 +1,62 @@
 import React from 'react';
 import s from './Chat.module.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import { inject } from 'mobx-react';
 
-import { FixedSizeList as List } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import dayjs from 'dayjs';
 
-// @inject(({ChatStore}) => {
-//     return {
-//         price: ChatStore.price
-//     };
-// })
+@inject(({ ChatStore }) => {
+    return {
+        selectDialog: ChatStore.selectDialog,
+    };
+})
 class MessagesView extends React.Component {
     render() {
-        const { messages } = this.props;
-        const Row = ({ data, index, style }) => (
-            <div
-                // className={index % 2 ? 'ListItemOdd' : 'ListItemEven'}
-                style={style}
-            >
-                {data[index].message}
-            </div>
-        );
+        const { messages, user, selectDialog } = this.props;
 
         return (
             <>
-                <AutoSizer>
-                    {({ height, width }) => (
-                        <List
-                            className="List"
-                            height={height}
-                            itemSize={35}
-                            width={width}
-                            itemCount={messages.length}
-                            itemData={messages}
-                        >
-                            {Row}
-                        </List>
-                    )}
-                </AutoSizer>
-                {/* {messages.map((m, i) => (
-                    <div key={m.messageId}>{m.message}</div>
-                ))} */}
+                <div className={s.closeButton} onClick={() => selectDialog(-1)}>
+                    <IconButton>
+                        <CloseIcon />
+                    </IconButton>
+                </div>
+                {messages.length ? (
+                    <div className={s.messagesList}>
+                        {messages.map((message, i) => {
+                            const userClass =
+                                message.messageFrom === user.id
+                                    ? s.messageUser
+                                    : '';
+
+                            return typeof message === 'string' ? (
+                                <div key={i} className={s.messageDateGroup}>
+                                    <div className={s.messageDateGroupBlock}>
+                                        {message}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div key={i} className={s.message}>
+                                    <div
+                                        className={`${s.messageBlock} ${userClass}`}
+                                    >
+                                        <div className={s.messageText}>
+                                            {message.message}
+                                        </div>
+                                        <div className={s.messageDate}>
+                                            {dayjs(message.date).format(
+                                                'HH:mm'
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className={s.emptyMessages}>Список сообщений пуст</div>
+                )}
             </>
         );
     }

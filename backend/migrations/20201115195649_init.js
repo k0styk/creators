@@ -75,7 +75,7 @@ exports.up = async (knex) =>
                 .integer('type')
                 .notNullable()
                 .comment('Тип услуги(основная или доп)');
-            table.bigInteger('price').notNullable().comment('Стоимость');
+            table.integer('price').notNullable().comment('Стоимость');
             table.index('caseId');
         }),
 

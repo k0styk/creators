@@ -1,4 +1,5 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const PORT_FORK = process.env['APP_PORT'] || '8000',
     PORT_PART = process.env['APP_PORT_PART'] || '800',
@@ -13,7 +14,6 @@ const PORT =
     async function listenCallback() {
         try {
             process.send && process.send('ready');
-            // if we have socket connection to DB or another
         } catch (err) {
             console.log('Some error occured');
             console.log(err);
@@ -23,6 +23,10 @@ const PORT =
             );
         }
     }
+    await mongoose.connect(process.env.DB_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
 
     const app = require('./app');
     const httpServer = require('http').createServer(app);
@@ -34,13 +38,14 @@ const PORT =
 process.on('SIGINT', async () => {
     console.log('Received SIGINT');
     // disconnect DB if instance running
+    await mongoose.connection.close();
     process.exit(0);
 });
 
 process.on('message', async (msg) => {
     if (msg === 'shutdown') {
-        // console.log('Closing all connections...');
         // disconnect DB if instance running
+        await mongoose.connection.close();
         process.exit(0);
     }
 });

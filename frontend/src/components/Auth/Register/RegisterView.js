@@ -127,7 +127,7 @@ class RegisterPage extends React.Component {
                         type="submit"
                         onClick={registerUser}
                     >
-                        зарегистрироваться
+                        Зарегистрироваться
                     </Button>
                 </div>
 

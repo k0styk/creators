@@ -87,7 +87,7 @@ class LoginPage extends React.Component {
                 </div>
 
                 <Link to={`/register`} className={'registerLink'}>
-                    У вас нет аккаунта? зарегистрируйтесь
+                    У вас нет аккаунта? Зарегистрируйтесь
                 </Link>
             </div>
         );

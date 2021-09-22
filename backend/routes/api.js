@@ -1,13 +1,21 @@
 const router = require('express-promise-router')();
 const { getMethod } = require('../controllers/api.controller');
+const authMiddleware = require('../middleware/auth');
+const userController = require('../controllers/user');
 
-router.get(
-    '/users/getUser/:id',
-    getMethod(() => 'getUser')
-);
+// router.get(
+//     '/users/getUser/:id',
+//     getMethod(() => 'getUser')
+// );
+// router.get(
+//     '/users/getCurrentUser',
+//     getMethod(() => 'getCurrentUser')
+// );
+router.get('/users/getUser/:id', userController.getUser);
 router.get(
     '/users/getCurrentUser',
-    getMethod(() => 'getCurrentUser')
+    authMiddleware,
+    userController.getCurrentUser
 );
 router.post(
     '/users/editUser',
@@ -63,6 +71,11 @@ router.get(
 router.post(
     '/upload',
     getMethod(() => 'upload')
+);
+
+router.post(
+    '/chat/create',
+    getMethod(() => 'createChat')
 );
 
 module.exports = router;

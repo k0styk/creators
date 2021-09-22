@@ -1,33 +1,34 @@
 import React from 'react';
-import {inject} from "mobx-react";
+import { inject } from 'mobx-react';
 import s from './Case.module.scss';
-import YouTube from "react-youtube";
-import {
-    Avatar,
-    Button,
-    Link,
-    Paper
-} from "@material-ui/core";
-import CheckboxList from "./CheckboxList";
+import YouTube from 'react-youtube';
+import { Avatar, Button, Link, Paper } from '@material-ui/core';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import CheckboxList from './CheckboxList';
 
-@inject(({CaseStore, RouterStore}) => {
+import API from '../../api';
+
+@inject(({ CaseStore, RouterStore }) => {
     return {
         price: CaseStore.price,
         productionTime: (CaseStore.case || {}).productionTime,
         type: (CaseStore.case || {}).type,
         sphere: (CaseStore.case || {}).sphere,
-        youtubeId:(CaseStore.case || {}).youtubeId,
+        youtubeId: (CaseStore.case || {}).youtubeId,
         user: (CaseStore.case || {}).user || {},
-        RouterStore
+        RouterStore,
     };
 })
 class Search extends React.Component {
     goToChat = () => {
-        const {RouterStore} = this.props;
+        // TODO send to api to create chat and redirect to chat with selected id CHAT
+        // API.post('', {});
+
+        const { RouterStore } = this.props;
         RouterStore.history.push({
-            pathname: '/chat/1'
-        })
-    }
+            pathname: '/chat',
+        });
+    };
     opts = {
         playerVars: {
             rel: 0,
@@ -36,17 +37,12 @@ class Search extends React.Component {
             modestbranding: 1,
             fs: 0,
             loop: 1,
-            controls: 0
+            controls: 0,
         },
     };
 
     render() {
-        const {
-            price,
-            productionTime,
-            user,
-            youtubeId
-        } = this.props;
+        const { price, productionTime, user, youtubeId } = this.props;
 
         return (
             <Paper className={s.content} elevation={3}>
@@ -65,31 +61,23 @@ class Search extends React.Component {
                                 Срок изготовления: {productionTime}
                             </span>
                         </div>
-                        <Link
-                            className={s.user}
-                            href={`/profile/${user.id}`}
-                        >
+                        <Link className={s.user} href={`/profile/${user.id}`}>
                             {user.firstName}
-                            <Avatar
-                                alt={user.firstName}
-                                src={user.photoPath}
-                            />
+                            <Avatar alt={user.firstName} src={user.photoPath} />
                         </Link>
                     </div>
-                    <div>
-                    </div>
-                    <span className={s.titleBox}>
-                        Что включено
-                    </span>
-                    <CheckboxList/>
+                    <div></div>
+                    <span className={s.titleBox}>Что включено</span>
+                    <CheckboxList />
                     <Button
-                        onClick={this.goToChat}
-                        variant='contained'
-                        size={'small'}
-                        color={'primary'}
+                        variant="contained"
+                        size="small"
+                        color="primary"
                         className={s.buttonLink}
+                        endIcon={<QuestionAnswerIcon />}
+                        onClick={this.goToChat}
                     >
-                        Перейти к странице заказа
+                        Связаться
                     </Button>
                 </div>
             </Paper>

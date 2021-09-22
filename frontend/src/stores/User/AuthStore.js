@@ -62,7 +62,8 @@ class AuthStore {
         const { email, password } = this;
 
         try {
-            await AuthService.login({ email, password });
+            const data = await AuthService.login({ email, password });
+            localStorage.setItem('token', data['accessToken']);
             await this.UserStore.getCurrentUser();
 
             this.RouterStore.history.push({ pathname: '/lk' });
@@ -84,7 +85,12 @@ class AuthStore {
             const roleTypeId =
                 (isCreator && userType.CREATOR) || userType.CONSUMER;
 
-            await AuthService.register({ email, password, roleTypeId });
+            const data = await AuthService.register({
+                email,
+                password,
+                roleTypeId,
+            });
+            localStorage.setItem('token', data['accessToken']);
             await this.UserStore.getCurrentUser();
 
             this.RouterStore.history.push({ pathname: '/lk' });
