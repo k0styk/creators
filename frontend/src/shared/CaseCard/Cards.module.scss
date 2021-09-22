@@ -1,5 +1,10 @@
 @import '../style';
 
+@mixin chip {
+  font-size: 12px;
+  margin-right: 10px;
+}
+
 .root {
   maxWidth: 345;
   display: flex;
@@ -7,14 +12,18 @@
   justify-content: space-between;
 }
 
-.types{
-padding: 5px 0;
+.types {
+  padding: 5px 0;
 
-.chip {
-  background-color: $main-blue-10;
-  font-size: 12px;
-  margin-right: 10px;
-}
+  .chipType {
+    @include chip;
+    background-color: $main-blue-10;
+  }
+
+  .chipSphere {
+    @include chip;
+    background-color: $main-pink;
+  }
 }
 
 .media {
@@ -73,11 +82,17 @@ padding: 5px 0;
     font-size: 20px;
   }
 
-  .favIconEn{
+  .favIconEn {
     font-size: 20px;
-    color:red;
+    color: red;
+  }
+
+  a {
+    text-decoration: none !important;
   }
 }
+
+
 
 .user {
   display: flex;
@@ -88,6 +103,8 @@ padding: 5px 0;
     margin-right: 10px;
     height: 30px;
     width: 30px;
+    text-decoration: none;
+
   }
 }
 

@@ -28,16 +28,6 @@ class ProfileView extends React.Component {
                         <div className={s.avatar}>
                             <img alt={user.firstName} src={user.photoPath} />
                         </div>
-                        <Button
-                            variant="contained"
-                            size={'small'}
-                            color={'primary'}
-                            className={s.connectButton}
-                            endIcon={<QuestionAnswerIcon />}
-                        >
-                            {' '}
-                            Связаться{' '}
-                        </Button>
                     </div>
                     <div className={s.user}>
                         <span className={s.userName}>

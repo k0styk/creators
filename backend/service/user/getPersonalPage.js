@@ -2,7 +2,7 @@ const {
     getUser,
     getUserCountCases,
     getUserCases,
-    getUserSphereTypes
+    getUserSphereTypes, getUserSumPrice
 } = require('./tools/queries');
 const { userType } = require('../../enums');
 const { searchCases } = require("../case/searchCases");
@@ -33,13 +33,15 @@ module.exports = {
         }
 
         if (user.type === userType.CREATOR) {
-            const [spheres,cases,casesCount] = await Promise.all([
+            const [spheres,cases,casesCount, sumPrice] = await Promise.all([
                 getUserSphereTypes(knex,userId),
                 searchCases({ body: { userId },knex }),
-                getUserCountCases(knex,userId)
+                getUserCountCases(knex,userId),
+                getUserSumPrice(knex, userId)
             ]);
 
             return {
+                ...sumPrice,
                 user,
                 spheres,
                 cases,

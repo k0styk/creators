@@ -1,8 +1,8 @@
 import React from 'react';
-import { inject } from 'mobx-react';
-import { toJS } from 'mobx';
+import {inject} from 'mobx-react';
+import {toJS} from 'mobx';
 import s from '../PersonalPage.module.scss';
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import DoneIcon from '@material-ui/icons/Done';
 import Dropzone from 'react-dropzone';
@@ -10,7 +10,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 import TextField from '../../../shared/TextField';
 import SelectAddress from '../../../shared/AddressSelect';
 
-@inject(({ PersonalPageStore }) => {
+@inject(({PersonalPageStore}) => {
     return {
         user: toJS(PersonalPageStore.user),
         activeCases: PersonalPageStore.activeCases,
@@ -22,7 +22,7 @@ import SelectAddress from '../../../shared/AddressSelect';
 })
 class PersonalPage extends React.Component {
     render() {
-        const { user, setUserField, loadFiled, updateUser } = this.props;
+        const {user, setUserField, loadFiled, updateUser} = this.props;
         let fullName = `${user?.secondName || ''} ${user?.firstName || ''} ${
             user?.lastName || ''
         }`;
@@ -40,32 +40,33 @@ class PersonalPage extends React.Component {
                         color="primary"
                         onClick={updateUser}
                     >
-                        <DoneIcon className={s.addIcon} />
+                        <DoneIcon className={s.addIcon}/>
                         Сохранить
                     </Button>
                 </div>
                 <div className={s.content}>
                     <div className={s.userBlock}>
                         <div className={s.avatar}>
+                            {user.photoPath ? (
+                                <img alt={user.fullName} src={user.photoPath}/>
+                            ) : (
+                                <PersonIcon className={s.noPhoto}/>
+                            )}
                             <Dropzone onDrop={loadFiled}>
-                                {({ getRootProps, getInputProps }) => (
-                                    <section>
-                                        <div
-                                            className={s.loadBlock}
-                                            {...getRootProps()}
-                                        >
+                                {({getRootProps, getInputProps}) => (
+                                    <React.Fragment>
+                                        <Button
+                                            color="primary"
+                                            startIcon={<PublishIcon/>}
+                                            variant="contained"
+                                            className={s.upButton}
+                                            {...getRootProps()}>
+                                            Загрузить фотографию
                                             <input {...getInputProps()} />
-                                            <p>Загрузить фотографию </p>
-                                            <PublishIcon />
-                                        </div>
-                                    </section>
+                                        </Button>
+                                    </React.Fragment>
                                 )}
                             </Dropzone>
-                            {user.photoPath ? (
-                                <img alt={user.fullName} src={user.photoPath} />
-                            ) : (
-                                <PersonIcon className={s.noPhoto} />
-                            )}
                         </div>
                         <div className={s.field}>
                             <span className={s.titleField}> Почта </span>
@@ -83,7 +84,7 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Фамилия </span>
                                 <TextField
                                     placeholder={'Введите фамилию'}
-                                    onChange={({ target }) =>
+                                    onChange={({target}) =>
                                         setUserField('secondName', target.value)
                                     }
                                     value={user.secondName}
@@ -94,7 +95,7 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Имя </span>
                                 <TextField
                                     placeholder={'Введите имя'}
-                                    onChange={({ target }) =>
+                                    onChange={({target}) =>
                                         setUserField('firstName', target.value)
                                     }
                                     value={user.firstName}
@@ -105,7 +106,7 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Отчество </span>
                                 <TextField
                                     placeholder={'Введите отчество'}
-                                    onChange={({ target }) =>
+                                    onChange={({target}) =>
                                         setUserField('lastName', target.value)
                                     }
                                     value={user.lastName}
@@ -117,7 +118,7 @@ class PersonalPage extends React.Component {
                                 <span className={s.titleField}> Телефон </span>
                                 <TextField
                                     placeholder={'Введите номер'}
-                                    onChange={({ target }) =>
+                                    onChange={({target}) =>
                                         setUserField('phone', target.value)
                                     }
                                     value={user.phone}

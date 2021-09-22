@@ -8,11 +8,11 @@ import {
     FormControlLabel,
     TextField,
 } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Visibility, VisibilityOff, Close } from '@material-ui/icons';
 import { inject } from 'mobx-react';
 import { Link } from 'react-router-dom';
 
-@inject(({ AuthStore }) => {
+@inject(({ AuthStore, RouterStore }) => {
     return {
         registerUser: AuthStore.registerUser,
         email: AuthStore.email,
@@ -25,9 +25,16 @@ import { Link } from 'react-router-dom';
         toggleShowPassword: AuthStore.toggleShowPassword,
         isCreator: AuthStore.isCreator,
         setIsCreator: AuthStore.setIsCreator,
+        RouterStore,
     };
 })
 class RegisterPage extends React.Component {
+    toHome = () => {
+        this.props.RouterStore.history.push({
+            pathname: '/',
+        });
+    };
+
     render() {
         const {
             email,
@@ -46,6 +53,9 @@ class RegisterPage extends React.Component {
         return (
             <div className="card">
                 <div className="cardHeader">Регистрация</div>
+                <IconButton className={'close'} onClick={this.toHome}>
+                    <Close />
+                </IconButton>
                 <div className="cardBody">
                     <TextField
                         fullWidth
@@ -127,7 +137,7 @@ class RegisterPage extends React.Component {
                         type="submit"
                         onClick={registerUser}
                     >
-                        Зарегистрироваться
+                        зарегистрироваться
                     </Button>
                 </div>
 
