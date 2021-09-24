@@ -21,9 +21,15 @@ router.post(
     '/users/editUser',
     getMethod(() => 'editUser')
 );
+// router.get(
+//     '/users/getPersonalPage',
+//     authMiddleware,
+//     getMethod(() => 'getPersonalPage')
+// );
 router.get(
     '/users/getPersonalPage',
-    getMethod(() => 'getPersonalPage')
+    authMiddleware,
+    userController.getPersonalPage
 );
 router.get(
     '/users/getProfile/:id',

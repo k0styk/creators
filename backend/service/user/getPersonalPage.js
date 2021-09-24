@@ -2,15 +2,15 @@ const {
     getUser,
     getUserCountCases,
     getUserCases,
-    getUserSphereTypes, getUserSumPrice
+    getUserSphereTypes,
+    getUserSumPrice,
 } = require('./tools/queries');
 const { userType } = require('../../enums');
-const { searchCases } = require("../case/searchCases");
+const { searchCases } = require('../case/searchCases');
 
 module.exports = {
-    getPersonalPage: async ({ session,knex }) => {
-        const { user: { id: userId } = {} } = session;
-        const user = await getUser(knex,userId,[
+    getPersonalPage: async ({ user, knex }) => {
+        const usr = await getUser(knex, user.id, [
             'users.type',
             'users.id',
             'firstName',
@@ -25,34 +25,34 @@ module.exports = {
                  THEN json_build_object('name', cities.name, 'id', cities.id)
                  ELSE NULL
              END
-            ) as city`)
-        ]).catch(err => console.log(err));
+            ) as city`),
+        ]).catch((err) => console.log(err));
 
-        if (!user) {
+        if (!usr) {
             return {};
         }
 
-        if (user.type === userType.CREATOR) {
-            const [spheres,cases,casesCount, sumPrice] = await Promise.all([
-                getUserSphereTypes(knex,userId),
-                searchCases({ body: { userId },knex }),
-                getUserCountCases(knex,userId),
-                getUserSumPrice(knex, userId)
+        if (usr.type === userType.CREATOR) {
+            const [spheres, cases, casesCount, sumPrice] = await Promise.all([
+                getUserSphereTypes(knex, userId),
+                searchCases({ body: { userId }, knex }),
+                getUserCountCases(knex, userId),
+                getUserSumPrice(knex, userId),
             ]);
 
             return {
                 ...sumPrice,
-                user,
+                usr,
                 spheres,
                 cases,
-                casesCount: casesCount && casesCount.count || 0
+                casesCount: (casesCount && casesCount.count) || 0,
             };
         }
 
         return {
-            user,
+            usr,
             activeCases: [],
             completedCases: [],
         };
-    }
+    },
 };

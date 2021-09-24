@@ -5,6 +5,8 @@ const mailService = require('../mail/mail');
 const tokenService = require('../token');
 const { ShortUser, User } = require('../../dtos/user');
 const ApiError = require('../../exceptions/api-error');
+const user = require('../../models/user');
+const { userType } = require('../../models/helper');
 
 class UserService {
     async registration(email, password, roleTypeId) {
@@ -109,6 +111,63 @@ class UserService {
         const userDto = new User(user);
 
         return { ...userDto };
+    }
+
+    async getPersonalPage(userId) {
+        const user = await UserModel.findById(userId, {
+            _id: 1,
+            email: 1,
+            type: 1,
+            phone: 1,
+            firstName: 1,
+            lastName: 1,
+            secondName: 1,
+            about: 1,
+            photoPath: 1,
+            city: 1,
+        });
+        if (user.type === userType.CREATOR) {
+            // TODO: END GetPersonalPage
+            const [spheres, cases, casesCount, sumPrice] = await Promise.all([
+                searchCases({ body: { userId }, knex }),
+                getUserSphereTypes(knex, userId),
+                getUserCountCases(knex, userId),
+                getUserSumPrice(knex, userId),
+            ]);
+
+            return {
+                ...sumPrice,
+                usr,
+                spheres,
+                cases,
+                casesCount: (casesCount && casesCount.count) || 0,
+            };
+        }
+
+        return {
+            usr,
+            activeCases: [],
+            completedCases: [],
+        };
+
+        return new User(user);
+    }
+
+    // TODO: getFavorites
+    async getFavorites(userId) {
+        const favorites = await UserModel.find(userId, 'favorites').populate(
+            'Cases',
+            'id title youtubeId'
+        );
+        console.log(favorites);
+        return favorites;
+    }
+
+    async setFavorites(userId, favoriteId) {
+        await UserModel.updateOne(
+            { _id: userId },
+            { $push: { favorites: favoriteId } }
+        );
     }
 }
 

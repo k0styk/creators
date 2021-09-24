@@ -184,10 +184,20 @@ class UserController {
         }
     }
 
+    async getPersonalPage(req, res, next) {
+        try {
+            const { user } = req;
+            const data = await userService.getPersonalPage(user.id);
+
+            return res.json(data);
+        } catch (e) {
+            next(e);
+        }
+    }
+
     async test(req, res, next) {
         try {
             const { accessToken } = req.body;
-            console.log(accessToken);
 
             const data = tokenService.validateAccessToken(accessToken);
             console.log(data);

@@ -1,16 +1,16 @@
 class UserDto {
-    email;
     id;
-    isActivated;
+    email;
     firstName;
     lastName;
     about;
-    cityId;
-    type;
     phone;
+    type;
+    city;
+    isActivated;
     isFullRegister;
-    activationLink;
-    activationLinkExpiration;
+    // activationLink;
+    // activationLinkExpiration;
     secondName;
     photoPath;
 
@@ -21,12 +21,12 @@ class UserDto {
         this.firstName = model.firstName;
         this.lastName = model.lastName;
         this.about = model.about;
-        this.cityId = model.cityId;
+        this.city = model.city;
         this.type = model.type;
         this.phone = model.phone;
         this.isFullRegister = model.isFullRegister;
-        this.activationLink = model.activationLink;
-        this.activationLinkExpiration = model.activationLinkExpiration;
+        // this.activationLink = model.activationLink;
+        // this.activationLinkExpiration = model.activationLinkExpiration;
         this.secondName = model.secondName;
         this.photoPath = model.photoPath;
     }
