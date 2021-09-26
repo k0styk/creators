@@ -1,9 +1,8 @@
 module.exports = {
-    Cities: 'Cities',
-    Spheres: 'Spheres',
-    User: 'User',
-    Cases: 'Cases',
-    Token: 'Token',
-    CaseTypes: 'CaseTypes',
-    Services: 'Services',
+  Users: 'Users',
+  Cases: 'Cases',
+  Tokens: 'Tokens',
+  Services: 'Services',
+  Seeds: 'Seeds',
+  Chats: 'Chats',
 };

@@ -1,21 +1,32 @@
 const { Schema, model } = require('mongoose');
-const { Cases, Spheres, User, Cities, CaseTypes } = require('./names');
+const { Cases, Users, Seeds } = require('./names');
 
 const CasesSchema = new Schema(
-    {
-        title: { type: String, required: true },
-        description: { type: String },
-        productionTime: { type: Number }, // minutes
-        userId: { type: Schema.Types.ObjectId, ref: User, required: true },
-        sphereId: { type: Schema.Types.ObjectId, ref: Spheres, required: true },
-        youtubeId: { type: String, required: true },
-        typeId: { type: Schema.Types.ObjectId, ref: CaseTypes },
-        cityId: { type: Schema.Types.ObjectId, ref: Cities },
+  {
+    title: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: Users, required: true },
+    sphere: { type: String, required: true },
+    youtubeId: { type: String, required: true },
+    description: { type: String },
+    productionTime: { type: Number }, // minutes
+    time: { type: Number },
+    caseType: { type: String },
+    city: {
+      id: { type: String },
+      name: { type: String },
     },
-    {
-        timestamps: true,
-        versionKey: false,
-    }
+    services: [
+      {
+        serviceType: { type: Number },
+        price: { type: Number },
+        serviceId: { type: Schema.Types.ObjectId, ref: Seeds },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
 module.exports = model(Cases, CasesSchema);

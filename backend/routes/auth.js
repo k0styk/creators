@@ -122,10 +122,10 @@ const userController = require('../controllers/user');
 const router = new Router();
 
 router.post(
-    '/register',
-    body('email').isEmail(),
-    body('password').isLength({ min: 6, max: 32 }),
-    userController.registration
+  '/register',
+  body('email').isEmail(),
+  body('password').isLength({ min: 6, max: 32 }),
+  userController.registration
 );
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);

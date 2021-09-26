@@ -9,6 +9,7 @@
     "production": "pm2 start ./pm2/production.config.js --env production",
     "devstart": "nodemon server.js",
     "knex": "./node_modules/.bin/knex",
+    "seed": "node ./seeds/mongo.seed.js",
     "eslint": "eslint"
   },
   "author": "",
