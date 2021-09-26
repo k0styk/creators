@@ -1,11 +1,15 @@
+const fetch = require('node-fetch');
 const ApiError = require('../../exceptions/api-error');
 const CaseModel = require('../../models/cases');
+const SeedModel = require('../../models/seeds');
+const { SeedDto } = require('../../dtos/seed');
+const { serviceType } = require('../../models/helper');
 const key_youtube = 'AIzaSyCKzWSYT7lmS-Hs4J8ty4cPUyWtDFUtg-o';
 
 class CaseService {
   async createCase(
     {
-      city, // { name, id }
+      city,
       desc: description,
       youtubeId,
       typeId,
@@ -17,15 +21,12 @@ class CaseService {
     },
     { id: userId }
   ) {
-    // let cityId = null;
     let time = null;
 
     try {
       const result = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?id=${youtubeId}&key=${key_youtube}&part=contentDetails&fields=items(contentDetails(duration))`
       ).then((res) => res.text());
-
-      console.log(JSON.parse(result));
 
       const { contentDetails: { duration } = {} } = JSON.parse(result).items[0];
       const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
@@ -52,14 +53,14 @@ class CaseService {
         }
       }
     } catch (e) {
-      throw e;
+      throw ApiError.BadRequest(e.message);
     }
+
     const services = [
       ...addServices.map(({ id, price }) => {
         return {
           serviceId: id,
           price,
-          caseId,
           type: serviceType.ADDITIONAL,
         };
       }),
@@ -67,63 +68,24 @@ class CaseService {
         return {
           serviceId: id,
           price,
-          caseId,
           type: serviceType.MAIN,
         };
       }),
     ];
 
-    const Case = await CaseModel.create({
+    await CaseModel.create({
+      userId,
       title,
       youtubeId,
       description,
       productionTime,
       caseType: typeId,
       city,
-      sphere: 'TEST', // need to take sphere
+      sphereId,
       services,
     });
-    console.log(Case);
 
     return true;
-
-    // const [caseId] = await knex('cases')
-    //   .insert({
-    //     cityId,
-    //     description,
-    //     youtubeId,
-    //     typeId,
-    //     sphereId,
-    //     title,
-    //     userId,
-    //     productionTime,
-    //     time,
-    //     created_at: new Date(),
-    //   })
-    //   .returning('id');
-
-    // const services = [
-    //   ...addServices.map(({ id, price }) => {
-    //     return {
-    //       serviceId: id,
-    //       price,
-    //       caseId,
-    //       type: serviceType.ADDITIONAL,
-    //     };
-    //   }),
-    //   ...mainServices.map(({ id, price }) => {
-    //     return {
-    //       serviceId: id,
-    //       price,
-    //       caseId,
-    //       type: serviceType.MAIN,
-    //     };
-    //   }),
-    // ];
-
-    // await knex('casesServices').insert(services);
-
-    // return response;
   }
 
   async searchCases(
@@ -141,6 +103,19 @@ class CaseService {
     }).limit(limit);
     console.log(candidate);
     return true;
+  }
+
+  async getRecommendations({ id }) {
+    const recommendations = await this.searchCases({ limimt: 8 }, { id });
+
+    return recommendations;
+  }
+
+  async getDataForCreateCases() {
+    const findy = await SeedModel.findOne({});
+    const seedDto = new SeedDto(findy);
+
+    return { ...seedDto };
   }
 }
 

@@ -7,7 +7,7 @@ class CaseController {
     try {
       const created = await caseService.createCase(req.body, req.user);
 
-      return res.json({});
+      return res.json({ created });
     } catch (e) {
       next(e);
     }
@@ -18,6 +18,16 @@ class CaseController {
       const searchedCase = await caseService.searchCases(req.body, req.user);
 
       return res.json({});
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getDataForCreateCases(req, res, next) {
+    try {
+      const data = await caseService.getDataForCreateCases();
+
+      return res.json(data);
     } catch (e) {
       next(e);
     }

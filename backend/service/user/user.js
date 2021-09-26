@@ -2,12 +2,22 @@ const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 const UserModel = require('../../models/user');
 const CaseModel = require('../../models/cases');
+const { Seeds } = require('../../models/names');
 const mailService = require('../mail/mail');
-const tokenService = require('../token');
 const { ShortUser, User } = require('../../dtos/user');
 const ApiError = require('../../exceptions/api-error');
 const user = require('../../models/user');
 const { userType } = require('../../models/helper');
+const tokenService = require('../token');
+
+const knex = require('../../knex/index');
+const {
+  getUser,
+  getUserCountCases,
+  getUserCases,
+  getUserSphereTypes,
+  getUserSumPrice,
+} = require('./tools/queries');
 
 class UserService {
   async registration(email, password, roleTypeId) {
@@ -37,7 +47,6 @@ class UserService {
     //     email,
     //     `${process.env.API_URL}/auth/activate/${activationLink}`
     // );
-    console.log(user);
 
     const userDto = new ShortUser(user);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -80,7 +89,6 @@ class UserService {
     }
     const userDto = new ShortUser(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    console.log(tokens);
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
     return { ...tokens, user: userDto };
@@ -130,19 +138,27 @@ class UserService {
     });
     if (user.type === userType.CREATOR) {
       // TODO: END GetPersonalPage
-      const [spheres, cases, casesCount, sumPrice] = await Promise.all([
-        searchCases({ body: { userId }, knex }),
-        getUserSphereTypes(knex, userId),
-        getUserCountCases(knex, userId),
-        getUserSumPrice(knex, userId),
-      ]);
+      const spheres = await CaseModel.find({ userId }).populate(
+        `${Seeds}.spheres`
+      );
+      // .distinct('spheres.name');
+      console.log(spheres);
+
+      // const sql = await getUserSphereTypes(knex, userId);
+      // console.log(sql);
+      // const [spheres, cases, casesCount, sumPrice] = await Promise.all([
+      //   searchCases({ body: { userId }, knex }),
+      //   getUserSphereTypes(knex, userId),
+      //   getUserCountCases(knex, userId),
+      //   getUserSumPrice(knex, userId),
+      // ]);
 
       return {
-        ...sumPrice,
+        // ...sumPrice,
         user,
-        spheres,
-        cases,
-        casesCount: (casesCount && casesCount.count) || 0,
+        // spheres,
+        // cases,
+        // casesCount: (casesCount && casesCount.count) || 0,
       };
     }
 

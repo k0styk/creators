@@ -37,9 +37,14 @@ router.get(
   getMethod(() => 'getProfile')
 );
 
+// router.get(
+//   '/cases/getDataForCreate',
+//   getMethod(() => 'getDataForCreate')
+// );
 router.get(
   '/cases/getDataForCreate',
-  getMethod(() => 'getDataForCreate')
+  authMiddleware,
+  caseController.getDataForCreateCases
 );
 // router.post(
 //   '/cases/create',
@@ -58,9 +63,14 @@ router.post(
   '/cases/searchCases',
   getMethod(() => 'searchCases')
 );
+// router.get(
+//   '/cases/getDataForCreate',
+//   getMethod(() => 'getDataForCreate')
+// );
 router.get(
   '/cases/getDataForCreate',
-  getMethod(() => 'getDataForCreate')
+  authMiddleware,
+  caseController.getDataForCreateCases
 );
 router.get(
   '/cases/getCase/:id',

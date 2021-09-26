@@ -5,12 +5,20 @@ const CasesSchema = new Schema(
   {
     title: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: Users, required: true },
-    sphere: { type: String, required: true },
+    sphereId: {
+      type: Schema.Types.ObjectId,
+      ref: `${Seeds}.spheres`,
+      required: true,
+    },
     youtubeId: { type: String, required: true },
+    caseType: {
+      type: Schema.Types.ObjectId,
+      ref: `${Seeds}.caseType`,
+      required: true,
+    },
     description: { type: String },
     productionTime: { type: Number }, // minutes
     time: { type: Number },
-    caseType: { type: String },
     city: {
       id: { type: String },
       name: { type: String },
@@ -19,7 +27,7 @@ const CasesSchema = new Schema(
       {
         serviceType: { type: Number },
         price: { type: Number },
-        serviceId: { type: Schema.Types.ObjectId, ref: Seeds },
+        serviceId: { type: Schema.Types.ObjectId, ref: `${Seeds}.services` },
       },
     ],
   },
