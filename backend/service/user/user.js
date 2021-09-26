@@ -30,7 +30,7 @@ class UserService {
     const user = await UserModel.create({
       email,
       password: hashPassword,
-      roleTypeId,
+      type: roleTypeId,
       activationLink,
     });
     // await mailService.sendActivationMail(
