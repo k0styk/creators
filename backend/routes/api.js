@@ -55,9 +55,14 @@ router.get(
   '/cases/getParameters',
   getMethod(() => 'getParameters')
 );
+// router.get(
+//   '/cases/getRecommendations',
+//   getMethod(() => 'getRecommendations')
+// );
 router.get(
   '/cases/getRecommendations',
-  getMethod(() => 'getRecommendations')
+  // authMiddleware,
+  caseController.getRecommendations
 );
 router.post(
   '/cases/searchCases',
@@ -77,9 +82,14 @@ router.get(
   getMethod(() => 'getCase')
 );
 
+// router.post(
+//   '/favorites/setFavorite',
+//   getMethod(() => 'setFavorite')
+// );
 router.post(
   '/favorites/setFavorite',
-  getMethod(() => 'setFavorite')
+  authMiddleware,
+  userController.setFavorites
 );
 router.get(
   '/favorites/getFavorites',

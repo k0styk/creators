@@ -1,17 +1,33 @@
-class SeedDto {
+class ServiceDto {
   constructor(model) {
-    this.services = model.services.map((v) => ({
+    this.services = model.map((v) => ({
       id: v['_id'],
       name: v.name,
       tooltipText: v.tooltipText,
       tooltipAdditionalType: v.tooltipAdditionalType,
       tooltipAdditional: v.tooltipAdditional,
     }));
-    this.spheres = model.spheres.map((v) => ({
+  }
+}
+
+class SphereDto {
+  constructor(model) {
+    this.spheres = model.map((v) => ({
       id: v['_id'],
       name: v.name,
     }));
-    this.types = model.caseType.map((v) => ({
+  }
+}
+
+class SphereAggregateDto {
+  constructor(model) {
+    this.sphere = model['_id'];
+  }
+}
+
+class CaseTypeDto {
+  constructor(model) {
+    this.types = model.map((v) => ({
       id: v['_id'],
       name: v.name,
     }));
@@ -19,5 +35,8 @@ class SeedDto {
 }
 
 module.exports = {
-  SeedDto,
+  ServiceDto,
+  SphereDto,
+  SphereAggregateDto,
+  CaseTypeDto,
 };

@@ -1,5 +1,11 @@
 const { Schema, model } = require('mongoose');
-const { Cases, Users, Seeds } = require('./names');
+const {
+  Cases,
+  Users,
+  SeedCaseType,
+  SeedService,
+  SeedSphere,
+} = require('./names');
 
 const CasesSchema = new Schema(
   {
@@ -7,13 +13,13 @@ const CasesSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: Users, required: true },
     sphereId: {
       type: Schema.Types.ObjectId,
-      ref: `${Seeds}.spheres`,
+      ref: SeedSphere,
       required: true,
     },
     youtubeId: { type: String, required: true },
     caseType: {
       type: Schema.Types.ObjectId,
-      ref: `${Seeds}.caseType`,
+      ref: SeedCaseType,
       required: true,
     },
     description: { type: String },
@@ -27,7 +33,7 @@ const CasesSchema = new Schema(
       {
         serviceType: { type: Number },
         price: { type: Number },
-        serviceId: { type: Schema.Types.ObjectId, ref: `${Seeds}.services` },
+        serviceId: { type: Schema.Types.ObjectId, ref: SeedService },
       },
     ],
   },

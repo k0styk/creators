@@ -194,6 +194,31 @@ class UserController {
     }
   }
 
+  async setFavorites(req, res, next) {
+    try {
+      const {
+        user,
+        body: { caseId, action },
+      } = req;
+      const data = await userService.setFavorites(user.id, caseId, action);
+
+      return res.json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getFavorites(req, res, next) {
+    try {
+      const { user } = req;
+      const data = await userService.getFavorites(user.id);
+
+      return res.json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async test(req, res, next) {
     try {
       const { accessToken } = req.body;

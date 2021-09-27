@@ -32,6 +32,17 @@ class CaseController {
       next(e);
     }
   }
+
+  async getRecommendations(req, res, next) {
+    try {
+      const data = await caseService.getRecommendations();
+      console.log(data);
+
+      return res.json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 module.exports = new CaseController();

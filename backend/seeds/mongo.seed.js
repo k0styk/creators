@@ -1,9 +1,11 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const SeedModel = require('../models/seeds');
+const Spheres = require('../models/seed.spheres');
+const Services = require('../models/seed.services');
+const CaseType = require('../models/seed.caseType');
 
-const data = {
-  services: [
+const data = [
+  [
     {
       name: 'Сценарий',
       tooltipText:
@@ -76,7 +78,7 @@ const data = {
         'Озвучка - озвучка ролика диктором для фонового сопровождения или дубляжа (озвучки актеров)',
     },
   ],
-  spheres: [
+  [
     { name: 'Недвижимость' },
     { name: 'Промышленность' },
     { name: 'Ритейл' },
@@ -87,7 +89,7 @@ const data = {
     { name: 'Блогинг/YouTube' },
     { name: 'Другое' },
   ],
-  caseType: [
+  [
     { name: 'Реĸлама' },
     { name: 'Креатив' },
     { name: 'Продающий ролиĸ/презентация' },
@@ -97,7 +99,9 @@ const data = {
     { name: 'Анимация 2D' },
     { name: 'Анимация 3D' },
   ],
-};
+];
+
+const models = [Services, Spheres, CaseType];
 
 const start = async () => {
   try {
@@ -106,8 +110,10 @@ const start = async () => {
       useUnifiedTopology: true,
     });
 
-    await SeedModel.remove({});
-    await SeedModel.create(data);
+    for (let i = 0; i < models.length; i++) {
+      await models[i].remove({});
+      await models[i].insertMany(data[i]);
+    }
     console.log('Seed running: OK');
     mongoose.disconnect();
   } catch (e) {

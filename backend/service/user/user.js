@@ -1,14 +1,17 @@
 const uuid = require('uuid');
+const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcrypt');
 const UserModel = require('../../models/user');
 const CaseModel = require('../../models/cases');
-const { Seeds } = require('../../models/names');
+const { SeedSphere } = require('../../models/names');
 const mailService = require('../mail/mail');
 const { ShortUser, User } = require('../../dtos/user');
+const { SphereAggregateDto } = require('../../dtos/seed');
 const ApiError = require('../../exceptions/api-error');
 const user = require('../../models/user');
 const { userType } = require('../../models/helper');
 const tokenService = require('../token');
+const caseService = require('../case/case');
 
 const knex = require('../../knex/index');
 const {
@@ -138,27 +141,67 @@ class UserService {
     });
     if (user.type === userType.CREATOR) {
       // TODO: END GetPersonalPage
-      const spheres = await CaseModel.find({ userId }).populate(
-        `${Seeds}.spheres`
+      const spheresAggregate = await CaseModel.aggregate([
+        { $match: { userId: new ObjectId(userId) } },
+        {
+          $lookup: {
+            from: 'seed.spheres',
+            localField: 'sphereId',
+            foreignField: '_id',
+            as: 'spheres',
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: [{ $arrayElemAt: ['$spheres', 0] }, '$$ROOT'],
+            },
+          },
+        },
+        { $project: { name: 1 } },
+        { $group: { _id: '$name' } },
+      ]);
+      const spheres = spheresAggregate.map(
+        (v) => new SphereAggregateDto(v).sphere
       );
-      // .distinct('spheres.name');
-      console.log(spheres);
-
-      // const sql = await getUserSphereTypes(knex, userId);
-      // console.log(sql);
-      // const [spheres, cases, casesCount, sumPrice] = await Promise.all([
-      //   searchCases({ body: { userId }, knex }),
-      //   getUserSphereTypes(knex, userId),
-      //   getUserCountCases(knex, userId),
-      //   getUserSumPrice(knex, userId),
-      // ]);
+      const casesCount = await CaseModel.find({
+        userId: new ObjectId(userId),
+      }).count();
+      const prices = await CaseModel.aggregate([
+        { $match: { userId: new ObjectId(userId) } },
+        {
+          $project: {
+            userId: 1,
+            services: {
+              $filter: {
+                input: '$services',
+                as: 'item',
+                cond: { $eq: ['$$item.serviceType', 1] },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            userId: 1,
+            Prices: { $sum: '$services.price' },
+          },
+        },
+        {
+          $group: {
+            _id: '$userId',
+            sumPrices: { $sum: '$Prices' },
+          },
+        },
+      ]);
+      const cases = await caseService.searchCases({ userId });
 
       return {
-        // ...sumPrice,
         user,
-        // spheres,
-        // cases,
-        // casesCount: (casesCount && casesCount.count) || 0,
+        sumPrice: prices[0]['sumPrices'],
+        spheres,
+        cases,
+        casesCount,
       };
     }
 
@@ -182,11 +225,18 @@ class UserService {
     return favorites;
   }
 
-  async setFavorites(userId, favoriteId) {
-    await UserModel.updateOne(
-      { _id: userId },
-      { $push: { favorites: favoriteId } }
-    );
+  async setFavorites(userId, favoriteId, action) {
+    if (action) {
+      await UserModel.updateOne(
+        { _id: userId },
+        { $push: { favorites: favoriteId } }
+      );
+    } else {
+      // await UserModel.updateOne(
+      //   { _id: userId },
+      //   { $pull: { favorites: { $gte: 6 } } }
+      // );
+    }
   }
 
   async getUserCases(userId) {

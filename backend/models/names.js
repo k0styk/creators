@@ -3,6 +3,8 @@ module.exports = {
   Cases: 'Cases',
   Tokens: 'Tokens',
   Services: 'Services',
-  Seeds: 'Seeds',
+  SeedSphere: 'Seed.Sphere',
+  SeedService: 'Seed.Service',
+  SeedCaseType: 'Seed.Case.Type',
   Chats: 'Chats',
 };
