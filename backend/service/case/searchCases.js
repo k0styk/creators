@@ -53,6 +53,7 @@ module.exports = {
     }
 
     if (onlyFavorites) {
+      console.log('ONLY FAVORITES: ', onlyFavorites);
       subQuery
         .select(knex.raw(`favorites."caseId" as "inFavorite"`))
         .join('favorites', function () {
@@ -65,6 +66,7 @@ module.exports = {
     }
 
     if (!onlyFavorites && userIdCurrent) {
+      console.log('!ONLY FAVORITES: ', onlyFavorites, userIdCurrent);
       subQuery
         .select(knex.raw(`favorites."caseId" as "inFavorite"`))
         .leftJoin('favorites', function () {
@@ -102,9 +104,6 @@ module.exports = {
           })
           .whereRaw(whereRaw);
       }
-
-      // const sql = `"tsvector" @@ replace(to_tsquery('russian', ?)::text, '&', '|')::tsquery`;
-      // subQuery.whereRaw(sql, `'${fastFilter}':*`);
     }
 
     if (price) {

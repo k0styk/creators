@@ -86,6 +86,7 @@ class CaseService {
       city,
       sphereId,
       services,
+      time,
     });
 
     return true;
@@ -93,11 +94,57 @@ class CaseService {
 
   async searchCases(
     { type, sphere, price, userId, fastFilter, onlyFavorites, limit, time },
-    currentUserId = ''
+    currentUserId = {}
   ) {
     const userIdQuery = userId
       ? { $match: { userId: new ObjectId(userId) } }
       : {};
+    const typeQuery = userId
+      ? { $match: { caseType: new ObjectId(type) } }
+      : {};
+    const sphereQuery = userId
+      ? { $match: { sphereId: new ObjectId(sphere) } }
+      : {};
+    let fastFilterQuery = {},
+      priceQuery = {},
+      timeQuery = {};
+    if (price) {
+      const andArray = [];
+      if (price.to) {
+        andArray.push({ price: { $lte: Number(price.to) } });
+      }
+      if (price.from) {
+        andArray.push({ price: { $gte: Number(price.from) } });
+      }
+      if (andArray.length) {
+        priceQuery = { $match: { $and: andArray } };
+      }
+    }
+    if (time) {
+      const andArray = [];
+      if (time.to) {
+        andArray.push({ time: { $lte: time.to } });
+      }
+      if (time.from) {
+        andArray.push({ time: { $gte: time.from } });
+      }
+      if (andArray.length) {
+        timeQuery = { $match: { $and: andArray } };
+      }
+    }
+    if (fastFilter) {
+      const text = fastFilter.trim().replace(/[ ]+/g, ' ').split(' ');
+      if (text.length) {
+        const arr = [];
+        for (let i = 0; i < text.length; i++) {
+          arr.push({ description: new RegExp(text[i], 'gmi') });
+          arr.push({ title: new RegExp(text[i], 'gmi') });
+        }
+        if (arr.length) {
+          fastFilterQuery = { $match: { $or: [...arr] } };
+        }
+      }
+    }
     const aggregationQuery = [
       {
         $lookup: {
@@ -125,14 +172,20 @@ class CaseService {
       },
       {
         $project: {
+          city: 1,
           title: 1,
           userId: 1,
           sphereId: 1,
-          youtubeId: 1,
           caseType: 1,
+          youtubeId: 1,
           description: 1,
-          city: 1,
-          services: 1,
+          services: {
+            $filter: {
+              input: '$services',
+              as: 'item',
+              cond: { $eq: ['$$item.serviceType', 1] },
+            },
+          },
           productionTime: 1,
           updatedAt: 1,
           createdAt: 1,
@@ -143,11 +196,21 @@ class CaseService {
       },
       {
         $project: {
+          city: 1,
           title: 1,
+          userId: 1,
+          sphereId: 1,
+          caseType: 1,
+          services: 1,
           youtubeId: 1,
           description: 1,
-          city: 1,
-          services: 1,
+          price: {
+            $reduce: {
+              input: '$services',
+              initialValue: 0,
+              in: { $add: ['$$value', '$$this.price'] },
+            },
+          },
           productionTime: 1,
           updatedAt: 1,
           createdAt: 1,
@@ -162,35 +225,25 @@ class CaseService {
       },
       limit ? { $limit: limit } : {},
     ];
-    // console.log(aggregationQuery);
-    // const case = await CaseModel.find({});
-    /*
-    query, {
-      _id: 1,
-      title: 1,
-      youtubeId: 1,
-      sphere: 1,
-      caseType: 1,
-      created_at: 1,
-    }
-    */
-    // let candidate;
-    // if (limit) {
 
-    // } else {
-    //   candidate = await CaseModel.aggregate([userIdQuery, ...aggregationQuery]);
-    // }
-    const aggregations = [userIdQuery, ...aggregationQuery].filter(
-      (v) => Object.keys(v).length !== 0
-    );
-    console.log(aggregations);
+    const aggregations = [
+      ...aggregationQuery,
+      fastFilterQuery,
+      userIdQuery,
+      sphereQuery,
+      priceQuery,
+      typeQuery,
+      timeQuery,
+    ].filter((v) => Object.keys(v).length !== 0);
+    console.dir(aggregations, { depth: null, colors: true });
     const candidate = await CaseModel.aggregate(aggregations);
+    console.dir(candidate, { depth: null, colors: true });
 
     return candidate;
   }
 
   async getRecommendations() {
-    const recommendations = await this.searchCases({ limit: 2 });
+    const recommendations = await this.searchCases({ limit: 8 });
 
     return recommendations;
   }
@@ -208,6 +261,17 @@ class CaseService {
     return {
       types: [...types.types],
       services: [...services.services],
+      spheres: [...spheres.spheres],
+    };
+  }
+
+  async getParameters() {
+    const promises = await Promise.all([CaseType.find(), CaseSpheres.find()]);
+    const types = new CaseTypeDto(promises[0]);
+    const spheres = new SphereDto(promises[1]);
+
+    return {
+      types: [...types.types],
       spheres: [...spheres.spheres],
     };
   }

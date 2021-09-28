@@ -51,10 +51,11 @@ router.get(
 //   getMethod(() => 'createCase')
 // );
 router.post('/cases/create', authMiddleware, caseController.createCase);
-router.get(
-  '/cases/getParameters',
-  getMethod(() => 'getParameters')
-);
+// router.get(
+//   '/cases/getParameters',
+//   getMethod(() => 'getParameters')
+// );
+router.get('/cases/getParameters', caseController.getParameters);
 // router.get(
 //   '/cases/getRecommendations',
 //   getMethod(() => 'getRecommendations')
@@ -64,10 +65,11 @@ router.get(
   // authMiddleware,
   caseController.getRecommendations
 );
-router.post(
-  '/cases/searchCases',
-  getMethod(() => 'searchCases')
-);
+// router.post(
+//   '/cases/searchCases',
+//   getMethod(() => 'searchCases')
+// );
+router.post('/cases/searchCases', caseController.searchCases);
 // router.get(
 //   '/cases/getDataForCreate',
 //   getMethod(() => 'getDataForCreate')
