@@ -170,6 +170,27 @@ class UserController {
     }
   }
 
+  async editUser(req, res, next) {
+    const { firstName, about, lastName, secondName, photoPath, city } =
+      req.body;
+    const { user: { id } = {} } = req;
+    try {
+      const result = await userService.editUser({
+        firstName,
+        about,
+        lastName,
+        secondName,
+        photoPath,
+        city,
+        userId: id,
+      });
+      return res.json({ message: 'OK' });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   async getCurrentUser(req, res, next) {
     try {
       if (req.user.id) {

@@ -126,6 +126,40 @@ class UserService {
     return { ...userDto };
   }
 
+  async editUser({
+    firstName,
+    about,
+    lastName,
+    secondName,
+    photoPath,
+    city,
+    phone,
+    userId,
+  }) {
+    let isFullRegister = false;
+    if (
+      firstName &&
+      about &&
+      lastName &&
+      secondName &&
+      photoPath &&
+      city &&
+      phone
+    ) {
+      isFullRegister = ture;
+    }
+    return await UserModel.findByIdAndUpdate(userId, {
+      firstName,
+      about,
+      lastName,
+      secondName,
+      photoPath,
+      phone,
+      city,
+      isFullRegister,
+    });
+  }
+
   async getPersonalPage(userId) {
     const user = await UserModel.findById(userId, {
       _id: 1,
@@ -199,7 +233,7 @@ class UserService {
 
       return {
         user,
-        sumPrice: prices[0]['sumPrices'],
+        sumPrice: prices[0]['sumPrices'], // TODO: check prices if exists
         spheres,
         cases,
         casesCount,

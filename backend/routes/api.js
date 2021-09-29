@@ -18,10 +18,11 @@ router.get(
   authMiddleware,
   userController.getCurrentUser
 );
-router.post(
-  '/users/editUser',
-  getMethod(() => 'editUser')
-);
+// router.post(
+//   '/users/editUser',
+//   getMethod(() => 'editUser')
+// );
+router.post('/users/editUser', authMiddleware, userController.editUser);
 // router.get(
 //     '/users/getPersonalPage',
 //     authMiddleware,
