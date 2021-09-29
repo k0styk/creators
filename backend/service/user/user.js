@@ -194,6 +194,7 @@ class UserService {
           },
         },
       ]);
+      console.log(userId);
       const cases = await caseService.searchCases({ userId });
 
       return {
@@ -226,16 +227,17 @@ class UserService {
   }
 
   async setFavorites(userId, favoriteId, action) {
+    console.log(action);
     if (action) {
       await UserModel.updateOne(
         { _id: userId },
         { $push: { favorites: favoriteId } }
       );
     } else {
-      // await UserModel.updateOne(
-      //   { _id: userId },
-      //   { $pull: { favorites: { $gte: 6 } } }
-      // );
+      await UserModel.updateOne(
+        { _id: userId },
+        { $pull: { favorites: { $in: [favoriteId] } } }
+      );
     }
   }
 

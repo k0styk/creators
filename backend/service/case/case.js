@@ -99,10 +99,8 @@ class CaseService {
     const userIdQuery = userId
       ? { $match: { userId: new ObjectId(userId) } }
       : {};
-    const typeQuery = userId
-      ? { $match: { caseType: new ObjectId(type) } }
-      : {};
-    const sphereQuery = userId
+    const typeQuery = type ? { $match: { caseType: new ObjectId(type) } } : {};
+    const sphereQuery = sphere
       ? { $match: { sphereId: new ObjectId(sphere) } }
       : {};
     let fastFilterQuery = {},
@@ -196,6 +194,7 @@ class CaseService {
       },
       {
         $project: {
+          id: '$_id',
           city: 1,
           title: 1,
           userId: 1,
@@ -237,7 +236,6 @@ class CaseService {
     ].filter((v) => Object.keys(v).length !== 0);
     console.dir(aggregations, { depth: null, colors: true });
     const candidate = await CaseModel.aggregate(aggregations);
-    console.dir(candidate, { depth: null, colors: true });
 
     return candidate;
   }
