@@ -3,24 +3,14 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcrypt');
 const UserModel = require('../../models/user');
 const CaseModel = require('../../models/cases');
-const { SeedSphere } = require('../../models/names');
+const { userType } = require('../../models/helper');
 const mailService = require('../mail/mail');
 const { ShortUser, User } = require('../../dtos/user');
 const { SphereAggregateDto } = require('../../dtos/seed');
 const ApiError = require('../../exceptions/api-error');
-const user = require('../../models/user');
-const { userType } = require('../../models/helper');
 const tokenService = require('../token');
 const caseService = require('../case/case');
-
-const knex = require('../../knex/index');
-const {
-  getUser,
-  getUserCountCases,
-  getUserCases,
-  getUserSphereTypes,
-  getUserSumPrice,
-} = require('./tools/queries');
+const { getPersonalPage } = require('../aggregations');
 
 class UserService {
   async registration(email, password, roleTypeId) {
@@ -46,6 +36,7 @@ class UserService {
       type: roleTypeId,
       activationLink,
     });
+    // FIXME: Enable on PRODUCTION
     // await mailService.sendActivationMail(
     //     email,
     //     `${process.env.API_URL}/auth/activate/${activationLink}`
@@ -136,17 +127,14 @@ class UserService {
     phone,
     userId,
   }) {
+    // TODO: make client send phone
     let isFullRegister = false;
     if (
       firstName &&
-      about &&
-      lastName &&
       secondName &&
-      photoPath &&
-      city &&
-      phone
+      Object.keys(city).length === 2 /* && phone */
     ) {
-      isFullRegister = ture;
+      isFullRegister = true;
     }
     return await UserModel.findByIdAndUpdate(userId, {
       firstName,
@@ -174,65 +162,24 @@ class UserService {
       city: 1,
     });
     if (user.type === userType.CREATOR) {
-      // TODO: END GetPersonalPage
-      const spheresAggregate = await CaseModel.aggregate([
-        { $match: { userId: new ObjectId(userId) } },
-        {
-          $lookup: {
-            from: 'seed.spheres',
-            localField: 'sphereId',
-            foreignField: '_id',
-            as: 'spheres',
-          },
-        },
-        {
-          $replaceRoot: {
-            newRoot: {
-              $mergeObjects: [{ $arrayElemAt: ['$spheres', 0] }, '$$ROOT'],
-            },
-          },
-        },
-        { $project: { name: 1 } },
-        { $group: { _id: '$name' } },
-      ]);
+      const spheresAggregate = await CaseModel.aggregate(
+        getPersonalPage.sphereAggregation(userId)
+      );
       const spheres = spheresAggregate.map(
         (v) => new SphereAggregateDto(v).sphere
       );
       const casesCount = await CaseModel.find({
         userId: new ObjectId(userId),
       }).count();
-      const prices = await CaseModel.aggregate([
-        { $match: { userId: new ObjectId(userId) } },
-        {
-          $project: {
-            userId: 1,
-            services: {
-              $filter: {
-                input: '$services',
-                as: 'item',
-                cond: { $eq: ['$$item.serviceType', 1] },
-              },
-            },
-          },
-        },
-        {
-          $project: {
-            userId: 1,
-            Prices: { $sum: '$services.price' },
-          },
-        },
-        {
-          $group: {
-            _id: '$userId',
-            sumPrices: { $sum: '$Prices' },
-          },
-        },
-      ]);
-      console.log(userId);
+      const prices = await CaseModel.aggregate(
+        getPersonalPage.priceAggregation(userId)
+      );
       const cases = await caseService.searchCases({ userId });
+      console.log(prices);
+      const userDto = new User(user);
 
       return {
-        user,
+        user: userDto,
         sumPrice: prices[0]['sumPrices'], // TODO: check prices if exists
         spheres,
         cases,
