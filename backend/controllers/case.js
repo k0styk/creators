@@ -52,6 +52,21 @@ class CaseController {
       next(e);
     }
   }
+  /*
+
+*/
+  async getCase(req, res, next) {
+    try {
+      const {
+        params: { id },
+      } = req;
+      const data = await caseService.getCase(id);
+
+      return res.json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 module.exports = new CaseController();
