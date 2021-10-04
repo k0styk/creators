@@ -240,13 +240,19 @@ class UserController {
     }
   }
 
-  async test(req, res, next) {
+  async getProfile(req, res, next) {
     try {
-      const { accessToken } = req.body;
+      const { id } = req.params;
 
-      const data = tokenService.validateAccessToken(accessToken);
-      console.log(data);
-      return res.json(data);
+      const data = await userService.getPersonalPage(id);
+      const result = {
+        sumPrice: data.sumPrice,
+        spheres: data.spheres,
+        cases: data.cases,
+        casesCount: data.casesCount,
+        ...data.user,
+      };
+      return res.json(result);
     } catch (e) {
       next(e);
     }

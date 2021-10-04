@@ -162,25 +162,15 @@ class UserService {
       city: 1,
     });
     if (user.type === userType.CREATOR) {
-      const spheresAggregate = await CaseModel.aggregate(
-        getPersonalPage.sphereAggregation(userId)
-      );
-      const spheres = spheresAggregate.map(
-        (v) => new SphereAggregateDto(v).sphere
-      );
-      const casesCount = await CaseModel.find({
-        userId: new ObjectId(userId),
-      }).count();
-      const prices = await CaseModel.aggregate(
-        getPersonalPage.priceAggregation(userId)
-      );
+      const spheres = await caseService.getSpheresForUser(userId);
+      const casesCount = await caseService.getCountCasesForUser(userId);
+      const sumPrice = await caseService.getAveragePriceForUser(userId);
       const cases = await caseService.searchCases({ userId });
-      console.log(prices);
       const userDto = new User(user);
 
       return {
         user: userDto,
-        sumPrice: prices[0]['sumPrices'], // TODO: check prices if exists
+        sumPrice,
         spheres,
         cases,
         casesCount,
@@ -193,8 +183,6 @@ class UserService {
       activeCases: [],
       completedCases: [],
     };
-
-    return new User(user);
   }
 
   // TODO: getFavorites
@@ -224,6 +212,7 @@ class UserService {
 
   async getUserCases(userId) {
     const cases = await CaseModel.find({ userId });
+    console.log('getUserCases');
     console.log(cases);
   }
 }

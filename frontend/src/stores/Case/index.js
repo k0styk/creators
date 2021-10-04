@@ -32,7 +32,7 @@ class PromoStore {
   }
 
   @computed get caseId() {
-    return Number(get(get(this.RouterStore.match, 'params'), 'id'));
+    return get(get(this.RouterStore.match, 'params'), 'id');
   }
 
   getData = async () => {
@@ -41,7 +41,9 @@ class PromoStore {
     }
     this.setStatus(statusEnum.LOADING);
     try {
+      console.log('start load case data');
       const result = await API.get(`cases/getCase/${this.caseId}`);
+      console.log(result);
       const { services, userCases, ...caseObject } = result;
 
       this.setPromo(caseObject);

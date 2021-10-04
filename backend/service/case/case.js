@@ -7,7 +7,8 @@ const CaseServices = require('../../models/seed.services');
 const CaseSpheres = require('../../models/seed.spheres');
 const { serviceType } = require('../../models/helper');
 const { CaseTypeDto, ServiceDto, SphereDto } = require('../../dtos/seed');
-const { searchCases } = require('../aggregations');
+const { SphereAggregateDto } = require('../../dtos/seed');
+const { searchCases, getPersonalPage, getCase } = require('../aggregations');
 
 const key_youtube = 'AIzaSyCKzWSYT7lmS-Hs4J8ty4cPUyWtDFUtg-o';
 
@@ -155,7 +156,6 @@ class CaseService {
       typeQuery,
       timeQuery,
     ].filter((v) => Object.keys(v).length !== 0);
-    console.dir(aggregations, { depth: null, colors: true });
     const candidate = await CaseModel.aggregate(aggregations);
 
     return candidate;
@@ -193,6 +193,48 @@ class CaseService {
       types: [...types.types],
       spheres: [...spheres.spheres],
     };
+  }
+
+  async getSpheresForUser(userId) {
+    const spheresAggregate = await CaseModel.aggregate(
+      getPersonalPage.sphereAggregation(userId)
+    );
+    const spheres = spheresAggregate.map(
+      (v) => new SphereAggregateDto(v).sphere
+    );
+    return spheres;
+  }
+
+  async getAveragePriceForUser(userId) {
+    const prices = await CaseModel.aggregate(
+      getPersonalPage.priceAggregation(userId)
+    );
+
+    if (prices.length) {
+      if (prices[0]['sumPrices']) {
+        return prices[0]['sumPrices'];
+      }
+    }
+    return 0;
+  }
+
+  async getCountCasesForUser(userId) {
+    const casesCount = await CaseModel.find({
+      userId: new ObjectId(userId),
+    }).count();
+
+    return casesCount;
+  }
+
+  async getCase(id) {
+    const caseCard = await CaseModel.aggregate(getCase.aggregationQuery(id));
+    const userCases = await this.searchCases({
+      userId: caseCard.userId,
+      limit: 4,
+    });
+    console.dir(caseCard, { depth: null });
+
+    return { ...caseCard[0], userCases, services: caseCard[0].services };
   }
 }
 

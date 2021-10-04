@@ -33,10 +33,11 @@ router.get(
   authMiddleware,
   userController.getPersonalPage
 );
-router.get(
-  '/users/getProfile/:id',
-  getMethod(() => 'getProfile')
-);
+// router.get(
+//   '/users/getProfile/:id',
+//   getMethod(() => 'getProfile')
+// );
+router.get('/users/getProfile/:id', authMiddleware, userController.getProfile);
 
 // router.get(
 //   '/cases/getDataForCreate',
@@ -80,10 +81,7 @@ router.get(
   authMiddleware,
   caseController.getDataForCreateCases
 );
-router.get(
-  '/cases/getCase/:id',
-  getMethod(() => 'getCase')
-);
+router.get('/cases/getCase/:id', caseController.getCase);
 
 // router.post(
 //   '/favorites/setFavorite',
