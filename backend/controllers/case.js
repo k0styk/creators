@@ -15,6 +15,7 @@ class CaseController {
 
   async searchCases(req, res, next) {
     try {
+      console.log(req.body);
       const data = await caseService.searchCases(req.body, req.user);
 
       return res.json(data);
@@ -52,9 +53,7 @@ class CaseController {
       next(e);
     }
   }
-  /*
 
-*/
   async getCase(req, res, next) {
     try {
       const {

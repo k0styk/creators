@@ -132,6 +132,7 @@ module.exports = {
             id: '$userObject._id',
             firstName: '$userObject.firstName',
             photoPath: '$userObject.photoPath',
+            favorites: '$userObject.favorites',
           },
         },
       },
@@ -157,6 +158,7 @@ module.exports = {
       },
       {
         $project: {
+          inFavorite: { $in: ['$_id', '$user.favorites'] },
           id: '$_id',
           city: 1,
           title: 1,
@@ -166,7 +168,11 @@ module.exports = {
           services: 1,
           youtubeId: 1,
           description: 1,
-          user: 1,
+          user: {
+            id: '$user.id',
+            firstName: '$user.firstName',
+            photoPath: '$user.photoPath',
+          },
           productionTime: 1,
           time: 1,
           updatedAt: 1,
