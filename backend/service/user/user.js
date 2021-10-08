@@ -10,7 +10,7 @@ const { SphereAggregateDto } = require('../../dtos/seed');
 const ApiError = require('../../exceptions/api-error');
 const tokenService = require('../token');
 const caseService = require('../case/case');
-const { getPersonalPage } = require('../aggregations');
+const { getPersonalPage, searchCases } = require('../aggregations');
 
 class UserService {
   async registration(email, password, roleTypeId) {
@@ -127,13 +127,8 @@ class UserService {
     phone,
     userId,
   }) {
-    // TODO: make client send phone
     let isFullRegister = false;
-    if (
-      firstName &&
-      secondName &&
-      Object.keys(city).length === 2 /* && phone */
-    ) {
+    if (firstName && secondName && Object.keys(city).length === 2 && phone) {
       isFullRegister = true;
     }
     return await UserModel.findByIdAndUpdate(userId, {
@@ -160,6 +155,8 @@ class UserService {
       about: 1,
       photoPath: 1,
       city: 1,
+      isFullRegister: 1,
+      isActivated: 1,
     });
     if (user.type === userType.CREATOR) {
       const spheres = await caseService.getSpheresForUser(userId);
@@ -185,18 +182,15 @@ class UserService {
     };
   }
 
-  // TODO: getFavorites
   async getFavorites(userId) {
-    const favorites = await UserModel.find(userId, 'favorites').populate(
-      'Cases',
-      'id title youtubeId'
-    );
-    console.log(favorites);
-    return favorites;
+    const data = await UserModel.aggregate(searchCases.favoritesQuery(userId));
+    console.dir(data, { depth: null });
+
+    return data;
   }
 
+  // TODO: only uniq stay in favorite array
   async setFavorites(userId, favoriteId, action) {
-    console.log(action);
     if (action) {
       await UserModel.updateOne(
         { _id: userId },

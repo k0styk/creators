@@ -34,8 +34,6 @@ class UserStore {
     this.setAuthStatus(authStatusEnum.IS_CHECKING);
     try {
       const user = await API.get(`users/getCurrentUser`);
-      console.log('getCurrentUser');
-      console.log(user);
 
       if (user) {
         this.setUser(user);

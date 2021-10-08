@@ -1,5 +1,105 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 
+const project1 = {
+  serviceObject: 1,
+  services: 1,
+  city: 1,
+  title: 1,
+  userId: 1,
+  sphereId: 1,
+  caseType: 1,
+  youtubeId: 1,
+  description: 1,
+  productionTime: 1,
+  time: 1,
+  updatedAt: 1,
+  createdAt: 1,
+  sphereObject: { $arrayElemAt: ['$sphereArray', 0] },
+  caseTypeObject: { $arrayElemAt: ['$caseTypeArray', 0] },
+  userObject: { $arrayElemAt: ['$usersArray', 0] },
+};
+
+const project2 = {
+  city: 1,
+  time: 1,
+  title: 1,
+  userId: 1,
+  sphereId: 1,
+  caseType: 1,
+  services: 1,
+  youtubeId: 1,
+  description: 1,
+  productionTime: 1,
+  updatedAt: 1,
+  createdAt: 1,
+  sphere: '$sphereObject.name',
+  type: '$caseTypeObject.name',
+  user: {
+    id: '$userObject._id',
+    firstName: '$userObject.firstName',
+    photoPath: '$userObject.photoPath',
+    favorites: '$userObject.favorites',
+  },
+};
+
+const group1 = {
+  _id: '$_id',
+  services: { $push: '$services' },
+  city: { $first: '$city' },
+  title: { $first: '$title' },
+  userId: { $first: '$userId' },
+  sphereId: { $first: '$sphereId' },
+  caseType: { $first: '$caseType' },
+  youtubeId: { $first: '$youtubeId' },
+  description: { $first: '$description' },
+  productionTime: { $first: '$productionTime' },
+  time: { $first: '$time' },
+  updatedAt: { $first: '$updatedAt' },
+  createdAt: { $first: '$createdAt' },
+  sphere: { $first: '$sphere' },
+  type: { $first: '$type' },
+  user: { $first: '$user' },
+};
+
+const project3 = {
+  inFavorite: 1,
+  id: '$_id',
+  city: 1,
+  title: 1,
+  userId: 1,
+  sphereId: 1,
+  caseType: 1,
+  services: 1,
+  youtubeId: 1,
+  description: 1,
+  user: {
+    id: '$user.id',
+    firstName: '$user.firstName',
+    photoPath: '$user.photoPath',
+  },
+  productionTime: 1,
+  time: 1,
+  updatedAt: 1,
+  createdAt: 1,
+  sphere: 1,
+  type: 1,
+  price: {
+    $reduce: {
+      input: {
+        $filter: {
+          input: '$services',
+          as: 'item',
+          cond: {
+            $eq: ['$$item.serviceType', 1],
+          },
+        },
+      },
+      initialValue: 0,
+      in: { $add: ['$$value', '$$this.price'] },
+    },
+  },
+};
+
 module.exports = {
   getPersonalPage: {
     sphereAggregation: (userId) => [
@@ -51,7 +151,126 @@ module.exports = {
     ],
   },
   searchCases: {
-    aggregationQuery: (limit) => [
+    aggregationQuery: (limit, userId) => [
+      {
+        $lookup: {
+          from: 'seed.spheres',
+          localField: 'sphereId',
+          foreignField: '_id',
+          as: 'sphereArray',
+        },
+      },
+      {
+        $lookup: {
+          from: 'seed.case.types',
+          localField: 'caseType',
+          foreignField: '_id',
+          as: 'caseTypeArray',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'usersArray',
+        },
+      },
+      userId
+        ? {
+            $addFields: {
+              currentUserId: new ObjectId(userId),
+            },
+          }
+        : {},
+      userId
+        ? {
+            $lookup: {
+              from: 'users',
+              localField: 'currentUserId',
+              foreignField: '_id',
+              as: 'currentUserArray',
+            },
+          }
+        : {},
+      {
+        $addFields: {
+          inFavorite: false,
+        },
+      },
+      { $unwind: '$services' },
+      {
+        $lookup: {
+          from: 'seed.services',
+          localField: 'services.serviceId',
+          foreignField: '_id',
+          as: 'serviceObject',
+        },
+      },
+      { $unwind: '$serviceObject' },
+      {
+        $addFields: {
+          services: { $mergeObjects: ['$serviceObject', '$services'] },
+        },
+      },
+      { $unset: ['services.__v'] },
+      {
+        $project: userId
+          ? {
+              ...project1,
+              currentUserId: 1,
+              currentUserObject: { $arrayElemAt: ['$currentUserArray', 0] },
+            }
+          : project1,
+      },
+      {
+        $project: userId
+          ? {
+              ...project2,
+              currentUserId: 1,
+              currentUserObject: 1,
+            }
+          : project2,
+      },
+      {
+        $group: userId
+          ? {
+              ...group1,
+              currentUserId: { $first: '$currentUserId' },
+              currentUserObject: { $first: '$currentUserObject' },
+            }
+          : group1,
+      },
+      {
+        $project: userId
+          ? {
+              ...project3,
+              inFavorite: { $in: ['$_id', '$currentUserObject.favorites'] },
+            }
+          : project3,
+      },
+      limit ? { $limit: limit } : {},
+    ],
+    favoritesQuery: (userId) => [
+      { $match: { _id: { $eq: new ObjectId(userId) } } },
+      { $unwind: '$favorites' },
+      {
+        $lookup: {
+          from: 'cases',
+          localField: 'favorites',
+          foreignField: '_id',
+          as: 'favoriteCases',
+        },
+      },
+      { $project: { createdAt: 0, updatedAt: 0, _id: 0 } },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ['$favoriteCases', 0] }, '$$ROOT'],
+          },
+        },
+      },
+      { $project: { favoriteCases: 0 } },
       {
         $lookup: {
           from: 'seed.spheres',
@@ -95,16 +314,16 @@ module.exports = {
       {
         $project: {
           serviceObject: 1,
-          services: 1,
           city: 1,
+          time: 1,
           title: 1,
           userId: 1,
           sphereId: 1,
           caseType: 1,
+          services: 1,
           youtubeId: 1,
           description: 1,
           productionTime: 1,
-          time: 1,
           updatedAt: 1,
           createdAt: 1,
           sphereObject: { $arrayElemAt: ['$sphereArray', 0] },
@@ -132,7 +351,6 @@ module.exports = {
             id: '$userObject._id',
             firstName: '$userObject.firstName',
             photoPath: '$userObject.photoPath',
-            favorites: '$userObject.favorites',
           },
         },
       },
@@ -157,8 +375,12 @@ module.exports = {
         },
       },
       {
+        $addFields: {
+          inFavorite: true,
+        },
+      },
+      {
         $project: {
-          inFavorite: { $in: ['$_id', '$user.favorites'] },
           id: '$_id',
           city: 1,
           title: 1,
@@ -167,6 +389,7 @@ module.exports = {
           caseType: 1,
           services: 1,
           youtubeId: 1,
+          inFavorite: 1,
           description: 1,
           user: {
             id: '$user.id',
@@ -179,6 +402,7 @@ module.exports = {
           createdAt: 1,
           sphere: 1,
           type: 1,
+          inFavorite: true,
           price: {
             $reduce: {
               input: {
@@ -196,7 +420,6 @@ module.exports = {
           },
         },
       },
-      limit ? { $limit: limit } : {},
     ],
   },
   getCase: {

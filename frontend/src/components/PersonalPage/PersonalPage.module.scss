@@ -89,6 +89,25 @@
   grid-template-columns: 1fr 2fr;
   grid-auto-rows: minmax(20px, auto);
   margin-top: 10px;
+
+  .titleFieldMail {
+    display: flex;
+    align-content: center;
+    align-items: center;
+
+    .titleFieldIcon {
+      line-height: 0;
+      margin-left: 4px;
+
+      svg {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.mailTypography {
+  cursor: pointer;
 }
 
 .works {
@@ -161,4 +180,18 @@
 
 .upButton {
   margin-top: 10px;
+}
+
+.isFullRegister, .isActivated, .additionalInfo {
+  background: #fff9e5;
+    border-radius: 6px;
+    padding: 8px 50px;
+    border: 1px solid #ffe894;
+    text-align: center;
+    align-self: center;
+    color: darkslategrey;
+    margin: 4px 0px;
+    max-width: 450px;
+    width: 100%;
+    box-sizing: border-box;
 }

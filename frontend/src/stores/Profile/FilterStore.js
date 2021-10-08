@@ -1,24 +1,24 @@
-import {computed, get, makeObservable} from 'mobx';
+import { computed, get, makeObservable } from 'mobx';
 import FilterBaseStore from '../FilterStore';
 
 class FilterStore extends FilterBaseStore {
-    RouterStore
+  RouterStore;
 
-    constructor({RouterStore}) {
-        super({RouterStore})
-        this.RouterStore = RouterStore;
+  constructor({ RouterStore }) {
+    super({ RouterStore });
+    this.RouterStore = RouterStore;
 
-        makeObservable(this);
-    }
+    makeObservable(this);
+  }
 
-    @computed get user(){
-       return   Number(get(get(this.RouterStore.match, 'params'), 'id')) || null;
-    }
+  @computed get user() {
+    return get(get(this.RouterStore.match, 'params'), 'id') || null;
+  }
 
-    search = () => {
-        this.setUserId(this.user);
-        this.setParameters();
-    }
+  search = () => {
+    this.setUserId(this.user);
+    this.setParameters();
+  };
 }
 
 export default FilterStore;

@@ -20,9 +20,6 @@ import City from '../../shared/renderFields/rederCity';
 class ProfileView extends React.Component {
   render() {
     const { user, cases, casesCount, spheres, sumPrice } = this.props;
-
-    console.log(this.props);
-
     return (
       <React.Fragment>
         <div className={s.body}>

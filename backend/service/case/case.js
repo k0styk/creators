@@ -10,7 +10,7 @@ const { CaseTypeDto, ServiceDto, SphereDto } = require('../../dtos/seed');
 const { SphereAggregateDto } = require('../../dtos/seed');
 const { searchCases, getPersonalPage, getCase } = require('../aggregations');
 
-const key_youtube = 'AIzaSyCKzWSYT7lmS-Hs4J8ty4cPUyWtDFUtg-o';
+const key_youtube = 'AIzaSyAP1G1RBIA27SQHK5PY7QwIvPbhZIPQC6A';
 
 class CaseService {
   async createCase(
@@ -34,28 +34,31 @@ class CaseService {
         `https://www.googleapis.com/youtube/v3/videos?id=${youtubeId}&key=${key_youtube}&part=contentDetails&fields=items(contentDetails(duration))`
       ).then((res) => res.text());
 
-      const { contentDetails: { duration } = {} } = JSON.parse(result).items[0];
-      const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-      let hours = 0,
-        minutes = 0,
-        seconds = 0,
-        total;
+      if (JSON.parse(result).items[0]) {
+        const { contentDetails: { duration } = {} } =
+          JSON.parse(result).items[0];
+        const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+        let hours = 0,
+          minutes = 0,
+          seconds = 0,
+          total;
 
-      if (reptms.test(duration)) {
-        const matches = reptms.exec(duration);
-        if (matches[1]) {
-          hours = Number(matches[1]);
-        }
-        if (matches[2]) {
-          minutes = Number(matches[2]);
-        }
-        if (matches[3]) {
-          seconds = Number(matches[3]);
-        }
-        total = hours * 3600 + minutes * 60 + seconds;
+        if (reptms.test(duration)) {
+          const matches = reptms.exec(duration);
+          if (matches[1]) {
+            hours = Number(matches[1]);
+          }
+          if (matches[2]) {
+            minutes = Number(matches[2]);
+          }
+          if (matches[3]) {
+            seconds = Number(matches[3]);
+          }
+          total = hours * 3600 + minutes * 60 + seconds;
 
-        if (Number(total)) {
-          time = total;
+          if (Number(total)) {
+            time = total;
+          }
         }
       }
     } catch (e) {
@@ -96,8 +99,8 @@ class CaseService {
   }
 
   async searchCases(
-    { type, sphere, price, userId, fastFilter, onlyFavorites, limit, time },
-    currentUserId = {}
+    { type, sphere, price, userId, fastFilter, limit, time },
+    currentUser = {}
   ) {
     const userIdQuery = userId
       ? { $match: { userId: new ObjectId(userId) } }
@@ -148,7 +151,10 @@ class CaseService {
     }
 
     const aggregations = [
-      ...searchCases.aggregationQuery(limit),
+      ...searchCases.aggregationQuery(
+        limit,
+        currentUser ? currentUser.id : null
+      ),
       fastFilterQuery,
       userIdQuery,
       sphereQuery,
@@ -156,13 +162,14 @@ class CaseService {
       typeQuery,
       timeQuery,
     ].filter((v) => Object.keys(v).length !== 0);
+    // console.dir(aggregations, { depth: null });
     const candidate = await CaseModel.aggregate(aggregations);
 
     return candidate;
   }
 
-  async getRecommendations() {
-    const recommendations = await this.searchCases({ limit: 8 });
+  async getRecommendations(user) {
+    const recommendations = await this.searchCases({ limit: 8 }, user);
 
     return recommendations;
   }

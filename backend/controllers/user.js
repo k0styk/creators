@@ -171,11 +171,12 @@ class UserController {
   }
 
   async editUser(req, res, next) {
-    const { firstName, about, lastName, secondName, photoPath, city } =
+    const { firstName, about, lastName, secondName, photoPath, city, phone } =
       req.body;
     const { user: { id } = {} } = req;
     try {
       const result = await userService.editUser({
+        phone,
         firstName,
         about,
         lastName,
