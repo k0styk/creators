@@ -4,6 +4,7 @@ const authMiddleware = require('../middleware/auth');
 const nonStrictAuthMiddleware = require('../middleware/nonStrictAuth');
 const userController = require('../controllers/user');
 const caseController = require('../controllers/case');
+const chatController = require('../controllers/chat');
 
 router.get('/users/getUser/:id', userController.getUser);
 router.get(
@@ -60,9 +61,6 @@ router.post(
   getMethod(() => 'upload')
 );
 
-router.post(
-  '/chat/create',
-  getMethod(() => 'createChat')
-);
+router.post('/chat/create', authMiddleware, chatController.createChat);
 
 module.exports = router;

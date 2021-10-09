@@ -1,91 +1,9 @@
-// const knex = require('../knex');
-// const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
-
-// exports.register = async (req, res) => {
-//     try {
-//         const { email, password, roleTypeId } = req.body;
-
-//         const hashPassword = await bcrypt.hash(
-//             password,
-//             process.env['PASSWORD_SALT'] || 10
-//         );
-//         await knex('users').insert({
-//             email,
-//             password: hashPassword,
-//             type: roleTypeId,
-//         });
-
-//         await this.login(req, res);
-//     } catch (err) {
-//         res.sendStatus(500);
-//         console.error('Register error');
-//         console.log(err);
-//         throw err;
-//     }
-// };
-
-// exports.login = async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-//         const candidate = await knex('users')
-//             .first(['password', 'id', 'type'])
-//             .where('email', email);
-
-//         console.log(candidate);
-
-//         if (!candidate) {
-//             console.log('not found');
-//             return res
-//                 .status(404)
-//                 .location('/auth/login')
-//                 .send({ message: 'User Not found.' });
-//         }
-
-//         const passwordIsValid = await bcrypt.compare(
-//             password,
-//             candidate.password
-//         );
-
-//         if (!passwordIsValid) {
-//             console.log('not valid');
-//             return res
-//                 .status(401)
-//                 .location('/auth/login')
-//                 .send({ message: 'Wrong credentials' });
-//         }
-
-//         const token = jwt.sign(
-//             { id: candidate.id },
-//             process.env['JWT_SECRET'],
-//             {
-//                 expiresIn: 60 * 60 * 24 * 7, // seconds*minutes*hours*days
-//             }
-//         );
-
-//         req.session.user = candidate;
-//         req.session.accessToken = token;
-//         req.session.isAuthenticated = true;
-
-//         res.status(200).send({
-//             id: candidate.id,
-//             email: candidate.email,
-//             roleTypeId: candidate.type,
-//             accessToken: token,
-//         });
-//     } catch (err) {
-//         res.sendStatus(500);
-//         console.error('Login error');
-//         console.log(err);
-//         throw err;
-//     }
-// };
-
 const userService = require('../service/user/user');
 const { validationResult } = require('express-validator');
 const ApiError = require('../exceptions/api-error');
 const tokenService = require('../service/token');
 
+// TODO: need to parse auth and user
 class UserController {
   async registration(req, res, next) {
     try {
@@ -256,6 +174,61 @@ class UserController {
       return res.json(result);
     } catch (e) {
       next(e);
+    }
+  }
+
+  // TODO: End make reset password
+  async makeResetPassword(req, res, next) {
+    if (!req.params.token) {
+      return res.redirect('/auth/login');
+    }
+
+    try {
+      const user = await User.findOne({
+        resetToken: req.params.token,
+        resetTokenExp: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return res.redirect('/auth/login');
+      } else {
+        res.render('auth/password', {
+          title: 'Восстановить доступ',
+          error: req.flash('error'),
+          userId: user._id.toString(),
+          token: req.params.token,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // TODO: End create reset password
+  async createResetPassword(req, res, next) {
+    try {
+      crypto.randomBytes(32, async (err, buffer) => {
+        if (err) {
+          req.flash('error', 'Что-то пошло не так, повторите попытку позже');
+          return res.redirect('/auth/reset');
+        }
+
+        const token = buffer.toString('hex');
+        const candidate = await User.findOne({ email: req.body.email });
+
+        if (candidate) {
+          candidate.resetToken = token;
+          candidate.resetTokenExp = Date.now() + 60 * 60 * 1000;
+          await candidate.save();
+          await transporter.sendMail(resetEmail(candidate.email, token));
+          res.redirect('/auth/login');
+        } else {
+          req.flash('error', 'Такого email нет');
+          res.redirect('/auth/reset');
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
   }
 }

@@ -1,29 +1,26 @@
-module.exports = {
-    createChat: async ({ body, session, knex }) => {
-        const { caseId, customerId, userType } = body;
-        const { user: { id } = {} } = session;
+const ObjectId = require('mongoose').Types.ObjectId;
+const ChatModel = require('../../models/chat');
+const { ChatDto } = require('../../dtos/chat');
 
-        console.log(body);
-        console.log(session);
-        try {
-            if (userType === 1) {
-                //
-            } else {
-                await Promise.all([
-                    knex('dialogs')
-                        .insert({
-                            case_id: caseId,
-                            customer_id: customerId,
-                        })
-                        .onConflict('id')
-                        .ignore(),
-                ]);
-                return { status: 200 };
-            }
-            return { status: 500 };
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-};
+class ChatService {
+  async createCase(customerId, creatorId, caseId) {
+    const candidate = await ChatModel.findOne({
+      customerId,
+      creatorId,
+      caseId,
+    });
+    if (candidate) {
+      return { chat: new ChatDto(candidate) };
+    }
+
+    const chat = await ChatModel.create({
+      creatorId,
+      customerId,
+      caseId,
+    });
+
+    return { chat: new ChatDto(chat) };
+  }
+}
+
+module.exports = new ChatService();

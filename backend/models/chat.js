@@ -1,11 +1,12 @@
 const { Schema, model } = require('mongoose');
-const { Chat, Users, Cases } = require('./names');
+const { Chats, Users, Cases } = require('./names');
 
 const ChatSchema = new Schema(
   {
-    customerId: { type: Schema.Types.ObjectId, ref: Users },
-    caseId: { type: Schema.Types.ObjectId, ref: Cases },
-    deleted: { type: Boolean },
+    customerId: { type: Schema.Types.ObjectId, ref: Users, required: true },
+    creatorId: { type: Schema.Types.ObjectId, ref: Users, required: true },
+    caseId: { type: Schema.Types.ObjectId, ref: Cases, required: true },
+    deleted: { type: Boolean, default: false },
     messages: [
       {
         fromId: { type: Schema.Types.ObjectId, ref: Users },
@@ -20,4 +21,4 @@ const ChatSchema = new Schema(
   }
 );
 
-module.exports = model(Chat, ChatSchema);
+module.exports = model(Chats, ChatSchema);

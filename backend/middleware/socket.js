@@ -1,10 +1,23 @@
-const sessionMiddleware = require('./session');
+const tokenService = require('../service/token');
+const ApiError = require('../exceptions/api-error');
 
 module.exports = (socket, next) => {
-    try {
-        sessionMiddleware(socket.request, {}, next);
-    } catch (err) {
-        console.log('###-> socket middleware error <-###');
-        console.log(err);
+  try {
+    console.log('MIDDLE WARE');
+    console.dir(socket, { depth: null });
+    if (socket.handshake.query && socket.handshake.query.token) {
+      const tokenData = tokenService.validateAccessToken(
+        socket.handshake.query.token
+      );
+      if (!tokenData) {
+      }
+
+      socket.tokenData = tokenData;
+      next();
+    } else {
+      next(new Error('Authentication error'));
     }
+  } catch (e) {
+    return next(ApiError.UnauthorizedError());
+  }
 };
