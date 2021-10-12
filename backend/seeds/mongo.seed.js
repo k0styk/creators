@@ -6,7 +6,7 @@ const CaseType = require('../models/seed.caseType');
 
 const originPath =
   process.env['NODE_ENV'] === 'production'
-    ? 'creators.emergent.su/public/service'
+    ? 'https://creators.emergent.su/public/service'
     : 'http://localhost:8000/public/service';
 
 const data = [
