@@ -7,10 +7,50 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
+  Typography,
+  Grid,
+  Switch,
+  FormGroup,
+  FormLabel,
 } from '@material-ui/core';
 import { Visibility, VisibilityOff, Close } from '@material-ui/icons';
 import { inject } from 'mobx-react';
 import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+
+const AntSwitch = withStyles((theme) => ({
+  root: {
+    width: 28,
+    height: 16,
+    padding: 0,
+    display: 'flex',
+  },
+  switchBase: {
+    padding: 2,
+    color: theme.palette.grey[500],
+    '&$checked': {
+      transform: 'translateX(12px)',
+      color: theme.palette.common.white,
+      '& + $track': {
+        opacity: 1,
+        backgroundColor: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+      },
+    },
+  },
+  thumb: {
+    width: 12,
+    height: 12,
+    boxShadow: 'none',
+  },
+  track: {
+    border: `1px solid ${theme.palette.grey[500]}`,
+    borderRadius: 16 / 2,
+    opacity: 1,
+    backgroundColor: theme.palette.common.white,
+  },
+  checked: {},
+}))(Switch);
 
 @inject(({ AuthStore, RouterStore }) => {
   return {
@@ -110,7 +150,22 @@ class RegisterPage extends React.Component {
               ),
             }}
           />
-          <FormControlLabel
+          <FormGroup className="switchGroup">
+            <Typography component="div">
+              <Grid component="label" container alignItems="center" spacing={1}>
+                <Grid item>Заказчик</Grid>
+                <Grid item>
+                  <Switch
+                    checked={!!isCreator}
+                    onChange={setIsCreator}
+                    color="primary"
+                  />
+                </Grid>
+                <Grid item>Исполнитель</Grid>
+              </Grid>
+            </Typography>
+          </FormGroup>
+          {/* <FormControlLabel
             control={
               <Checkbox
                 onChange={setIsCreator}
@@ -120,7 +175,7 @@ class RegisterPage extends React.Component {
               />
             }
             label="Вы креатор?"
-          />
+          /> */}
         </div>
         <div className="button-block">
           <Button

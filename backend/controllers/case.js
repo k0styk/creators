@@ -7,7 +7,7 @@ class CaseController {
     try {
       const created = await caseService.createCase(req.body, req.user);
 
-      return res.json({ created });
+      return res.json({ ...created });
     } catch (e) {
       next(e);
     }

@@ -21,6 +21,7 @@ const authStatusEnum = {
 };
 
 const socketEvents = {
+  joinNotificationLobby: 'joinNotificationLobby',
   joinChat: 'joinChat',
   getChats: 'getChats',
   sendMessage: 'sendMessage',

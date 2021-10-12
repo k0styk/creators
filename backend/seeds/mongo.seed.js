@@ -4,6 +4,11 @@ const Spheres = require('../models/seed.spheres');
 const Services = require('../models/seed.services');
 const CaseType = require('../models/seed.caseType');
 
+const originPath =
+  process.env['NODE_ENV'] === 'production'
+    ? 'creators.emergent.su/public/service'
+    : 'http://localhost:8000/public/service';
+
 const data = [
   [
     {
@@ -30,28 +35,28 @@ const data = [
       tooltipText:
         'Цветокоррекция - настройка яркости, контраста, цвета и других параметров итогового видео.',
       tooltipAdditionalType: 'img',
-      tooltipAdditional: 'http://localhost:3003/public/service/color.gif',
+      tooltipAdditional: `${originPath}/color.gif`,
     },
     {
       name: 'Графичесĸие 2D сцены',
       tooltipText:
         'Графические 2D сцены - создание сцен, полностью состоящих из 2D графики',
       tooltipAdditionalType: 'img',
-      tooltipAdditional: 'http://localhost:3003/public/service/2d.gif',
+      tooltipAdditional: `${originPath}/2d.gif`,
     },
     {
       name: 'Графичесĸие 3D сцены',
       tooltipText:
         'Графические 3D сцены - создание сцен, полностью состоящих из 3D графики',
       tooltipAdditionalType: 'img',
-      tooltipAdditional: 'http://localhost:3003/public/service/3d.gif',
+      tooltipAdditional: `${originPath}/3d.gif`,
     },
     {
       name: 'Инфографиĸа, титры',
       tooltipText:
         'Инфографика, титры - графическое дополнение и оформление снятого видео материала',
       tooltipAdditionalType: 'img',
-      tooltipAdditional: 'http://localhost:3003/public/service/infgr.gif',
+      tooltipAdditional: `${originPath}/infgr.gif`,
     },
     {
       name: 'Саунддизайн',

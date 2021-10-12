@@ -11,9 +11,14 @@ module.exports = {
       return error;
     }
 
-    // TODO: need prod env
-    return {
-      file: `http://${process.env.APP_HOST}:${process.env.APP_PORT}/public/${imageFile.name}`,
-    };
+    if (process.env['NODE_ENV'] === 'production') {
+      return {
+        file: `https://creators.emergent.su/public/${imageFile.name}`,
+      };
+    } else {
+      return {
+        file: `http://${process.env.APP_HOST}:${process.env.APP_PORT}/public/${imageFile.name}`,
+      };
+    }
   },
 };

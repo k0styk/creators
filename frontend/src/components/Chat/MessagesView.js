@@ -7,59 +7,49 @@ import { inject } from 'mobx-react';
 import dayjs from 'dayjs';
 
 @inject(({ ChatStore }) => {
-    return {
-        selectDialog: ChatStore.selectDialog,
-    };
+  return {
+    selectDialog: ChatStore.selectDialog,
+  };
 })
 class MessagesView extends React.Component {
-    render() {
-        const { messages, user, selectDialog } = this.props;
+  render() {
+    const { messages, user, selectDialog } = this.props;
 
-        return (
-            <>
-                <div className={s.closeButton} onClick={() => selectDialog(-1)}>
-                    <IconButton>
-                        <CloseIcon />
-                    </IconButton>
+    return (
+      <>
+        <div className={s.closeButton} onClick={() => selectDialog()}>
+          <IconButton>
+            <CloseIcon />
+          </IconButton>
+        </div>
+        {messages.length ? (
+          <div className={s.messagesList}>
+            {messages.map((message, i) => {
+              const userClass =
+                message.messageFrom === user.id ? s.messageUser : '';
+
+              return typeof message === 'string' ? (
+                <div key={i} className={s.messageDateGroup}>
+                  <div className={s.messageDateGroupBlock}>{message}</div>
                 </div>
-                {messages.length ? (
-                    <div className={s.messagesList}>
-                        {messages.map((message, i) => {
-                            const userClass =
-                                message.messageFrom === user.id
-                                    ? s.messageUser
-                                    : '';
-
-                            return typeof message === 'string' ? (
-                                <div key={i} className={s.messageDateGroup}>
-                                    <div className={s.messageDateGroupBlock}>
-                                        {message}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div key={i} className={s.message}>
-                                    <div
-                                        className={`${s.messageBlock} ${userClass}`}
-                                    >
-                                        <div className={s.messageText}>
-                                            {message.message}
-                                        </div>
-                                        <div className={s.messageDate}>
-                                            {dayjs(message.date).format(
-                                                'HH:mm'
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+              ) : (
+                <div key={i} className={s.message}>
+                  <div className={`${s.messageBlock} ${userClass}`}>
+                    <div className={s.messageText}>{message.message}</div>
+                    <div className={s.messageDate}>
+                      {dayjs(message.date).format('HH:mm')}
                     </div>
-                ) : (
-                    <div className={s.emptyMessages}>Список сообщений пуст</div>
-                )}
-            </>
-        );
-    }
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={s.emptyMessages}>Список сообщений пуст</div>
+        )}
+      </>
+    );
+  }
 }
 
 export default MessagesView;

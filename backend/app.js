@@ -9,28 +9,23 @@ const { apiRoute, authRoute } = require('./routes/');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorMiddleware = require('./middleware/error');
 
-const origin = process.env['ORIGIN'] && process.env['ORIGIN'].split(' ') || [
-    'http://socket.test',
-    'http://localhost:3000',
+const origin = (process.env['ORIGIN'] && process.env['ORIGIN'].split(' ')) || [
+  'http://socket.test',
+  'http://localhost:3000',
 ];
-console.log(origin);
 const compress = process.env['COMPRESSION'] === 'true';
 
 app.enable('trust proxy');
-// app.use((req, res, next) => {
-//     console.log(req);
-//     next();
-// });
 app.use(
-    cors({
-        origin,
-        // preflightContinue: true,
-        credentials: true,
-    })
+  cors({
+    origin,
+    // preflightContinue: true,
+    credentials: true,
+  })
 );
 app.use(helmet());
 if (compress) {
-    app.use(require('compression')());
+  app.use(require('compression')());
 }
 app.use(express.json());
 app.use(express.json({ type: 'application/vnd.api+json' }));

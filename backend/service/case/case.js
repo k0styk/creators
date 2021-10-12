@@ -29,40 +29,49 @@ class CaseService {
   ) {
     let time = null;
 
+    // к вашему видео доступ ограничен, невозможно создать кейс
+    // когда выход, редирект на главную
     try {
       const result = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?id=${youtubeId}&key=${key_youtube}&part=contentDetails&fields=items(contentDetails(duration))`
       ).then((res) => res.text());
 
-      if (JSON.parse(result).items[0]) {
-        const { contentDetails: { duration } = {} } =
-          JSON.parse(result).items[0];
-        const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-        let hours = 0,
-          minutes = 0,
-          seconds = 0,
-          total;
+      // if (JSON.parse(result).items[0]) {
+      const { contentDetails: { duration } = {} } = JSON.parse(result).items[0];
+      const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+      let hours = 0,
+        minutes = 0,
+        seconds = 0,
+        total;
 
-        if (reptms.test(duration)) {
-          const matches = reptms.exec(duration);
-          if (matches[1]) {
-            hours = Number(matches[1]);
-          }
-          if (matches[2]) {
-            minutes = Number(matches[2]);
-          }
-          if (matches[3]) {
-            seconds = Number(matches[3]);
-          }
-          total = hours * 3600 + minutes * 60 + seconds;
+      if (reptms.test(duration)) {
+        const matches = reptms.exec(duration);
+        if (matches[1]) {
+          hours = Number(matches[1]);
+        }
+        if (matches[2]) {
+          minutes = Number(matches[2]);
+        }
+        if (matches[3]) {
+          seconds = Number(matches[3]);
+        }
+        total = hours * 3600 + minutes * 60 + seconds;
 
-          if (Number(total)) {
-            time = total;
-          }
+        if (Number(total)) {
+          time = total;
         }
       }
+      // }
     } catch (e) {
-      throw ApiError.BadRequest(e.message);
+      if (e instanceof TypeError) {
+        return {
+          isCreated: false,
+          error: e,
+          message: 'К вашему видео доступ ограничен, невозможно создать кейс',
+        };
+      } else {
+        throw ApiError.BadRequest(e.message);
+      }
     }
 
     const services = [
@@ -95,7 +104,7 @@ class CaseService {
       time,
     });
 
-    return true;
+    return { isCreated: true };
   }
 
   async searchCases(

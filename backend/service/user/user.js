@@ -13,6 +13,7 @@ const caseService = require('../case/case');
 const { getPersonalPage, searchCases } = require('../aggregations');
 
 class UserService {
+  // switch на регистрации
   async registration(email, password, roleTypeId) {
     const candidate = await UserModel.findOne({ email });
     if (candidate) {
@@ -36,11 +37,12 @@ class UserService {
       type: roleTypeId,
       activationLink,
     });
-    // FIXME: Enable on PRODUCTION
-    // await mailService.sendActivationMail(
-    //     email,
-    //     `${process.env.API_URL}/auth/activate/${activationLink}`
-    // );
+    if (process.env['NODE_ENV'] === 'production') {
+      await mailService.sendActivationMail(
+        email,
+        `${process.env.API_URL}/auth/activate/${activationLink}`
+      );
+    }
 
     const userDto = new ShortUser(user);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -64,7 +66,8 @@ class UserService {
   }
 
   async deleteUserAfterExpiration(id) {
-    await UserModel.findByIdAndDelete(id);
+    // FIXME: delete user after expiration
+    // await UserModel.findByIdAndDelete(id);
   }
 
   async login(email, password) {

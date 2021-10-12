@@ -5,22 +5,22 @@ import { inject } from 'mobx-react';
 import ChatStore from '../../stores/Chat';
 
 @inject(({ RouterStore }) => {
-    return { RouterStore };
+  return { RouterStore };
 })
 class PersonalPage extends React.Component {
-    constructor(props) {
-        super(props);
-        const { RouterStore } = this.props;
+  constructor(props) {
+    super(props);
+    const { RouterStore } = this.props;
 
-        this.ChatStore = new ChatStore({ RouterStore });
-    }
+    this.ChatStore = new ChatStore({ RouterStore });
+  }
 
-    render() {
-        return (
-            <Provider ChatStore={this.ChatStore}>
-                <ChatView />
-            </Provider>
-        );
-    }
+  render() {
+    return (
+      <Provider ChatStore={this.ChatStore}>
+        <ChatView />
+      </Provider>
+    );
+  }
 }
 export default PersonalPage;

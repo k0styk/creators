@@ -90,8 +90,8 @@ class PromoStore {
 
   @action initServices = (services) => {
     this.checkedServices = services
-      .filter(({ type }) => type === serviceType.MAIN)
-      .map(({ id }) => id);
+      .filter(({ serviceType: type }) => type === serviceType.MAIN)
+      .map(({ serviceId }) => serviceId);
     this.services = services;
     this.changePrice();
   };
@@ -110,8 +110,8 @@ class PromoStore {
 
   @action changePrice = () => {
     let sumPrice = 0;
-    this.services.forEach(({ id, price }) => {
-      if (this.checkedServices.includes(id)) {
+    this.services.forEach(({ serviceId, price }) => {
+      if (this.checkedServices.includes(serviceId)) {
         sumPrice += Number(price);
       }
     });

@@ -7,87 +7,89 @@ import { Button, Menu, MenuItem, Avatar, IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { inject } from 'mobx-react';
 
-@inject(({ UserStore }) => {
-    return {
-        user: UserStore.user || {},
-        logout: UserStore.logout,
-        userId: UserStore.userId,
-    };
+import AuthStore from '../../stores/User/AuthStore';
+
+@inject(({ UserStore, RouterStore }) => {
+  return {
+    user: UserStore.user || {},
+    userId: UserStore.userId,
+    UserStore,
+    RouterStore,
+  };
 })
 class Header extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            anchorEl: null,
-        };
-    }
-
-    handleClick = (event) => {
-        this.setState({ anchorEl: event.currentTarget });
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
-    };
+    this.AuthStore = new AuthStore({
+      RouterStore: this.props.RouterStore,
+      UserStore: this.props.UserStore,
+    });
+  }
 
-    handleCloseLogout = () => {
-        const { logout } = this.props;
-        logout();
-        this.handleClose();
-    };
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
-    render() {
-        const { anchorEl } = this.state;
-        const { user, userId, withName = true } = this.props;
-        return (
-            <>
-                {userId ? (
-                    <>
-                        <Link to={`/favorites`}>
-                            <IconButton color={'primary'}>
-                                <FavoriteBorderIcon className={s.favIcon} />
-                            </IconButton>
-                        </Link>
-                        <Link to={`/chat`}>
-                            <Badge badgeContent={1} color="primary">
-                                <MailOutlineIcon className={s.favIcon} />
-                            </Badge>
-                        </Link>
-                        <Button
-                            onClick={this.handleClick}
-                            className={s.userButton}
-                        >
-                            {withName && user?.firstName}
-                            <Avatar
-                                className={s.avatar}
-                                alt={user?.firstName}
-                                src={user?.photoPath}
-                            />
-                        </Button>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={!!anchorEl}
-                            onClose={this.handleClose}
-                        >
-                            <Link to={`/lk`} className={s.menuItem}>
-                                <MenuItem>Личный кабинет</MenuItem>
-                            </Link>
-                            <MenuItem onClick={this.handleCloseLogout}>
-                                Выход
-                            </MenuItem>
-                        </Menu>
-                    </>
-                ) : (
-                    <div>
-                        <Button href="/login">войти</Button>
-                        <Button href="/register" color="primary">
-                            зарегистрироваться
-                        </Button>
-                    </div>
-                )}
-                {/* <Menu
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleCloseLogout = () => {
+    this.AuthStore.logout();
+    this.handleClose();
+  };
+
+  render() {
+    const { anchorEl } = this.state;
+    const { user, userId, withName = true } = this.props;
+    return (
+      <>
+        {userId ? (
+          <>
+            <Link to={`/favorites`}>
+              <IconButton color={'primary'}>
+                <FavoriteBorderIcon className={s.favIcon} />
+              </IconButton>
+            </Link>
+            <Link to={`/chat`}>
+              <Badge badgeContent={1} color="primary">
+                <MailOutlineIcon className={s.favIcon} />
+              </Badge>
+            </Link>
+            <Button onClick={this.handleClick} className={s.userButton}>
+              {withName && user?.firstName}
+              <Avatar
+                className={s.avatar}
+                alt={user?.firstName}
+                src={user?.photoPath}
+              />
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={!!anchorEl}
+              onClose={this.handleClose}
+            >
+              <Link to={`/lk`} className={s.menuItem}>
+                <MenuItem>Личный кабинет</MenuItem>
+              </Link>
+              <MenuItem onClick={this.handleCloseLogout}>Выход</MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <div>
+            <Button href="/login">войти</Button>
+            <Button href="/register" color="primary">
+              зарегистрироваться
+            </Button>
+          </div>
+        )}
+        {/* <Menu
                     id="simple-menu"
                     anchorEl={anchorEl}
                     keepMounted
@@ -113,9 +115,9 @@ class Header extends React.Component {
                         </Link>
                     }
                 </Menu> */}
-            </>
-        );
-    }
+      </>
+    );
+  }
 }
 
 export default Header;
