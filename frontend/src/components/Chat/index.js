@@ -4,15 +4,15 @@ import ChatView from './ChatView';
 import { inject } from 'mobx-react';
 import ChatStore from '../../stores/Chat';
 
-@inject(({ RouterStore }) => {
-  return { RouterStore };
+@inject(({ RouterStore, SocketStore }) => {
+  return { RouterStore, SocketStore };
 })
 class PersonalPage extends React.Component {
   constructor(props) {
     super(props);
-    const { RouterStore } = this.props;
+    const { RouterStore, SocketStore } = this.props;
 
-    this.ChatStore = new ChatStore({ RouterStore });
+    this.ChatStore = new ChatStore({ RouterStore, SocketStore });
   }
 
   render() {

@@ -38,8 +38,6 @@ class Search extends React.Component {
       setFavorite,
     } = this.props;
 
-    console.log(this.props);
-
     const breadcrumbs = [
       { title: 'Видео' },
       { title: type },

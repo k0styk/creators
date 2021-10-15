@@ -3,7 +3,7 @@ import { autorun, observable } from 'mobx';
 
 import { socketEvents } from '../../enums';
 
-class Socket {
+class SocketStore {
   @observable isConnected;
 
   constructor({ RouterStore, UserStore }) {
@@ -17,7 +17,7 @@ class Socket {
 
     this.initSocketEvents();
 
-    autorun(() => this.enterLobby());
+    autorun(() => this.enterNotificationRoom());
   }
 
   initSocketEvents = () => {
@@ -25,54 +25,45 @@ class Socket {
       console.log('Socket connected: ', this.socket.id);
     });
 
-    this.socket.on(socketEvents.joinChat, () => {
-      console.log('ROOM EVENT');
+    this.socket.on(socketEvents.joinNotificationLobby, () => {
+      console.log('JOINED NOTIFICATION ROOM');
     });
   };
 
-  enterLobby = () => {
-    console.log('enterLobby');
-    console.log(this.UserStore.userId);
+  enterNotificationRoom = () => {
     if (this.UserStore.userId) {
       this.socket.emit(
         socketEvents.joinNotificationLobby,
         this.UserStore.userId
       );
     }
-
-    // this.io.on('rooms', (roomsData) => {
-    //   console.log('rooms', roomsData);
-    //   this.state.setRooms(roomsData);
-    //   resolve(this.state.rooms);
-    // });
   };
 
-  // leaveLobby = () => {
-  //   return new Promise((resolve, reject) => {
-  //     console.log('leaveLobby');
-  //     this.io.emit('leaveLobby');
-  //     this.io.off('rooms');
-  //     resolve();
-  //   });
-  // };
+  getChats = async () =>
+    new Promise((resolve, reject) => {
+      this.socket.emit(socketEvents.getChats, this.UserStore.userId, (data) => {
+        if (data.error) {
+          reject(data.error);
+        }
+        resolve(data);
+      });
+    });
 
-  // createRoom = ({ title }) => {
-  //   return new Promise((resolve, reject) => {
-  //     console.log('createRoom', { title });
-  //     this.io.emit('createRoom', { title });
+  getChatMessages = async (chatId) =>
+    new Promise((resolve, reject) => {
+      this.socket.emit(socketEvents.getChatMessages, chatId, (data) => {
+        if (data.error) {
+          reject(data.error);
+        }
+        resolve(data);
+      });
+    });
 
-  //     this.io.once('room', (roomData) => {
-  //       console.log('createRoom -> room', roomData);
-  //       this.state.createRoom(roomData);
-  //       resolve(this.state.activeRoom);
+  enterChatRoom = ({ id }) => {};
 
-  //       this.io.on('room', (roomData) => {
-  //         console.log('room', roomData);
-  //         this.state.updateActiveRoom(roomData);
-  //       });
-  //     });
-  //   });
-  // };
+  leaveChatRoom = () => {};
+
+  sendMessageToChatRoom = () => {};
 
   // enterRoom = ({ id }) => {
   //   return new Promise((resolve, reject) => {
@@ -112,4 +103,4 @@ class Socket {
   // };
 }
 
-export default Socket;
+export default SocketStore;

@@ -37,18 +37,23 @@ module.exports = async (server) => {
     );
 
     /**---  DISCONNECT  ---**/
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected: ', socket.id);
-    });
+    // socket.on('disconnect', () => {
+    //   console.log('Socket disconnected: ', socket.id);
+    // });
 
     socket.on(socketEvents.joinNotificationLobby, (userId) => {
-      console.log(userId);
+      console.log('Joined N_ROOM: ', userId);
       socket.join(`${N_ROOM}:${userId}`);
-      setTimeout(() => {
-        console.log('timeout');
-        io.to(`${N_ROOM}:${userId}`).emit(socketEvents.joinChat);
-      }, 3000);
+      //   io.to(`${N_ROOM}:${userId}`).emit(socketEvents.joinChat);
     });
+
+    socket.on(socketEvents.getChats, chatController.getChats);
+    socket.on(socketEvents.getChatMessages, chatController.getChatMessages);
+    socket.on(socketEvents.sendMessage, async (chatId, fromId, text, cb) => {
+      await chatController.sendMessageToChat(chatId, fromId, text);
+      cb({ isSended: true });
+    });
+    socket.on(socketEvents.leftChat, () => {});
 
     // // joined to the room
     // socket.on('join event', chatController.joinChat);

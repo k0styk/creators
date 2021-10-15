@@ -20,7 +20,6 @@ const StyledBreadcrumb = withStyles((theme) => ({
 }))(Chip);
 
 export default function CustomizedBreadcrumbs({ items, ...props }) {
-  console.log(items);
   const breadcrumbItems = items.map(({ title }) => (
     <StyledBreadcrumb key={title} label={title} />
   ));

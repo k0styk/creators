@@ -565,4 +565,66 @@ module.exports = {
       },
     ],
   },
+  chats: {
+    getChats: (userId) => [
+      {
+        $match: {
+          $or: [
+            { customerId: new ObjectId(userId) },
+            { creatorId: new ObjectId(userId) },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'cases',
+          localField: 'caseId',
+          foreignField: '_id',
+          as: 'caseObject',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'creatorId',
+          foreignField: '_id',
+          as: 'userObject',
+        },
+      },
+      { $unwind: '$caseObject' },
+      { $unwind: '$userObject' },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          customerId: 1,
+          creatorId: 1,
+          caseId: 1,
+          caseName: '$caseObject.title',
+          userName: {
+            $concat: ['$userObject.firstName', ' ', '$userObject.secondName'],
+          },
+          userPhotoPath: '$userObject.photoPath',
+        },
+      },
+    ],
+    getChatMessages: (chatId) => [
+      { $match: { _id: new ObjectId(chatId) } },
+      /*{ $unwind: '$messages' },
+      {
+              $lookup: {
+                from: 'users',
+                localField: 'messages.fromId',
+                foreignField: '_id',
+                as: 'userObject',
+              },
+            },
+      { $unwind: '$userObject' },
+      { $group: {
+                _id: '$_id',
+                messages: { $push: '$messages' },
+              },
+      }, */
+    ],
+  },
 };

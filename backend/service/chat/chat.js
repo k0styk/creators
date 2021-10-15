@@ -1,16 +1,17 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const ChatModel = require('../../models/chat');
-const { ChatDto } = require('../../dtos/chat');
+const { ShortChatDto } = require('../../dtos/chat');
+const { chats } = require('../aggregations');
 
 class ChatService {
-  async createCase(customerId, creatorId, caseId) {
+  async createChat(customerId, creatorId, caseId) {
     const candidate = await ChatModel.findOne({
       customerId,
       creatorId,
       caseId,
     });
     if (candidate) {
-      return { chat: new ChatDto(candidate) };
+      return { ...new ShortChatDto(candidate) };
     }
 
     const chat = await ChatModel.create({
@@ -19,8 +20,41 @@ class ChatService {
       caseId,
     });
 
-    return { chat: new ChatDto(chat) };
+    return { ...new ShortChatDto(chat) };
   }
+
+  async getChats(userId) {
+    // TODO: REMOVE TIMEOUT
+    await timeout(1500);
+    const candidate = await ChatModel.aggregate(chats.getChats(userId));
+
+    return candidate;
+  }
+
+  async getChatMessages(chatId) {
+    // TODO: REMOVE TIMEOUT
+    await timeout(1500);
+    const candidate = await ChatModel.aggregate(chats.getChatMessages(chatId));
+
+    return candidate;
+  }
+
+  async sendMessageToChat(chatId, fromId, text) {
+    await timeout(1000);
+    const a = await ChatModel.findByIdAndUpdate(chatId, {
+      $push: {
+        messages: {
+          fromId,
+          text,
+        },
+      },
+    });
+    console.dir(a, { depth: null });
+  }
+}
+
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 module.exports = new ChatService();

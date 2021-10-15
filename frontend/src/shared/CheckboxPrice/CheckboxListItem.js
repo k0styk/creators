@@ -12,7 +12,7 @@ import formatPrice from '../../tools/formatPrice';
 import TooltipService from '../TootlipService';
 
 export default function CheckboxList({
-  id,
+  serviceId,
   name,
   price,
   tooltipText,
@@ -24,12 +24,12 @@ export default function CheckboxList({
   tooltipAdditional,
   tooltipAdditionalType,
 }) {
-  const isChecked = checked.includes(id);
+  const isChecked = checked.includes(serviceId);
   return (
-    <ListItem key={id} dense button>
+    <ListItem dense button>
       <ListItemIcon>
         <Checkbox
-          onClick={() => onClick(id)}
+          onClick={() => onClick(serviceId)}
           edge="start"
           checked={isChecked}
           disableRipple
@@ -47,12 +47,12 @@ export default function CheckboxList({
               <div className={s.textFieldBlock}>
                 <span className={s.dopField}> Стоимость: </span>
                 <TextField
-                  value={prices[id]}
+                  value={prices[serviceId]}
                   size={'small'}
                   color={'secondary'}
                   className={s.textField}
                   onChange={({ target }) =>
-                    onPriceChange(formatPrice(target.value, false), id)
+                    onPriceChange(formatPrice(target.value, false), serviceId)
                   }
                 />
                 <span className={s.dopField}> руб. </span>

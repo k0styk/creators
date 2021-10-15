@@ -11,6 +11,7 @@
   flex-direction: row;
   flex-grow: 1;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  max-height: 700px;
 
   .dialogs {
     position: relative;
@@ -45,14 +46,24 @@
     .messages {
       flex: 0 0 45%;
       position: relative;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+
+      .inputBlock {
+        margin-top: 4px;
+
+        form {
+          display: flex;
+          flex: 1;
+        }
+
+        .button {
+          margin: 0 1px;
+        }
+      }
 
       .messagesList {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        overflow-y: auto;
 
         .messageDateGroup {
           position: sticky;
@@ -120,8 +131,8 @@
 
       .closeButton {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 4px;
+        right: 8px;
         z-index: 1;
       }
     }

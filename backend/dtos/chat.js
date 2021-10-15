@@ -6,6 +6,13 @@ class ChatDto {
   }
 }
 
+class ShortChatDto {
+  constructor(model) {
+    this.id = model._id;
+  }
+}
+
 module.exports = {
   ChatDto,
+  ShortChatDto,
 };

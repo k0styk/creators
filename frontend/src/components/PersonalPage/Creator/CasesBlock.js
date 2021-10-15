@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject } from 'mobx-react';
 import s from '../PersonalPage.module.scss';
-import { Button, Divider, Link } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 // import AddIcon from '@material-ui/icons/Add';
 import Cards from '../../../shared/CaseCard';
 import NoCasesView from '../noCases';

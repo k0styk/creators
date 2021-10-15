@@ -9,7 +9,7 @@ const { apiRoute, authRoute } = require('./routes/');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorMiddleware = require('./middleware/error');
 
-const origin = (process.env['ORIGIN'] && process.env['ORIGIN'].split(' ')) || [
+const origin = process.env['ORIGIN'] || [
   'http://socket.test',
   'http://localhost:3000',
 ];

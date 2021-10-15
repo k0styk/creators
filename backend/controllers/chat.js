@@ -5,25 +5,31 @@ class ChatController {
   async createChat(req, res, next) {
     try {
       const { customerId, creatorId, caseId } = req.body;
-      const { chat } = await chatService.createCase(
-        customerId,
-        creatorId,
-        caseId
-      );
+      const chat = await chatService.createChat(customerId, creatorId, caseId);
 
-      res.json({ chat });
+      res.json({ ...chat });
     } catch (e) {
       next(e);
     }
   }
 
-  async getChats() {
+  async getChats(userId, cb) {
     try {
-      // const { customerId, creatorId, caseId } = req.body;
-      // const { chat } = await chatService(customerId, creatorId, caseId);
-      // res.json({ chat });
+      const data = await chatService.getChats(userId);
+
+      cb(data);
     } catch (e) {
-      next(e);
+      cb({ error: e });
+    }
+  }
+
+  async getChatMessages(chatId, cb) {
+    try {
+      const data = await chatService.getChatMessages(chatId);
+
+      cb(data);
+    } catch (e) {
+      cb({ error: e });
     }
   }
 
@@ -31,9 +37,9 @@ class ChatController {
 
   async leftChat() {}
 
-  async sendMessageToChat() {}
-
-  async getMessagesChat() {}
+  async sendMessageToChat(chatId, fromId, text) {
+    const data = await chatService.sendMessageToChat(chatId, fromId, text);
+  }
 }
 
 module.exports = new ChatController();

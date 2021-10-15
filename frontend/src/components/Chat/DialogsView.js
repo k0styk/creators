@@ -4,6 +4,9 @@ import { inject } from 'mobx-react';
 
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Loader from '../../shared/Loader';
+
+import { chatEnum } from '../../enums';
 
 import {
   Divider,
@@ -20,22 +23,26 @@ import {
   return {
     selectDialog: ChatStore.selectDialog,
     selectedDialog: ChatStore.selectedDialog,
+    loadDialogsStatus: ChatStore.loadDialogsStatus,
   };
 })
 class DialogsView extends React.Component {
   render() {
-    const { dialogs, selectDialog, selectedDialog } = this.props;
+    const { dialogs, selectDialog, selectedDialog, loadDialogsStatus } =
+      this.props;
 
     return (
       <>
-        {dialogs.length ? (
+        {loadDialogsStatus === chatEnum.IS_CHECKING ? (
+          <Loader />
+        ) : dialogs.length ? (
           <List className={s.dialogsList}>
             {dialogs.map((d, i) => (
-              <React.Fragment key={d.chatId}>
+              <React.Fragment key={d.id}>
                 <ListItem
                   button
-                  selected={selectedDialog === d.chatId}
-                  onClick={() => selectDialog(d.chatId)}
+                  selected={selectedDialog === d.id}
+                  onClick={() => selectDialog(d.id)}
                 >
                   <ListItemAvatar>
                     <Avatar>

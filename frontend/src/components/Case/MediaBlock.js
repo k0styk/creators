@@ -23,21 +23,18 @@ import API from '../../api';
 })
 class Search extends React.Component {
   goToChat = async () => {
-    // TODO send to api to create chat and redirect to chat with selected id CHAT
-    const { currentUserId, caseId, user } = this.props;
-    const chat = await API.post('/chat/create', {
+    const { currentUserId, caseId, user, RouterStore } = this.props;
+    const { id: chatId } = await API.post('/chat/create', {
       customerId: currentUserId,
       creatorId: user.id,
       caseId,
     });
 
-    console.log(chat);
-
-    // const { RouterStore } = this.props;
-    // RouterStore.history.push({
-    //     pathname: '/chat',
-    // });
+    RouterStore.history.push({
+      pathname: `/chat/${chatId}`,
+    });
   };
+
   opts = {
     playerVars: {
       rel: 0,

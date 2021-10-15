@@ -1,8 +1,7 @@
 import React from 'react';
 import { inject } from 'mobx-react';
 import s from './Profile.module.scss';
-import { Chip, Button } from '@material-ui/core';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import { Chip } from '@material-ui/core';
 import Filter from './Filter';
 import Cards from '../../shared/CaseCard';
 import FormatPrice from '../../tools/formatPrice';

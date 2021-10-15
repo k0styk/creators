@@ -23,8 +23,15 @@ const authStatusEnum = {
 const socketEvents = {
   joinNotificationLobby: 'joinNotificationLobby',
   joinChat: 'joinChat',
+  leftChat: 'leftChat',
   getChats: 'getChats',
+  getChatMessages: 'getChatMessages',
   sendMessage: 'sendMessage',
+};
+
+const chatEnum = {
+  IS_CHECKING: 1,
+  IS_RECIEVED: 2,
 };
 
 module.exports = {
@@ -33,4 +40,5 @@ module.exports = {
   authStatusEnum,
   userType,
   socketEvents,
+  chatEnum,
 };

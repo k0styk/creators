@@ -1,0 +1,2 @@
+ssh creator@194.58.98.17 "bash -s" < rm_script.sh
+scp -r ./build/ creator@194.58.98.17:/home/creator/git/creators/frontend
