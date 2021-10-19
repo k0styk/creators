@@ -39,17 +39,18 @@ class ChatService {
     return candidate;
   }
 
-  async sendMessageToChat(chatId, fromId, text) {
-    await timeout(1000);
-    const a = await ChatModel.findByIdAndUpdate(chatId, {
+  async sendMessageToChat({ chatId, fromId, text, dateSend }) {
+    await ChatModel.findByIdAndUpdate(new ObjectId(chatId), {
       $push: {
         messages: {
-          fromId,
+          fromId: new ObjectId(fromId),
+          dateSend,
           text,
         },
       },
     });
-    console.dir(a, { depth: null });
+    // TODO: REMOVE TIMEOUT
+    await timeout(3000);
   }
 }
 

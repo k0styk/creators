@@ -1,10 +1,18 @@
-const router = require('express-promise-router')();
+// const router = require('express-promise-router')();
 const { getMethod } = require('../controllers/api.controller');
+const router = require('express').Router();
 const authMiddleware = require('../middleware/auth');
 const nonStrictAuthMiddleware = require('../middleware/nonStrictAuth');
 const userController = require('../controllers/user');
 const caseController = require('../controllers/case');
 const chatController = require('../controllers/chat');
+const apiController = require('../controllers/api.controller');
+
+// middleware that is specific to this router
+// router.use(function timeLog(req, res, next) {
+//   console.log('Time: ', Date.now());
+//   next();
+// });
 
 router.get('/users/getUser/:id', userController.getUser);
 router.get(
@@ -56,10 +64,7 @@ router.get(
   userController.getFavorites
 );
 
-router.post(
-  '/upload',
-  getMethod(() => 'upload')
-);
+router.post('/upload', authMiddleware, apiController.upload);
 
 router.post('/chat/create', authMiddleware, chatController.createChat);
 

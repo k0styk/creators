@@ -5,13 +5,13 @@ import { socketEvents } from '../../enums';
 
 class SocketStore {
   @observable isConnected;
+  @observable socket;
 
   constructor({ RouterStore, UserStore }) {
     this.socket = io(process.env['REACT_APP_API_HOST'], {
       withCredentials: true,
       transports: ['websocket'],
     });
-    // this.ChatStore = ChatStore || {};
     this.RouterStore = RouterStore || {};
     this.UserStore = UserStore || {};
 
@@ -59,11 +59,13 @@ class SocketStore {
       });
     });
 
-  enterChatRoom = ({ id }) => {};
+  enterChatRoom = (id) => {
+    console.log(id);
+  };
 
-  leaveChatRoom = () => {};
-
-  sendMessageToChatRoom = () => {};
+  leaveChatRoom = (id) => {
+    console.log(id);
+  };
 
   // enterRoom = ({ id }) => {
   //   return new Promise((resolve, reject) => {

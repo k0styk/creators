@@ -1,5 +1,6 @@
 import { observable, action, makeObservable } from 'mobx';
 import API from '../../api';
+import { Alert } from '../../routes';
 
 class PersonalPageStore {
   @observable routerStore = {};
@@ -72,6 +73,23 @@ class PersonalPageStore {
 
       this.setUserField('photoPath', file);
     } catch (e) {
+      if (e.response.status === 413) {
+        Alert({
+          type: 'error',
+          title: 'Файл слишком большой, максимальный объём файла 5 МБ',
+        });
+      } else if (e.response.status === 415) {
+        Alert({
+          type: 'error',
+          title:
+            'Неподходящий формат файла, допустимые форматы: .jpg, .png, .gif',
+        });
+      } else {
+        Alert({
+          type: 'error',
+          title: 'Непредвиденная ошибка при загрузке файла',
+        });
+      }
       console.log(e);
     }
   };

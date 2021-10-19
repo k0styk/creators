@@ -32,6 +32,7 @@ const socketEvents = {
 const chatEnum = {
   IS_CHECKING: 1,
   IS_RECIEVED: 2,
+  IS_SENDED: 3,
 };
 
 module.exports = {

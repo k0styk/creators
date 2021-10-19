@@ -1,7 +1,7 @@
 /**---  MIDDLEWARES  ---**/
 const socketMiddleware = require('./middleware/socket');
 
-const { socketEvents } = require('../frontend/src/enums');
+const { status, socketEvents } = require('../frontend/src/enums');
 const chatController = require('./controllers/chat');
 
 const N_ROOM = 'notification';
@@ -49,9 +49,13 @@ module.exports = async (server) => {
 
     socket.on(socketEvents.getChats, chatController.getChats);
     socket.on(socketEvents.getChatMessages, chatController.getChatMessages);
-    socket.on(socketEvents.sendMessage, async (chatId, fromId, text, cb) => {
-      await chatController.sendMessageToChat(chatId, fromId, text);
-      cb({ isSended: true });
+    socket.on(socketEvents.sendMessage, async (data, cb) => {
+      try {
+        await chatController.sendMessageToChat(data);
+        cb({ status: status.SUCCESS });
+      } catch (e) {
+        cb({ status: status.ERROR });
+      }
     });
     socket.on(socketEvents.leftChat, () => {});
 

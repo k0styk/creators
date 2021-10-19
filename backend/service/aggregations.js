@@ -608,23 +608,58 @@ module.exports = {
         },
       },
     ],
-    getChatMessages: (chatId) => [
+    getChatMessages: (chatId, limit = 50) => [
       { $match: { _id: new ObjectId(chatId) } },
-      /*{ $unwind: '$messages' },
+      { $unwind: '$messages' },
+      { $sort: { 'messages.dateSend': -1 } },
+      { $limit: limit },
       {
-              $lookup: {
-                from: 'users',
-                localField: 'messages.fromId',
-                foreignField: '_id',
-                as: 'userObject',
+        $group: {
+          _id: {
+            id: '$_id',
+            groupedDate: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$messages.dateSend',
               },
             },
-      { $unwind: '$userObject' },
-      { $group: {
-                _id: '$_id',
-                messages: { $push: '$messages' },
-              },
-      }, */
+          },
+          messages: {
+            $push: '$messages',
+          },
+          customerId: {
+            $first: '$customerId',
+          },
+          creatorId: {
+            $first: '$creatorId',
+          },
+          caseId: {
+            $first: '$caseId',
+          },
+          deleted: {
+            $first: '$deleted',
+          },
+          createdAt: {
+            $first: '$createdAt',
+          },
+          updatedAt: {
+            $first: '$updatedAt',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: '$_id.id',
+          groupedDate: '$_id.groupedDate',
+          caseId: 1,
+          creatorId: 1,
+          customerId: 1,
+          deleted: 1,
+          messages: 1,
+          updatedAt: 1,
+          createdAt: 1,
+        },
+      },
     ],
   },
 };

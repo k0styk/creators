@@ -12,6 +12,16 @@
     "seed:production": "NODE_ENV=production node ./seeds/mongo.seed.js",
     "eslint": "eslint"
   },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+    "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "dev"
+    }
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

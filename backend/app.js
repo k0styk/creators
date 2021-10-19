@@ -32,20 +32,23 @@ app.use(express.json({ type: 'application/vnd.api+json' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // app.use(session);
-app.use(fileUpload());
+app.use(
+  fileUpload({
+    limits: {
+      //        mb  kb     bytes
+      fileSize: 10 * 1024 * 1024,
+    },
+    abortOnLimit: true,
+    debug: process.env['NODE_ENV'] === 'dev' || false,
+  })
+);
 
 //Bring in the routes
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/auth', authRoute);
 app.use('/api', apiRoute);
 
+// Bring error route
 app.use(errorMiddleware);
-// app.use(errorHandlers.notFound);
-// if (process.env.NODE_ENV === 'dev') {
-//     app.use(errorHandlers.developmentErrors);
-// } else {
-//     app.use(errorHandlers.productionErrors);
-// }
-// Error Handlers
 
 module.exports = app;

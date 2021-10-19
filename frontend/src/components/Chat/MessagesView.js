@@ -9,17 +9,22 @@ import dayjs from 'dayjs';
 
 @inject(({ ChatStore }) => {
   return {
+    text: ChatStore.text,
+    setText: ChatStore.setText,
     selectDialog: ChatStore.selectDialog,
+    sendMessage: ChatStore.sendMessage,
   };
 })
 class MessagesView extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
-    console.log('submit');
+    const { text, sendMessage, setText } = this.props;
+    sendMessage(text);
+    setText({ target: { value: '' } });
   }
 
   render() {
-    const { messages, user, selectDialog } = this.props;
+    const { messages, user, selectDialog, text, setText } = this.props;
 
     return (
       <>
@@ -58,9 +63,13 @@ class MessagesView extends React.Component {
           <div className={s.inputBlock}>
             <form onSubmit={this.handleSubmit.bind(this)}>
               <TextField
+                name="Message"
                 placeholder="Введите сообщение"
                 variant="outlined"
+                autoComplete="off"
                 fullWidth
+                value={text}
+                onChange={setText}
               />
               <Button
                 className={s.button}

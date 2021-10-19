@@ -231,6 +231,8 @@ class UserController {
       console.log(e);
     }
   }
+
+  // TODO: End send activation email again
 }
 
 module.exports = new UserController();

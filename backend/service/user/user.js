@@ -8,12 +8,12 @@ const mailService = require('../mail/mail');
 const { ShortUser, User } = require('../../dtos/user');
 const { SphereAggregateDto } = require('../../dtos/seed');
 const ApiError = require('../../exceptions/api-error');
+const AuthError = require('../../exceptions/auth-error');
 const tokenService = require('../token');
 const caseService = require('../case/case');
 const { getPersonalPage, searchCases } = require('../aggregations');
 
 class UserService {
-  // switch на регистрации
   async registration(email, password, roleTypeId) {
     const candidate = await UserModel.findOne({ email });
     if (candidate) {
@@ -97,12 +97,12 @@ class UserService {
 
   async refresh(refreshToken) {
     if (!refreshToken) {
-      throw ApiError.UnauthorizedError();
+      throw AuthError.UnauthorizedError();
     }
     const userData = tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await tokenService.findToken(refreshToken);
     if (!userData || !tokenFromDb) {
-      throw ApiError.UnauthorizedError();
+      throw AuthError.UnauthorizedError();
     }
     const user = await UserModel.findById(userData.id);
     const userDto = new ShortUser(user);

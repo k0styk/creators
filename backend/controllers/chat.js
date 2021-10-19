@@ -15,6 +15,7 @@ class ChatController {
 
   async getChats(userId, cb) {
     try {
+      console.log('get');
       const data = await chatService.getChats(userId);
 
       cb(data);
@@ -37,8 +38,14 @@ class ChatController {
 
   async leftChat() {}
 
-  async sendMessageToChat(chatId, fromId, text) {
-    const data = await chatService.sendMessageToChat(chatId, fromId, text);
+  async sendMessageToChat(data) {
+    try {
+      await chatService.sendMessageToChat(data);
+    } catch (e) {
+      console.log('Send message error;');
+      console.log(e);
+      console.log('-------------------');
+    }
   }
 }
 

@@ -9,6 +9,8 @@ const ChatSchema = new Schema(
     deleted: { type: Boolean, default: false },
     messages: [
       {
+        messageId: { type: String, required: true },
+        isReaded: { type: Boolean, default: false },
         fromId: { type: Schema.Types.ObjectId, ref: Users },
         dateSend: { type: Date, default: new Date() },
         text: { type: String },
