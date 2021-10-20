@@ -32,6 +32,10 @@ app.use(express.json({ type: 'application/vnd.api+json' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // app.use(session);
+
+//Bring in the routes
+app.use('/public', express.static(__dirname + '/public'));
+app.use('/auth', authRoute);
 app.use(
   fileUpload({
     limits: {
@@ -42,10 +46,6 @@ app.use(
     debug: process.env['NODE_ENV'] === 'dev' || false,
   })
 );
-
-//Bring in the routes
-app.use('/public', express.static(__dirname + '/public'));
-app.use('/auth', authRoute);
 app.use('/api', apiRoute);
 
 // Bring error route
