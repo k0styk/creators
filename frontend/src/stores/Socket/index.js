@@ -12,6 +12,13 @@ class SocketStore {
       withCredentials: true,
       transports: ['websocket'],
     });
+    this.notifySocket = io(
+      `${process.env['REACT_APP_API_HOST']}/notifications`,
+      {
+        withCredentials: true,
+        transports: ['websocket'],
+      }
+    );
     this.RouterStore = RouterStore || {};
     this.UserStore = UserStore || {};
 
@@ -58,14 +65,6 @@ class SocketStore {
         resolve(data);
       });
     });
-
-  enterChatRoom = (id) => {
-    console.log(id);
-  };
-
-  leaveChatRoom = (id) => {
-    console.log(id);
-  };
 
   // enterRoom = ({ id }) => {
   //   return new Promise((resolve, reject) => {

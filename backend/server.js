@@ -1,6 +1,39 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
+const path = require('path');
 
+if (process.env['NODE_ENV'] === 'dev') {
+  require('dotenv').config();
+
+  if (process.env['SUPER_LOGGER']) {
+    ['debug', 'log', 'warn', 'error'].forEach((methodName) => {
+      const path = require('path');
+      const originalLoggingMethod = console[methodName];
+      console[methodName] = (firstArgument, ...otherArguments) => {
+        const originalPrepareStackTrace = Error.prepareStackTrace;
+        Error.prepareStackTrace = (_, stack) => stack;
+        const callee = new Error().stack[1];
+        Error.prepareStackTrace = originalPrepareStackTrace;
+        const relativeFileName = path.relative(
+          process.cwd(),
+          callee.getFileName()
+        );
+        const prefix = `${relativeFileName}:${callee.getLineNumber()}:`;
+        if (typeof firstArgument === 'string') {
+          originalLoggingMethod(
+            prefix + ' ' + firstArgument,
+            ...otherArguments
+          );
+        } else {
+          originalLoggingMethod(prefix, firstArgument, ...otherArguments);
+        }
+      };
+    });
+  }
+} else {
+  result = require('dotenv').config({
+    path: path.resolve(process.cwd(), '.env.production'),
+  });
+}
+const mongoose = require('mongoose');
 const PORT_FORK = process.env['APP_PORT'] || '8000',
   PORT_PART = process.env['APP_PORT_PART'] || '800',
   HOST = process.env['APP_HOST'] || 'localhost',
@@ -9,29 +42,6 @@ const PORT =
   process.env['exec_mode'] === 'cluster_mode'
     ? PORT_PART + instance
     : PORT_FORK;
-
-if (process.env['SUPER_LOGGER']) {
-  ['debug', 'log', 'warn', 'error'].forEach((methodName) => {
-    const path = require('path');
-    const originalLoggingMethod = console[methodName];
-    console[methodName] = (firstArgument, ...otherArguments) => {
-      const originalPrepareStackTrace = Error.prepareStackTrace;
-      Error.prepareStackTrace = (_, stack) => stack;
-      const callee = new Error().stack[1];
-      Error.prepareStackTrace = originalPrepareStackTrace;
-      const relativeFileName = path.relative(
-        process.cwd(),
-        callee.getFileName()
-      );
-      const prefix = `${relativeFileName}:${callee.getLineNumber()}:`;
-      if (typeof firstArgument === 'string') {
-        originalLoggingMethod(prefix + ' ' + firstArgument, ...otherArguments);
-      } else {
-        originalLoggingMethod(prefix, firstArgument, ...otherArguments);
-      }
-    };
-  });
-}
 
 (async () => {
   async function listenCallback() {

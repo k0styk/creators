@@ -26,6 +26,7 @@ class ChatController {
 
   async getChatMessages(chatId, cb) {
     try {
+      console.log(chatId);
       const data = await chatService.getChatMessages(chatId);
 
       cb(data);

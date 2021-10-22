@@ -31,6 +31,22 @@ module.exports = async (server) => {
   io.adapter(createAdapter(pubClient, pubClient.duplicate()));
   // io.use(socketMiddleware);
 
+  const notificationNamespace = io.of('/notifications');
+
+  notificationNamespace.on('connection', (socket) => {
+    console.log('Notification namespace');
+    // socket.join("room1");
+    // notificationNamespace.to("room1").emit("hello");
+  });
+
+  const userNamespace = io.of('/users');
+
+  userNamespace.on('connection', (socket) => {
+    console.log('UserNameSpace');
+    // socket.join("room1"); // distinct from the room in the "orders" namespace
+    // userNamespace.to("room1").emit("holà");
+  });
+
   const onConnection = (socket) => {
     console.log(
       `Socket connected: ${socket.id} - to pid: ${process.env['NODE_APP_INSTANCE']}`
@@ -57,7 +73,14 @@ module.exports = async (server) => {
         cb({ status: status.ERROR });
       }
     });
-    socket.on(socketEvents.leftChat, () => {});
+    socket.on(socketEvents.joinChat, (id) => {
+      console.log('Joined chat: ', id);
+      socket.join(id);
+    });
+    socket.on(socketEvents.leftChat, (id) => {
+      console.log('Left chat: ', id);
+      socket.leave(id);
+    });
 
     // // joined to the room
     // socket.on('join event', chatController.joinChat);

@@ -31,6 +31,7 @@ class ChatStore {
     this.getChats();
     if (this.isDialogSelected) {
       this.getChatMessages();
+      this.enterChatRoom(this.chatId);
     }
   }
 
@@ -51,13 +52,14 @@ class ChatStore {
   };
 
   @action selectDialog = (dialogId) => {
+    this.leaveChatRoom(this.chatId);
     if (dialogId) {
       this.selectedDialog = dialogId;
       this.RouterStore.history.push({ pathname: `/chat/${dialogId}` });
-      this.SocketStore.enterChatRoom(dialogId);
+      this.enterChatRoom(dialogId);
+      this.setMessages([]);
       this.getChatMessages();
     } else {
-      this.SocketStore.leaveChatRoom(this.chatId);
       this.selectedDialog = null;
       this.RouterStore.history.push({ pathname: `/chat` });
       this.setMessages([]);
@@ -109,10 +111,12 @@ class ChatStore {
 
   getChatMessages = () => {
     this.setMessagesStatus(chatEnum.IS_CHECKING);
-    this.SocketStore.getChatMessages(this.chatId).then((data) => {
+    this.SocketStore.getChatMessages(this.selectedDialog).then((data) => {
       this.setMessagesStatus(chatEnum.IS_RECIEVED);
-      console.log(data);
-      this.setMessages([]);
+      if (data[0]) {
+        console.log(data[0].messages);
+        this.setMessages(data[0].messages);
+      }
     });
   };
 
@@ -135,6 +139,18 @@ class ChatStore {
     this.socket.emit(socketEvents.sendMessage, sendData, ({ status }) => {
       this.changeMessage(messageId, 'status', status);
     });
+  };
+
+  enterChatRoom = (id) => {
+    if (id) {
+      this.socket.emit(socketEvents.joinChat, id);
+    }
+  };
+
+  leaveChatRoom = (id) => {
+    if (id) {
+      this.socket.emit(socketEvents.leftChat, id);
+    }
   };
 }
 

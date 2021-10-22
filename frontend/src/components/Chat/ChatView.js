@@ -13,13 +13,12 @@ import MessagesView from './MessagesView';
     isDialogSelected: ChatStore.isDialogSelected,
     selectedDialog: ChatStore.selectedDialog,
     dialogs: ChatStore.dialogs,
-    messages: ChatStore.messages,
+    // messages: ChatStore.messages,
   };
 })
 class PersonalPage extends React.Component {
   render() {
-    const { user, isDialogSelected, selectedDialog, dialogs, messages } =
-      this.props;
+    const { user, isDialogSelected, selectedDialog, dialogs } = this.props;
     const dialogss = [
       {
         caseName: 'Case Name 1',
@@ -470,7 +469,6 @@ class PersonalPage extends React.Component {
         userName: 'User Name 20',
       },
     ];
-    // const index = dialogss.findIndex(({ chatId }) => chatId === selectedDialog);
 
     return (
       <>
@@ -485,7 +483,8 @@ class PersonalPage extends React.Component {
               <>
                 <div className={s.messages}>
                   {isDialogSelected && dialogs ? (
-                    <MessagesView user={user} messages={dialogss[0].messages} />
+                    <MessagesView /* user={user} messages={dialogss[0].messages} */
+                    />
                   ) : null}
                 </div>
                 <Divider orientation="vertical" />

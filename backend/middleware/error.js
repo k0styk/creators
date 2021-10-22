@@ -2,8 +2,7 @@ const ApiError = require('../exceptions/api-error');
 const AuthError = require('../exceptions/auth-error');
 
 module.exports = function (err, req, res, next) {
-  console.log(process.env.NODE_ENV);
-  if (process.env.NODE_ENV === 'dev') {
+  if (process.env['NODE_ENV'] === 'dev') {
     console.log(err);
     if (err instanceof ApiError) {
       return res

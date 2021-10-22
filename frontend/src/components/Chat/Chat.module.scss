@@ -113,19 +113,19 @@
             }
 
             .messageDate {
-              font-size: 0.7rem;
+              font-size: 0.6rem;
               margin-left: auto;
+              color: #626d7a;
             }
           }
         }
       }
 
       .emptyMessages {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        text-align: center;
+        flex: 1 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: #626d7a;
       }
 

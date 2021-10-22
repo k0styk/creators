@@ -2,17 +2,24 @@ import React from 'react';
 import s from './Chat.module.scss';
 import CloseIcon from '@material-ui/icons/Close';
 import SendIcon from '@material-ui/icons/Send';
-import { Button, IconButton, TextField, Divider } from '@material-ui/core';
+import { Button, IconButton, TextField } from '@material-ui/core';
 import { inject } from 'mobx-react';
 
 import dayjs from 'dayjs';
 
-@inject(({ ChatStore }) => {
+import Loader from '../../shared/Loader';
+
+import { chatEnum } from '../../enums';
+
+@inject(({ ChatStore, UserStore }) => {
   return {
     text: ChatStore.text,
     setText: ChatStore.setText,
     selectDialog: ChatStore.selectDialog,
     sendMessage: ChatStore.sendMessage,
+    messages: ChatStore.messages,
+    loadMessagesStatus: ChatStore.loadMessagesStatus,
+    user: UserStore.user,
   };
 })
 class MessagesView extends React.Component {
@@ -24,7 +31,10 @@ class MessagesView extends React.Component {
   }
 
   render() {
-    const { messages, user, selectDialog, text, setText } = this.props;
+    const { loadMessagesStatus, messages, user, selectDialog, text, setText } =
+      this.props;
+
+    console.log(messages);
 
     return (
       <>
@@ -34,11 +44,13 @@ class MessagesView extends React.Component {
           </IconButton>
         </div>
         <>
-          {messages.length ? (
+          {loadMessagesStatus === chatEnum.IS_CHECKING ? (
+            <Loader />
+          ) : messages.length ? (
             <div className={s.messagesList}>
               {messages.map((message, i) => {
                 const userClass =
-                  message.messageFrom === user.id ? s.messageUser : '';
+                  message.fromId === user.id ? s.messageUser : '';
 
                 return typeof message === 'string' ? (
                   <div key={i} className={s.messageDateGroup}>
@@ -47,9 +59,9 @@ class MessagesView extends React.Component {
                 ) : (
                   <div key={i} className={s.message}>
                     <div className={`${s.messageBlock} ${userClass}`}>
-                      <div className={s.messageText}>{message.message}</div>
+                      <div className={s.messageText}>{message.text}</div>
                       <div className={s.messageDate}>
-                        {dayjs(message.date).format('HH:mm')}
+                        {dayjs(message.dateSend).format('HH:mm')}
                       </div>
                     </div>
                   </div>

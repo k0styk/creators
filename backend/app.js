@@ -5,15 +5,11 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const app = express();
 const { apiRoute, authRoute } = require('./routes/');
-// const { session, headers } = require('./middleware');
 //Setup Error Handlers -- MUST BE LAST USE DIRECTIVES
 const errorMiddleware = require('./middleware/error');
 
-const origin = process.env['ORIGIN'] || [
-  'http://socket.test',
-  'http://localhost:3000',
-];
-const compress = process.env['COMPRESSION'] === 'true';
+const origin = process.env['ORIGIN'] || 'http://localhost:3000';
+const compress = !!process.env['COMPRESSION'];
 
 app.enable('trust proxy');
 app.use(
@@ -31,7 +27,6 @@ app.use(express.json());
 app.use(express.json({ type: 'application/vnd.api+json' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(session);
 
 //Bring in the routes
 app.use('/public', express.static(__dirname + '/public'));
