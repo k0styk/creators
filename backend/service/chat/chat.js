@@ -36,7 +36,7 @@ class ChatService {
     await timeout(1500);
     const candidate = await ChatModel.aggregate(chats.getChatMessages(chatId));
 
-    return candidate;
+    return candidate[0];
   }
 
   async sendMessageToChat({ chatId, fromId, text, dateSend }) {

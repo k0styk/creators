@@ -24,10 +24,18 @@ class ChatStore {
     this.SocketStore = SocketStore || {};
 
     if (this.SocketStore) {
-      this.socket = this.SocketStore.socket;
+      this.notifySocket = this.SocketStore.notifySocket;
+      this.chatSocket = this.SocketStore.chatSocket;
     }
 
+    this.chatSocket.on('connect', () => {
+      console.log('Chat connected: ', this.chatSocket.id);
+    });
+
     this.selectedDialog = this.chatId;
+    if (!this.chatSocket.connected) {
+      this.chatSocket.connect();
+    }
     this.getChats();
     if (this.isDialogSelected) {
       this.getChatMessages();
@@ -103,21 +111,39 @@ class ChatStore {
 
   getChats = () => {
     this.setDialogsStatus(chatEnum.IS_CHECKING);
-    this.SocketStore.getChats().then((data) => {
-      this.setDialogsStatus(chatEnum.IS_RECIEVED);
-      this.setDialogs(data);
-    });
+    // this.SocketStore.getChats().then((data) => {
+    //   this.setDialogsStatus(chatEnum.IS_RECIEVED);
+    //   this.setDialogs(data);
+    // });
+    this.chatSocket.emit(
+      socketEvents.getChats,
+      this.SocketStore.UserStore.userId,
+      (data) => {
+        if (data.error) {
+          console.error(data.error);
+        }
+        this.setDialogsStatus(chatEnum.IS_RECIEVED);
+        this.setDialogs(data);
+      }
+    );
   };
 
   getChatMessages = () => {
     this.setMessagesStatus(chatEnum.IS_CHECKING);
-    this.SocketStore.getChatMessages(this.selectedDialog).then((data) => {
-      this.setMessagesStatus(chatEnum.IS_RECIEVED);
-      if (data[0]) {
-        console.log(data[0].messages);
-        this.setMessages(data[0].messages);
+    this.chatSocket.emit(
+      socketEvents.getChatMessages,
+      this.selectedDialog,
+      (data) => {
+        if (data.error) {
+          console.error(data.error);
+        }
+        this.setMessagesStatus(chatEnum.IS_RECIEVED);
+        if (data) {
+          console.log(data.messages);
+          this.setMessages(data.messages);
+        }
       }
-    });
+    );
   };
 
   sendMessage = (text) => {
@@ -136,20 +162,20 @@ class ChatStore {
     };
     this.addMessage(message);
 
-    this.socket.emit(socketEvents.sendMessage, sendData, ({ status }) => {
+    this.chatSocket.emit(socketEvents.sendMessage, sendData, ({ status }) => {
       this.changeMessage(messageId, 'status', status);
     });
   };
 
   enterChatRoom = (id) => {
     if (id) {
-      this.socket.emit(socketEvents.joinChat, id);
+      this.chatSocket.emit(socketEvents.joinChat, id);
     }
   };
 
   leaveChatRoom = (id) => {
     if (id) {
-      this.socket.emit(socketEvents.leftChat, id);
+      this.chatSocket.emit(socketEvents.leftChat, id);
     }
   };
 }

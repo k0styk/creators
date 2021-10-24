@@ -12,11 +12,7 @@ module.exports = async (server) => {
   const redisHost = process.env['REDIS_HOST'] || 'localhost',
     redisPort = process.env['REDIS_PORT'] || '6379';
   const pubClient = createClient({ host: redisHost, port: redisPort });
-  const origin = (process.env['ORIGIN'] &&
-    process.env['ORIGIN'].split(' ')) || [
-    'http://socket.test',
-    'http://localhost:3000',
-  ];
+  const origin = process.env['ORIGIN'] || 'http://localhost:3000';
 
   const io = require('socket.io')(server, {
     transports: ['websocket'],
@@ -32,20 +28,7 @@ module.exports = async (server) => {
   // io.use(socketMiddleware);
 
   const notificationNamespace = io.of('/notifications');
-
-  notificationNamespace.on('connection', (socket) => {
-    console.log('Notification namespace');
-    // socket.join("room1");
-    // notificationNamespace.to("room1").emit("hello");
-  });
-
-  const userNamespace = io.of('/users');
-
-  userNamespace.on('connection', (socket) => {
-    console.log('UserNameSpace');
-    // socket.join("room1"); // distinct from the room in the "orders" namespace
-    // userNamespace.to("room1").emit("holà");
-  });
+  const chatNamespace = io.of('/chat');
 
   const onConnection = (socket) => {
     console.log(
@@ -94,5 +77,57 @@ module.exports = async (server) => {
     return io;
   };
 
+  const onChatConnection = (socket) => {
+    console.log(
+      `Chat connected: ${socket.id} - to pid: ${process.env['NODE_APP_INSTANCE']}`
+    );
+
+    /**---  DISCONNECT  ---**/
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected: ', socket.id);
+    });
+
+    socket.on(socketEvents.getChats, chatController.getChats);
+    socket.on(socketEvents.getChatMessages, chatController.getChatMessages);
+    socket.on(socketEvents.sendMessage, async (data, cb) => {
+      try {
+        await chatController.sendMessageToChat(data);
+        cb({ status: status.SUCCESS });
+      } catch (e) {
+        cb({ status: status.ERROR });
+      }
+    });
+    socket.on(socketEvents.joinChat, (id) => {
+      console.log('Joined chat: ', id);
+      socket.join(id);
+    });
+    socket.on(socketEvents.leftChat, (id) => {
+      console.log('Left chat: ', id);
+      socket.leave(id);
+    });
+
+    // // option between users and case in room
+    // socket.on('make options event');
+  };
+
+  const onNotificationConnection = (socket) => {
+    console.log(
+      `Notify connected: ${socket.id} - to pid: ${process.env['NODE_APP_INSTANCE']}`
+    );
+
+    /**---  DISCONNECT  ---**/
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected: ', socket.id);
+    });
+
+    socket.on(socketEvents.joinNotificationLobby, (userId) => {
+      console.log('Joined N_ROOM: ', userId);
+      socket.join(`${N_ROOM}:${userId}`);
+      //   io.to(`${N_ROOM}:${userId}`).emit(socketEvents.joinChat);
+    });
+  };
+
   io.on('connection', onConnection);
+  chatNamespace.on('connection', onChatConnection);
+  notificationNamespace.on('connection', onNotificationConnection);
 };

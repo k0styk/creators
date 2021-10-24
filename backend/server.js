@@ -5,6 +5,7 @@ if (process.env['NODE_ENV'] === 'dev') {
 
   if (process.env['SUPER_LOGGER']) {
     ['debug', 'log', 'warn', 'error'].forEach((methodName) => {
+      const fmDate = (date) => ('0' + date).slice(-2);
       const path = require('path');
       const originalLoggingMethod = console[methodName];
       console[methodName] = (firstArgument, ...otherArguments) => {
@@ -16,7 +17,12 @@ if (process.env['NODE_ENV'] === 'dev') {
           process.cwd(),
           callee.getFileName()
         );
-        const prefix = `${relativeFileName}:${callee.getLineNumber()}:`;
+        const d = new Date();
+        const prefix = `${fmDate(d.getHours())}:${fmDate(
+          d.getMinutes()
+        )}:${fmDate(
+          d.getSeconds()
+        )}-${relativeFileName}:${callee.getLineNumber()}:`;
         if (typeof firstArgument === 'string') {
           originalLoggingMethod(
             prefix + ' ' + firstArgument,
