@@ -1,4 +1,4 @@
-import { observable, action, get, computed, makeObservable, toJS } from 'mobx';
+import { observable, action, get, computed, makeObservable } from 'mobx';
 import { status, chatEnum, socketEvents } from '../../enums';
 
 class ChatStore {
@@ -28,20 +28,44 @@ class ChatStore {
       this.chatSocket = this.SocketStore.chatSocket;
     }
 
-    this.chatSocket.on('connect', () => {
-      console.log('Chat connected: ', this.chatSocket.id);
-    });
-
     this.selectedDialog = this.chatId;
     if (!this.chatSocket.connected) {
       this.chatSocket.connect();
     }
+    this.initSocketEvents();
     this.getChats();
     if (this.isDialogSelected) {
       this.getChatMessages();
       this.enterChatRoom(this.chatId);
     }
   }
+
+  initSocketEvents = () => {
+    this.chatSocket.on('connect', () => {
+      console.log('Chat connected: ', this.chatSocket.id);
+    });
+
+    this.chatSocket.on(socketEvents.message, (message) => {
+      if (this.messages.slice(-1)[0].messageId) {
+        if (this.messages.slice(-1)[0].messageId > message.messageId) {
+          // TODO: make sorting messages
+          // const compare = (a, b) => {
+          //   if (a.last_nom < b.last_nom) {
+          //     return -1;
+          //   }
+          //   if (a.last_nom > b.last_nom) {
+          //     return 1;
+          //   }
+          //   return 0;
+          // };
+          this.addMessage(message);
+          return;
+        }
+      }
+      console.log('addMessage');
+      this.addMessage(message);
+    });
+  };
 
   @computed get chatId() {
     return get(get(this.RouterStore.match, 'params'), 'id');
@@ -50,10 +74,6 @@ class ChatStore {
   @computed get isDialogSelected() {
     return Boolean(this.selectedDialog);
   }
-
-  close = () => {
-    this.disposerAutorunPromo();
-  };
 
   @action setText = ({ target: { value } }) => {
     this.text = value;
@@ -109,16 +129,18 @@ class ChatStore {
 
   // ID = () => '_' + Math.random().toString(36).substr(2, 9);
 
+  dispose = () => {
+    this.chatSocket.disconnect();
+  };
+
   getChats = () => {
     this.setDialogsStatus(chatEnum.IS_CHECKING);
-    // this.SocketStore.getChats().then((data) => {
-    //   this.setDialogsStatus(chatEnum.IS_RECIEVED);
-    //   this.setDialogs(data);
-    // });
+    console.log(this.SocketStore.UserStore.userId);
     this.chatSocket.emit(
       socketEvents.getChats,
       this.SocketStore.UserStore.userId,
       (data) => {
+        console.log(data);
         if (data.error) {
           console.error(data.error);
         }
@@ -134,6 +156,7 @@ class ChatStore {
       socketEvents.getChatMessages,
       this.selectedDialog,
       (data) => {
+        console.log(data);
         if (data.error) {
           console.error(data.error);
         }
@@ -147,7 +170,8 @@ class ChatStore {
   };
 
   sendMessage = (text) => {
-    const messageId = this.messages.length + 1;
+    if (!text.trim().length) return;
+    const messageId = +new Date();
     const sendData = {
       chatId: this.chatId,
       fromId: this.SocketStore.UserStore.userId,

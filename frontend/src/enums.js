@@ -27,6 +27,7 @@ const socketEvents = {
   getChats: 'getChats',
   getChatMessages: 'getChatMessages',
   sendMessage: 'sendMessage',
+  message: 'message',
 };
 
 const chatEnum = {

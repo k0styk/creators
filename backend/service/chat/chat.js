@@ -52,6 +52,20 @@ class ChatService {
     // TODO: REMOVE TIMEOUT
     await timeout(3000);
   }
+
+  async getUserIdMessageTo(chatId, fromId) {
+    try {
+      const chat = await ChatModel.findById(chatId);
+
+      return chat.customerId.toString() === fromId
+        ? chat.creatorId.toString()
+        : chat.customerId.toString();
+    } catch (e) {
+      console.log('Send message error;');
+      console.log(e);
+      console.log('-------------------');
+    }
+  }
 }
 
 function timeout(ms) {

@@ -81,10 +81,11 @@ module.exports = async (server) => {
     console.log(
       `Chat connected: ${socket.id} - to pid: ${process.env['NODE_APP_INSTANCE']}`
     );
+    console.log(socket.rooms);
 
     /**---  DISCONNECT  ---**/
     socket.on('disconnect', () => {
-      console.log('Socket disconnected: ', socket.id);
+      console.log('Chat disconnected: ', socket.id);
     });
 
     socket.on(socketEvents.getChats, chatController.getChats);
@@ -93,6 +94,16 @@ module.exports = async (server) => {
       try {
         await chatController.sendMessageToChat(data);
         cb({ status: status.SUCCESS });
+        console.log(data);
+        const sockets = await chatNamespace.in(data.chatId).fetchSockets();
+        if (sockets.length >= 2) {
+          socket.to(data.chatId).emit(socketEvents.message, data);
+        } else {
+          const userId = await chatController.getUserIdMessageTo(data);
+          notificationNamespace
+            .to(`${N_ROOM}:${userId}`)
+            .emit(socketEvents.message, data);
+        }
       } catch (e) {
         cb({ status: status.ERROR });
       }
@@ -114,10 +125,12 @@ module.exports = async (server) => {
     console.log(
       `Notify connected: ${socket.id} - to pid: ${process.env['NODE_APP_INSTANCE']}`
     );
+    console.log(socket.rooms);
 
     /**---  DISCONNECT  ---**/
     socket.on('disconnect', () => {
-      console.log('Socket disconnected: ', socket.id);
+      console.log('Notify disconnected: ', socket.id);
+      console.log(socket.rooms);
     });
 
     socket.on(socketEvents.joinNotificationLobby, (userId) => {
@@ -130,4 +143,20 @@ module.exports = async (server) => {
   io.on('connection', onConnection);
   chatNamespace.on('connection', onChatConnection);
   notificationNamespace.on('connection', onNotificationConnection);
+
+  chatNamespace.adapter.on('create-room', (room) =>
+    console.log(`[${room}] was created`)
+  );
+
+  chatNamespace.adapter.on('join-room', (room, id) =>
+    console.log(`[${id}] join room [${room}]`)
+  );
+
+  chatNamespace.adapter.on('delete-room', (room) =>
+    console.log(`[${room}] was deleted`)
+  );
+
+  chatNamespace.adapter.on('leave-room', (room, id) =>
+    console.log(`[${id}] left room [${room}]`)
+  );
 };

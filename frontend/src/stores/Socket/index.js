@@ -43,6 +43,11 @@ class SocketStore {
     this.notifySocket.on(socketEvents.joinNotificationLobby, () => {
       console.log('JOINED NOTIFICATION ROOM');
     });
+
+    this.notifySocket.on(socketEvents.message, (data) => {
+      console.log('NOTIFY MESSAGE');
+      console.log(data);
+    });
   };
 
   enterNotificationRoom = () => {

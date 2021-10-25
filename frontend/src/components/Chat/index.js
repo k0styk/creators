@@ -15,6 +15,10 @@ class PersonalPage extends React.Component {
     this.ChatStore = new ChatStore({ RouterStore, SocketStore });
   }
 
+  componentWillUnmount() {
+    this.ChatStore.dispose();
+  }
+
   render() {
     return (
       <Provider ChatStore={this.ChatStore}>
