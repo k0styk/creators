@@ -61,9 +61,12 @@ class CreateStore {
       this.setServices(
         services.map((v) => ({
           ...v,
-          serviceId: v._id,
+          serviceId: v.id,
         }))
       );
+      services.forEach((e) => {
+        this.onPriceChange('', e.id);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -147,7 +150,7 @@ class CreateStore {
     this.selectedTypes = types;
   };
 
-  @action checkFields = () => {
+  @action checkFields = (filteredPrices) => {
     if (
       !this.productionTime ||
       !this.title ||
@@ -165,7 +168,7 @@ class CreateStore {
     }
     if (
       this.checkedMainServices.length + this.checkedAddServices.length !==
-      Object.keys(this.prices).length
+      Object.keys(filteredPrices).length
     ) {
       Alert({ type: 'error', title: 'Укажите стоимость услуг' });
       return false;
@@ -175,7 +178,11 @@ class CreateStore {
   };
 
   @action sumbit = async () => {
-    if (!this.checkFields()) {
+    const asArray = Object.entries(this.prices);
+    const filtered = asArray.filter(([key, value]) => value);
+    const filteredPrices = Object.fromEntries(filtered);
+
+    if (!this.checkFields(filteredPrices)) {
       return;
     }
 
@@ -188,7 +195,6 @@ class CreateStore {
       title,
       checkedMainServices: mainServices,
       checkedAddServices: addServices,
-      prices,
       productionTime,
     } = this;
 
@@ -203,13 +209,13 @@ class CreateStore {
       mainServices: mainServices.map((item) => {
         return {
           id: item,
-          price: prices[item].replace(/\D+/g, ''),
+          price: filteredPrices[item].replace(/\D+/g, ''),
         };
       }),
       addServices: addServices.map((item) => {
         return {
           id: item,
-          price: prices[item].replace(/\D+/g, ''),
+          price: filteredPrices[item].replace(/\D+/g, ''),
         };
       }),
     };

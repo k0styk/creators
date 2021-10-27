@@ -245,7 +245,6 @@ class CaseService {
       userId: caseCard.userId,
       limit: 4,
     });
-    console.dir(caseCard, { depth: null });
 
     return { ...caseCard[0], userCases, services: caseCard[0].services };
   }

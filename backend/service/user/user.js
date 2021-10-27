@@ -188,7 +188,6 @@ class UserService {
 
   async getFavorites(userId) {
     const data = await UserModel.aggregate(searchCases.favoritesQuery(userId));
-    console.dir(data, { depth: null });
 
     return data;
   }
@@ -210,8 +209,6 @@ class UserService {
 
   async getUserCases(userId) {
     const cases = await CaseModel.find({ userId });
-    console.log('getUserCases');
-    console.log(cases);
   }
 }
 

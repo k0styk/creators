@@ -25,6 +25,7 @@ export default function CheckboxList({
   tooltipAdditionalType,
 }) {
   const isChecked = checked.includes(serviceId);
+
   return (
     <ListItem dense button>
       <ListItemIcon>
