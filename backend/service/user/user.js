@@ -40,7 +40,7 @@ class UserService {
     if (process.env['NODE_ENV'] === 'production') {
       await mailService.sendActivationMail(
         email,
-        `${process.env.API_URL}/auth/activate/${activationLink}`
+        `${process.env.ORIGIN}/auth/activate/${activationLink}`
       );
     }
 
