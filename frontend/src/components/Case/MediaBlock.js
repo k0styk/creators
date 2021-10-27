@@ -11,6 +11,7 @@ import API from '../../api';
 @inject(({ CaseStore, RouterStore, UserStore }) => {
   return {
     price: CaseStore.price,
+    checkedServices: CaseStore.checkedServices,
     productionTime: (CaseStore.case || {}).productionTime,
     type: (CaseStore.case || {}).type,
     sphere: (CaseStore.case || {}).sphere,
@@ -23,11 +24,14 @@ import API from '../../api';
 })
 class Search extends React.Component {
   goToChat = async () => {
-    const { currentUserId, caseId, user, RouterStore } = this.props;
+    const { currentUserId, caseId, user, RouterStore, checkedServices } =
+      this.props;
+
     const { id: chatId } = await API.post('/chat/create', {
       customerId: currentUserId,
       creatorId: user.id,
       caseId,
+      checkedServices,
     });
 
     RouterStore.history.push({

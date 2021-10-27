@@ -4,8 +4,13 @@ const ApiError = require('../exceptions/api-error');
 class ChatController {
   async createChat(req, res, next) {
     try {
-      const { customerId, creatorId, caseId } = req.body;
-      const chat = await chatService.createChat(customerId, creatorId, caseId);
+      const { customerId, creatorId, caseId, checkedServices } = req.body;
+      const chat = await chatService.createChat(
+        customerId,
+        creatorId,
+        caseId,
+        checkedServices
+      );
 
       res.json({ ...chat });
     } catch (e) {
@@ -13,10 +18,9 @@ class ChatController {
     }
   }
 
-  async getChats(userId, cb) {
+  async getChats(userId, userType, cb) {
     try {
-      console.log(userId);
-      const data = await chatService.getChats(userId);
+      const data = await chatService.getChats(userId, userType);
 
       cb(data);
     } catch (e) {
@@ -48,11 +52,21 @@ class ChatController {
     }
   }
 
-  async getUserIdMessageTo({ chatId, fromId }) {
+  async exchangeServices(chatId, services) {
     try {
-      const userId = await chatService.getUserIdMessageTo(chatId, fromId);
+      await chatService.exchangeServices(chatId, services);
+    } catch (e) {
+      console.log('Exchange services error;');
+      console.log(e);
+      console.log('-------------------');
+    }
+  }
 
-      return userId;
+  async getUserIdMessageTo({ chatId, userType }) {
+    try {
+      const data = await chatService.getUserIdMessageTo(chatId, userType);
+
+      return data;
     } catch (e) {
       console.log('Send message error;');
       console.log(e);

@@ -1,19 +1,14 @@
 import { io } from 'socket.io-client';
 import { autorun, observable } from 'mobx';
 
+import { Alert } from '../../routes';
 import { socketEvents } from '../../enums';
 
 class SocketStore {
-  // @observable isConnected;
-  // @observable socket;
   @observable notifySocket;
   @observable chatSocket;
 
   constructor({ RouterStore, UserStore }) {
-    // this.socket = io(process.env['REACT_APP_API_HOST'], {
-    //   withCredentials: true,
-    //   transports: ['websocket'],
-    // });
     this.notifySocket = io(
       `${process.env['REACT_APP_API_HOST']}/notifications`,
       {
@@ -40,13 +35,13 @@ class SocketStore {
       console.log('Socket connected: ', this.notifySocket.id);
     });
 
-    this.notifySocket.on(socketEvents.joinNotificationLobby, () => {
-      console.log('JOINED NOTIFICATION ROOM');
-    });
-
     this.notifySocket.on(socketEvents.message, (data) => {
-      console.log('NOTIFY MESSAGE');
-      console.log(data);
+      Alert({
+        type: 'info',
+        title: 'У вас новое сообщение',
+        message: `Сообщение по кейсу: ${data.caseName}, от ${data.userName}`,
+        duration: 4500,
+      });
     });
   };
 

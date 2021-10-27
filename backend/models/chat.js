@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const { Chats, Users, Cases } = require('./names');
+const { Chats, Users, Cases, SeedService } = require('./names');
 
 const ChatSchema = new Schema(
   {
@@ -16,6 +16,7 @@ const ChatSchema = new Schema(
         text: { type: String },
       },
     ],
+    checkedServices: [{ type: Schema.Types.ObjectId, ref: SeedService }],
   },
   {
     timestamps: true,

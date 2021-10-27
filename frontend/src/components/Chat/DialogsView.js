@@ -2,8 +2,8 @@ import React from 'react';
 import s from './Chat.module.scss';
 import { inject } from 'mobx-react';
 
-import FolderIcon from '@material-ui/icons/Folder';
-import DeleteIcon from '@material-ui/icons/Delete';
+import PersonIcon from '@material-ui/icons/Person';
+// import DeleteIcon from '@material-ui/icons/Delete';
 import Loader from '../../shared/Loader';
 
 import { chatEnum } from '../../enums';
@@ -14,9 +14,9 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction,
   ListItemText,
-  IconButton,
+  // ListItemSecondaryAction,
+  // IconButton,
 } from '@material-ui/core';
 
 @inject(({ ChatStore }) => {
@@ -24,12 +24,18 @@ import {
     selectDialog: ChatStore.selectDialog,
     selectedDialog: ChatStore.selectedDialog,
     loadDialogsStatus: ChatStore.loadDialogsStatus,
+    dialogs: ChatStore.dialogs,
   };
 })
 class DialogsView extends React.Component {
+  dialogHandler = (id) => {
+    const { selectDialog, selectedDialog } = this.props;
+    if (selectedDialog === id) return;
+    selectDialog(id);
+  };
+
   render() {
-    const { dialogs, selectDialog, selectedDialog, loadDialogsStatus } =
-      this.props;
+    const { dialogs, selectedDialog, loadDialogsStatus } = this.props;
 
     return (
       <>
@@ -42,22 +48,27 @@ class DialogsView extends React.Component {
                 <ListItem
                   button
                   selected={selectedDialog === d.id}
-                  onClick={() => selectDialog(d.id)}
+                  onClick={() => this.dialogHandler(d.id)}
                 >
                   <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon />
-                    </Avatar>
+                    {d.userPhotoPath ? (
+                      <Avatar variant="square" src={d.userPhotoPath} />
+                    ) : (
+                      <Avatar variant="square">
+                        <PersonIcon />
+                      </Avatar>
+                    )}
                   </ListItemAvatar>
                   <ListItemText
                     primary={d.caseName}
                     secondary={true ? d.userName : null}
                   />
-                  <ListItemSecondaryAction>
+                  {/* TODO: MAKE SOME SECOND ACTION OF DIALOGS */}
+                  {/* <ListItemSecondaryAction>
                     <IconButton disabled edge="end">
                       <DeleteIcon />
                     </IconButton>
-                  </ListItemSecondaryAction>
+                  </ListItemSecondaryAction> */}
                 </ListItem>
                 <Divider />
               </React.Fragment>

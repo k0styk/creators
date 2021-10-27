@@ -566,14 +566,12 @@ module.exports = {
     ],
   },
   chats: {
-    getChats: (userId) => [
+    getChats: (userId, userType) => [
       {
-        $match: {
-          $or: [
-            { customerId: new ObjectId(userId) },
-            { creatorId: new ObjectId(userId) },
-          ],
-        },
+        $match:
+          userType === 1
+            ? { customerId: new ObjectId(userId) }
+            : { creatorId: new ObjectId(userId) },
       },
       {
         $lookup: {
@@ -583,16 +581,26 @@ module.exports = {
           as: 'caseObject',
         },
       },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'creatorId',
-          foreignField: '_id',
-          as: 'userObject',
-        },
-      },
+      userType === 1
+        ? {
+            $lookup: {
+              from: 'users',
+              localField: 'creatorId',
+              foreignField: '_id',
+              as: 'userObject',
+            },
+          }
+        : {
+            $lookup: {
+              from: 'users',
+              localField: 'customerId',
+              foreignField: '_id',
+              as: 'userObject',
+            },
+          },
       { $unwind: '$caseObject' },
       { $unwind: '$userObject' },
+      { $sort: { updatedAt: -1 } },
       {
         $project: {
           _id: 0,
@@ -608,7 +616,7 @@ module.exports = {
         },
       },
     ],
-    getChatMessages: (chatId, limit = 50) => [
+    getChatMessages: (chatId, limit = 100) => [
       // { $match: { _id: new ObjectId(chatId) } },
       // { $unwind: '$messages' },
       // { $sort: { 'messages.dateSend': -1 } },
@@ -662,9 +670,9 @@ module.exports = {
       // },
       // { $sort: { groupedDate: 1 } },
       { $match: { _id: new ObjectId(chatId) } },
-      { $unwind: '$messages' },
+      { $unwind: { path: '$messages', preserveNullAndEmptyArrays: true } },
       { $sort: { 'messages.dateSend': -1 } },
-      { $limit: limit },
+      { $limit: 100 },
       { $sort: { 'messages.dateSend': 1 } },
       {
         $group: {
@@ -677,22 +685,120 @@ module.exports = {
           deleted: {
             $first: '$deleted',
           },
+          checkedServices: {
+            $first: '$checkedServices',
+          },
           createdAt: {
             $first: '$createdAt',
           },
           updatedAt: {
             $first: '$updatedAt',
           },
+          caseId: { $first: '$caseId' },
         },
       },
+      {
+        $lookup: {
+          from: 'cases',
+          localField: 'caseId',
+          foreignField: '_id',
+          as: 'caseObject',
+        },
+      },
+      { $unwind: '$caseObject' },
       {
         $project: {
           _id: '$_id.id',
           groupedDate: '$_id.groupedDate',
           deleted: 1,
           messages: 1,
+          services: '$caseObject.services',
+          productionTime: '$caseObject.productionTime',
+          caseObject: 1,
+          checkedServices: 1,
           updatedAt: 1,
           createdAt: 1,
+        },
+      },
+      { $unwind: '$services' },
+      {
+        $lookup: {
+          from: 'seed.services',
+          localField: 'services.serviceId',
+          foreignField: '_id',
+          as: 'serviceObject',
+        },
+      },
+      { $unwind: '$serviceObject' },
+      {
+        $addFields: {
+          services: { $mergeObjects: ['$serviceObject', '$services'] },
+        },
+      },
+      { $unset: ['services.__v'] },
+      {
+        $group: {
+          _id: '$_id',
+          services: { $push: '$services' },
+          messages: { $first: '$messages' },
+          productionTime: { $first: '$productionTime' },
+          deleted: {
+            $first: '$deleted',
+          },
+          checkedServices: {
+            $first: '$checkedServices',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          deleted: 1,
+          messages: 1,
+          services: 1,
+          checkedServices: 1,
+          productionTime: 1,
+        },
+      },
+    ],
+    getMessageInfoToNotify: (chatId, userType) => [
+      { $match: { _id: new ObjectId(chatId) } },
+      {
+        $lookup: {
+          from: 'cases',
+          localField: 'caseId',
+          foreignField: '_id',
+          as: 'caseObject',
+        },
+      },
+      userType === 1
+        ? {
+            $lookup: {
+              from: 'users',
+              localField: 'customerId',
+              foreignField: '_id',
+              as: 'userObject',
+            },
+          }
+        : {
+            $lookup: {
+              from: 'users',
+              localField: 'creatorId',
+              foreignField: '_id',
+              as: 'userObject',
+            },
+          },
+      { $unwind: '$caseObject' },
+      { $unwind: '$userObject' },
+      {
+        $project: {
+          _id: 0,
+          userId: userType === 1 ? '$creatorId' : '$customerId',
+          caseName: '$caseObject.title',
+          userName: {
+            $concat: ['$userObject.firstName', ' ', '$userObject.secondName'],
+          },
         },
       },
     ],

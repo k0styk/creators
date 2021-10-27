@@ -1,5 +1,8 @@
 import { observable, action, get, computed, makeObservable } from 'mobx';
+
 import { status, chatEnum, socketEvents } from '../../enums';
+import formatPrice from '../../tools/formatPrice';
+import getProductionTime from '../../tools/getProductionTime';
 
 class ChatStore {
   RouterStore = {};
@@ -7,8 +10,7 @@ class ChatStore {
   @observable services = [];
   @observable checkedServices = [];
   @observable price = '';
-  @observable case = {};
-  @observable userCases = [];
+  @observable productionTime = 0;
   @observable status;
   @observable loadDialogsStatus;
   @observable loadMessagesStatus;
@@ -17,6 +19,7 @@ class ChatStore {
   @observable dialogs = [];
   @observable messages = [];
   @observable selectedDialog = null;
+  timerId = undefined;
 
   constructor({ RouterStore, SocketStore }) {
     makeObservable(this);
@@ -40,6 +43,13 @@ class ChatStore {
     }
   }
 
+  debounceFunction = (func, delay) => {
+    clearTimeout(this.timerId);
+
+    // Executes the func after delay time.
+    this.timerId = setTimeout(func, delay);
+  };
+
   initSocketEvents = () => {
     this.chatSocket.on('connect', () => {
       console.log('Chat connected: ', this.chatSocket.id);
@@ -62,8 +72,11 @@ class ChatStore {
           return;
         }
       }
-      console.log('addMessage');
       this.addMessage(message);
+    });
+
+    this.chatSocket.on(socketEvents.updateServices, (checkedServices) => {
+      this.initServices(this.services, checkedServices);
     });
   };
 
@@ -114,6 +127,24 @@ class ChatStore {
     this.messages.push(message);
   };
 
+  @action setServices = (services) => {
+    this.services = [...services];
+  };
+
+  @action setCheckedServices = (services) => {
+    this.checkedServices = [...services];
+  };
+
+  @action setProductionTime = (time) => {
+    this.productionTime = time;
+  };
+
+  @action initServices = (services, checkedServices) => {
+    this.setServices(services);
+    this.setCheckedServices(checkedServices);
+    this.changePrice();
+  };
+
   @action changeMessage = (messageId, key, value) => {
     const array = this.messages.map((m) => {
       if (m.messageId === messageId) {
@@ -127,7 +158,25 @@ class ChatStore {
     this.setMessages(array);
   };
 
-  // ID = () => '_' + Math.random().toString(36).substr(2, 9);
+  @action onCheckService = (id) => {
+    if (this.checkedServices.includes(id)) {
+      this.checkedServices = this.checkedServices.filter((item) => item !== id);
+    } else this.checkedServices = [...this.checkedServices, id];
+
+    this.changePrice();
+    this.debounceFunction(this.exchangeServices, 3000);
+  };
+
+  @action changePrice = () => {
+    const price = this.services.reduce((prev, cur) => {
+      if (this.checkedServices.includes(cur.serviceId)) {
+        return prev + cur.price;
+      }
+      return prev;
+    }, 0);
+
+    this.price = formatPrice(price);
+  };
 
   dispose = () => {
     this.chatSocket.disconnect();
@@ -135,13 +184,12 @@ class ChatStore {
 
   getChats = () => {
     this.setDialogsStatus(chatEnum.IS_CHECKING);
-    console.log(this.SocketStore.UserStore.userId);
     this.chatSocket.emit(
       socketEvents.getChats,
       this.SocketStore.UserStore.userId,
+      this.SocketStore.UserStore.user.type,
       (data) => {
-        console.log(data);
-        if (data.error) {
+        if (data?.error) {
           console.error(data.error);
         }
         this.setDialogsStatus(chatEnum.IS_RECIEVED);
@@ -156,14 +204,15 @@ class ChatStore {
       socketEvents.getChatMessages,
       this.selectedDialog,
       (data) => {
-        console.log(data);
-        if (data.error) {
+        if (data?.error) {
           console.error(data.error);
         }
         this.setMessagesStatus(chatEnum.IS_RECIEVED);
         if (data) {
-          console.log(data.messages);
-          this.setMessages(data.messages);
+          const { messages, services, checkedServices, productionTime } = data;
+          this.setMessages(messages);
+          this.initServices(services, checkedServices);
+          this.setProductionTime(getProductionTime(productionTime));
         }
       }
     );
@@ -175,6 +224,7 @@ class ChatStore {
     const sendData = {
       chatId: this.chatId,
       fromId: this.SocketStore.UserStore.userId,
+      userType: this.SocketStore.UserStore.user.type,
       dateSend: new Date(),
       isReaded: false,
       messageId,
@@ -189,6 +239,14 @@ class ChatStore {
     this.chatSocket.emit(socketEvents.sendMessage, sendData, ({ status }) => {
       this.changeMessage(messageId, 'status', status);
     });
+  };
+
+  exchangeServices = () => {
+    this.chatSocket.emit(
+      socketEvents.exchangeServices,
+      this.chatId,
+      this.checkedServices
+    );
   };
 
   enterChatRoom = (id) => {

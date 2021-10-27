@@ -27,7 +27,7 @@ const CheckList = withStyles((theme) => ({
 class CheckboxList extends React.Component {
   render() {
     const { checkedServices, services, onCheckService } = this.props;
-    console.log(services);
+
     const listItem = services.map((service) => (
       <CheckboxListItem
         {...service}

@@ -4,7 +4,7 @@ const { ShortChatDto } = require('../../dtos/chat');
 const { chats } = require('../aggregations');
 
 class ChatService {
-  async createChat(customerId, creatorId, caseId) {
+  async createChat(customerId, creatorId, caseId, checkedServices) {
     const candidate = await ChatModel.findOne({
       customerId,
       creatorId,
@@ -13,28 +13,33 @@ class ChatService {
     if (candidate) {
       return { ...new ShortChatDto(candidate) };
     }
+    let services = undefined;
+    if (checkedServices) {
+      services = checkedServices.map((s) => new ObjectId(s));
+    }
 
     const chat = await ChatModel.create({
       creatorId,
       customerId,
       caseId,
+      checkedServices: services,
     });
 
     return { ...new ShortChatDto(chat) };
   }
 
-  async getChats(userId) {
-    // TODO: REMOVE TIMEOUT
-    await timeout(1500);
-    const candidate = await ChatModel.aggregate(chats.getChats(userId));
+  async getChats(userId, userType) {
+    // await timeout(1500); // TODO: REMOVE TIMEOUT
+    const candidate = await ChatModel.aggregate(
+      chats.getChats(userId, userType)
+    );
 
     return candidate;
   }
 
   async getChatMessages(chatId) {
-    // TODO: REMOVE TIMEOUT
-    await timeout(1500);
     const candidate = await ChatModel.aggregate(chats.getChatMessages(chatId));
+    // await timeout(1500); // TODO: REMOVE TIMEOUT
 
     return candidate[0];
   }
@@ -50,21 +55,23 @@ class ChatService {
       },
     });
     // TODO: REMOVE TIMEOUT
-    await timeout(3000);
+    // await timeout(3000);
   }
 
-  async getUserIdMessageTo(chatId, fromId) {
-    try {
-      const chat = await ChatModel.findById(chatId);
+  async getUserIdMessageTo(chatId, userType) {
+    const chat = await ChatModel.aggregate(
+      chats.getMessageInfoToNotify(chatId, userType)
+    );
 
-      return chat.customerId.toString() === fromId
-        ? chat.creatorId.toString()
-        : chat.customerId.toString();
-    } catch (e) {
-      console.log('Send message error;');
-      console.log(e);
-      console.log('-------------------');
-    }
+    return chat[0];
+  }
+
+  async exchangeServices(chatId, services) {
+    const checkedServices = services.map((s) => new ObjectId(s));
+
+    await ChatModel.findByIdAndUpdate(new ObjectId(chatId), {
+      checkedServices,
+    });
   }
 }
 

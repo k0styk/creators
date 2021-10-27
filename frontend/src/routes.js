@@ -7,11 +7,16 @@ import ReactNotification, { store } from 'react-notifications-component';
 import initStores from './main/initStores';
 import NotFound from './shared/NotFound';
 
-export const Alert = ({ type, title = ' ', message = ' ' }) => {
+export const Alert = ({
+  type,
+  title = ' ',
+  message = ' ',
+  duration = 2000,
+}) => {
   const opt = {
     container: 'top-right',
     dismiss: {
-      duration: 2000,
+      duration,
       onScreen: false,
     },
     showIcon: true,

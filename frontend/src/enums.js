@@ -28,6 +28,8 @@ const socketEvents = {
   getChatMessages: 'getChatMessages',
   sendMessage: 'sendMessage',
   message: 'message',
+  exchangeServices: 'exchangeServices',
+  updateServices: 'updateServices',
 };
 
 const chatEnum = {

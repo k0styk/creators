@@ -5,14 +5,9 @@ import { toJS } from 'mobx';
 
 import dayjs from 'dayjs';
 
-import Loader from '../../shared/Loader';
-
-import { chatEnum } from '../../enums';
-
 @inject(({ ChatStore, UserStore }) => {
   return {
     messages: toJS(ChatStore.messages),
-    loadMessagesStatus: ChatStore.loadMessagesStatus,
     user: UserStore.user,
   };
 })
@@ -32,15 +27,11 @@ class MessagesList extends React.Component {
   };
 
   render() {
-    const { loadMessagesStatus, messages, user } = this.props;
-
-    // console.log(messages);
+    const { messages, user } = this.props;
 
     return (
       <>
-        {loadMessagesStatus === chatEnum.IS_CHECKING ? (
-          <Loader />
-        ) : messages.length ? (
+        {messages.length ? (
           <div className={s.messageListBlock}>
             <div className={s.messagesList}>
               {messages.map((message, i) => {
