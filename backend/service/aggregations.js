@@ -802,5 +802,23 @@ module.exports = {
         },
       },
     ],
+    checkRights: (userId, chatId) => [
+      {
+        $match: {
+          $and: [
+            {
+              $or: [
+                { customerId: new ObjectId(userId) },
+                { creatorId: new ObjectId(userId) },
+              ],
+            },
+            { _id: new ObjectId(chatId) },
+          ],
+        },
+      },
+      {
+        $count: 'isValid',
+      },
+    ],
   },
 };

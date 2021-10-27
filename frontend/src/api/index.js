@@ -63,6 +63,11 @@ const API = {
   post: (address, body) =>
     baseQuery.post(address, body).then(({ data }) => data),
   get: (address) => baseQuery.get(address).then(({ data }) => data),
+  getMore: (address) =>
+    baseQuery.get(address).then(({ data, ...otherData }) => ({
+      data,
+      otherData,
+    })),
 };
 
 export default API;

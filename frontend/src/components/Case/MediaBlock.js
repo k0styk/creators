@@ -7,6 +7,7 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import CheckboxList from './CheckboxList';
 
 import API from '../../api';
+import { userType } from '../../enums';
 
 @inject(({ CaseStore, RouterStore, UserStore }) => {
   return {
@@ -19,6 +20,7 @@ import API from '../../api';
     user: (CaseStore.case || {}).user || {},
     caseId: (CaseStore.case || {}).id,
     currentUserId: UserStore.userId,
+    usrType: UserStore.user.type,
     RouterStore,
   };
 })
@@ -52,7 +54,8 @@ class Search extends React.Component {
   };
 
   render() {
-    const { price, productionTime, user, youtubeId } = this.props;
+    const { price, currentUserId, productionTime, user, usrType, youtubeId } =
+      this.props;
 
     return (
       <Paper className={s.content} elevation={3}>
@@ -73,16 +76,18 @@ class Search extends React.Component {
           <div></div>
           <span className={s.titleBox}>Что включено</span>
           <CheckboxList />
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            className={s.buttonLink}
-            endIcon={<QuestionAnswerIcon />}
-            onClick={this.goToChat}
-          >
-            Связаться
-          </Button>
+          {user.id === currentUserId || usrType === userType.CREATOR ? null : (
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              className={s.buttonLink}
+              endIcon={<QuestionAnswerIcon />}
+              onClick={this.goToChat}
+            >
+              Связаться
+            </Button>
+          )}
         </div>
       </Paper>
     );

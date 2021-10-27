@@ -1,5 +1,4 @@
 const chatService = require('../service/chat/chat');
-const ApiError = require('../exceptions/api-error');
 
 class ChatController {
   async createChat(req, res, next) {
@@ -13,6 +12,26 @@ class ChatController {
       );
 
       res.json({ ...chat });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async checkRights(req, res, next) {
+    try {
+      const {
+        params: { id },
+      } = req;
+      const result = await chatService.checkRights(req.user.id, id);
+
+      if (result.length) {
+        res.sendStatus(200);
+      } else {
+        res.json({
+          status: 301,
+          url: '/chat',
+        });
+      }
     } catch (e) {
       next(e);
     }

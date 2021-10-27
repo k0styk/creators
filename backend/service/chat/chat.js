@@ -73,6 +73,14 @@ class ChatService {
       checkedServices,
     });
   }
+
+  async checkRights(userId, chatId) {
+    const candidate = await ChatModel.aggregate(
+      chats.checkRights(userId, chatId)
+    );
+
+    return candidate;
+  }
 }
 
 function timeout(ms) {

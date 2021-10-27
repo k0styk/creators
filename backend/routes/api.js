@@ -66,6 +66,7 @@ router.get(
 
 router.post('/upload', authMiddleware, apiController.upload);
 
+router.get('/chat/:id', authMiddleware, chatController.checkRights);
 router.post('/chat/create', authMiddleware, chatController.createChat);
 
 module.exports = router;

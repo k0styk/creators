@@ -4,9 +4,10 @@ const Spheres = require('../models/seed.spheres');
 const Services = require('../models/seed.services');
 const CaseType = require('../models/seed.caseType');
 
+// TODO: origin
 const originPath =
   process.env['NODE_ENV'] === 'production'
-    ? 'https://creators.emergent.su/public/service'
+    ? 'https://test.creators.emergent.su/public/service'
     : 'http://localhost:8000/public/service';
 
 const data = [
