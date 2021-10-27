@@ -15,7 +15,7 @@ class MailService {
   }
 
   async sendActivationMail(to, link) {
-    const origin = process.env.API_URL || 'http://localhost:8000';
+    const origin = process.env.ORIGIN || 'http://localhost:8000';
 
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
