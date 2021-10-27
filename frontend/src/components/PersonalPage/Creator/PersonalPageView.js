@@ -81,8 +81,6 @@ class PersonalPage extends React.Component {
       fullName = 'Заполните данные о себе';
     }
 
-    console.log(user);
-
     return (
       <React.Fragment>
         <div className={s.userName}>

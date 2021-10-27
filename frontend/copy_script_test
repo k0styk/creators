@@ -1,2 +1,5 @@
 ssh creator@194.58.98.17 "bash -s" < rm_script_test.sh
 scp -r ./build/ creator@194.58.98.17:/home/creator/git/test.creators/frontend
+echo
+echo
+echo "Done Baby!"

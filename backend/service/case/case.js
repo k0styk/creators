@@ -29,8 +29,6 @@ class CaseService {
   ) {
     let time = null;
 
-    // к вашему видео доступ ограничен, невозможно создать кейс
-    // когда выход, редирект на главную
     try {
       const result = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?id=${youtubeId}&key=${key_youtube}&part=contentDetails&fields=items(contentDetails(duration))`
@@ -171,7 +169,6 @@ class CaseService {
       typeQuery,
       timeQuery,
     ].filter((v) => Object.keys(v).length !== 0);
-    // console.dir(aggregations, { depth: null });
     const candidate = await CaseModel.aggregate(aggregations);
 
     return candidate;

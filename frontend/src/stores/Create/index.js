@@ -17,7 +17,7 @@ class CreateStore {
   @observable checkedMainServices = [];
   @observable checkedAddServices = [];
 
-  @observable desc = null;
+  @observable desc = '';
 
   @observable time = {};
 
@@ -31,18 +31,39 @@ class CreateStore {
     this.time[field] = val;
   };
 
+  @action setTypes = (value) => {
+    this.types = [...value];
+  };
+
+  @action setServices = (value) => {
+    this.services = [...value];
+  };
+
+  @action setSpheres = (value) => {
+    this.spheres = [...value];
+  };
+
   getData = async () => {
     try {
       const { types, services, spheres } = await API.get(
         'cases/getDataForCreate'
       );
-      this.spheres = spheres.map(({ id, name }) => {
-        return { value: id, label: name };
-      });
-      this.types = types.map(({ id, name }) => {
-        return { value: id, label: name };
-      });
-      this.services = services;
+      this.setSpheres(
+        spheres.map(({ id, name }) => {
+          return { value: id, label: name };
+        })
+      );
+      this.setTypes(
+        types.map(({ id, name }) => {
+          return { value: id, label: name };
+        })
+      );
+      this.setServices(
+        services.map((v) => ({
+          ...v,
+          serviceId: v._id,
+        }))
+      );
     } catch (e) {
       console.log(e);
     }
